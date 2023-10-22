@@ -455,7 +455,8 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 		}
 		if(o.equals(btn_CapNhat))
 		{
-			capNhatNhaCungCap();
+			if(kiemTraRangBuoc())
+				capNhatNhaCungCap();
 		}
 		if(o.equals(btn_XoaTrang))
 		{
