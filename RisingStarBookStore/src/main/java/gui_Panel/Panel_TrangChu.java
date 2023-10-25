@@ -83,9 +83,9 @@ public class Panel_TrangChu extends javax.swing.JPanel {
         jLabel1.setForeground(new java.awt.Color(4, 72, 210));
         jLabel1.setText("Trang chủ");
         
-        jLabel2.setIcon(new ImageIcon("D:\\Application Growth\\Workspace\\RisingStarBookStore\\src\\main\\images\\view_image\\Book store 1.png"));
-        jLabel3.setIcon(new ImageIcon("D:\\Application Growth\\Workspace\\RisingStarBookStore\\src\\main\\images\\view_image\\Book store 2.png"));
-        jLabel4.setIcon(new ImageIcon("D:\\Application Growth\\Workspace\\RisingStarBookStore\\src\\main\\images\\view_image\\Book Store 3.png"));
+        jLabel2.setIcon(new ImageIcon("src\\main\\images\\view_image\\Book store 1.png"));
+        jLabel3.setIcon(new ImageIcon("src\\main\\images\\view_image\\Book store 2.png"));
+        jLabel4.setIcon(new ImageIcon("src\\main\\images\\view_image\\Book Store 3.png"));
         
     }// </editor-fold>//GEN-END:initComponents
 

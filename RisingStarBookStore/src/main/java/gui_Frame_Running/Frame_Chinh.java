@@ -44,14 +44,20 @@ import com.raven.model.ModelMenu;
 import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 
-import customEntities.Custom_ImageIcon;
+import customEntities.CustomIcon;
 import gui_Panel.EmployeeCard;
 import gui_Panel.MainForm;
 import gui_Panel.Menu;
+import gui_Panel.PanelSetting;
+import gui_Panel.Panel_DatHang;
+import gui_Panel.Panel_LapHoaDon;
 import gui_Panel.Panel_QuanLyKhachHang;
 import gui_Panel.Panel_QuanLyNhaCungCap;
 import gui_Panel.Panel_QuanLyNhanVien;
 import gui_Panel.Panel_QuanLySanPham;
+import gui_Panel.Panel_ThongKeSanPhamBanChay;
+import gui_Panel.Panel_ThongKeThuChiLoiNhuan;
+import gui_Panel.Panel_TimKiemDonDat;
 import gui_Panel.Panel_TimKiemHoaDon;
 import gui_Panel.Panel_TimKiemKhachHang;
 import gui_Panel.Panel_TimKiemNhaCungCap;
@@ -63,7 +69,7 @@ import swing.MenuItem;
 import swing.PanelTransparent;
 import swing.PopupMenu;
 
-public class Frame_Chinh extends JFrame implements ActionListener , WindowListener
+public class Frame_Chinh extends JFrame implements ActionListener, WindowListener
 {
 	private MigLayout layout;
 	private PanelTransparent bg;
@@ -103,7 +109,7 @@ public class Frame_Chinh extends JFrame implements ActionListener , WindowListen
 	                //SwingAcrylic.prepareSwing();
 	                Frame_Chinh frame = new Frame_Chinh();
 	                frame.setTitle("Rising Star");
-	                frame.setIconImage(new Custom_ImageIcon("src/main/images/view_image/Logo.png").getImage());
+	                frame.setIconImage(new CustomIcon("src/main/images/view_image/Logo.png").getImage());
 	                frame.setVisible(true);
 	                //SwingAcrylic.processFrame(frame);
 	            }
@@ -158,9 +164,17 @@ public class Frame_Chinh extends JFrame implements ActionListener , WindowListen
 				}
 				if (menuIndex == 1) {
 					if(subMenuIndex == 0)
-						main.showForm(new Panel_QuanLyKhachHang());
+						main.showForm(new Panel_LapHoaDon());
 					else if (subMenuIndex == 1)
 						main.showForm(new Panel_TimKiemHoaDon());
+					else if (subMenuIndex == 2)
+						main.showForm(new Panel_ThongKeThuChiLoiNhuan());
+				}
+				if (menuIndex == 2) {
+					if(subMenuIndex == 0)
+						main.showForm(new Panel_DatHang());
+					else if (subMenuIndex == 1)
+						main.showForm(new Panel_TimKiemDonDat());
 				}
 				if (menuIndex == 3) {
 					if(subMenuIndex == 0)
@@ -179,12 +193,17 @@ public class Frame_Chinh extends JFrame implements ActionListener , WindowListen
 						main.showForm(new Panel_QuanLySanPham());
 					else if (subMenuIndex == 1)
 						main.showForm(new Panel_TimKiemSanPham());
+					else if (subMenuIndex == 2)
+						main.showForm(new Panel_ThongKeSanPhamBanChay());
 				}
 				if (menuIndex == 6) {
 					if(subMenuIndex == 0)
 						main.showForm(new Panel_QuanLyNhaCungCap());
 					else if (subMenuIndex == 1)
 						main.showForm(new Panel_TimKiemNhaCungCap());
+				}
+				if (menuIndex == 7) {
+					main.showForm(new PanelSetting());
 				}
 			}
 		});
@@ -200,19 +219,20 @@ public class Frame_Chinh extends JFrame implements ActionListener , WindowListen
 				popup.setVisible(true);
 			}
 		});
-		menu.addMenu(new ModelMenu(new Custom_ImageIcon("src/main/images/view_image/Home.png",30,30), "Trang chủ"));
-		menu.addMenu(new ModelMenu(new Custom_ImageIcon("src/main/images/view_image/Bill.png",30,30), "Hóa đơn",
-				"Lập hóa đơn", "Tìm kiếm hóa đơn", "Thống kê doanh thu"));
-		menu.addMenu(new ModelMenu(new Custom_ImageIcon("src/main/images/view_image/Preorder.png",30,30), "Đơn đặt",
+		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Home.png",30,30), "Trang chủ"));
+		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Bill.png",30,30), "Hóa đơn",
+				"Lập hóa đơn", "Tìm kiếm hóa đơn", "Thống kê thu - chi - lợi nhuận"));
+		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Preorder.png",30,30), "Đơn đặt",
 				"Đặt hàng", "Tìm kiếm đơn đặt"));
-		menu.addMenu(new ModelMenu(new Custom_ImageIcon("src/main/images/view_image/Customer.png",30,30), "Khách hàng",
+		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Customer.png",30,30), "Khách hàng",
 				"Cập nhật", "Tìm kiếm"));
-		menu.addMenu(new ModelMenu(new Custom_ImageIcon("src/main/images/view_image/Employee.png",30,30), "Nhân viên",
+		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Employee.png",30,30), "Nhân viên",
 				"Cập nhật", "Tìm kiếm"));
-		menu.addMenu(new ModelMenu(new Custom_ImageIcon("src/main/images/view_image/Product.png",30,30), "Sản phẩm",
+		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Product.png",30,30), "Sản phẩm",
+				"Cập nhật", "Tìm kiếm", "Thống kê danh sách sản phẩm bán chạy"));
+		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Supplier.png",30,30), "Nhà cung cấp",
 				"Cập nhật", "Tìm kiếm"));
-		menu.addMenu(new ModelMenu(new Custom_ImageIcon("src/main/images/view_image/Supplier.png",30,30), "Nhà cung cấp",
-				"Cập nhật", "Tìm kiếm"));
+		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Setting.png",30,30), "Cài đặt chung"));
 		
 	}
 	private void initAnimator() {
@@ -273,12 +293,6 @@ public class Frame_Chinh extends JFrame implements ActionListener , WindowListen
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 	}
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-
-	}
-	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
@@ -321,4 +335,10 @@ public class Frame_Chinh extends JFrame implements ActionListener , WindowListen
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

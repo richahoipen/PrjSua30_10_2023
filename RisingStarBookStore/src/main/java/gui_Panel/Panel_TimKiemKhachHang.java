@@ -533,6 +533,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang.timKiemTheoTieuChiKhacMaKH(k, dtm_KH);
 		}
 		
+		
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {

@@ -1,5 +1,7 @@
 package customEntities;
 
+
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -12,7 +14,8 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
@@ -39,18 +42,36 @@ public class Custom_Button extends JButton {
      * @param color_Foreground màu chữ
      * @param color_Hightlight màu chữ khi chọn
      */
-    public Custom_Button() {
-		makeButton();
-	}
-	public Custom_Button(String text) {
-        //  Init Color
-		setText(text);
-        makeButton();
-    }
+    
 	
 	public String getText() {
 		return text;
 	}
+	public Custom_Button(String text, Color color_Foreground, Color color_Background,
+			Color color_Hightlight,Color color_Over,Color color_Click,
+			Color color_Clicked_Background,Color color_Border,boolean over,
+			   int radius) {
+		super(text);
+		setColor_Foreground(color_Foreground);
+		setColor_Background(color_Background);
+		setColor_Hightlight(color_Hightlight);
+		setColor_Over(color_Over);
+		setColor_Click(color_Click);
+		setColor_Clicked_Background(color_Clicked_Background);
+		setBorder(BorderFactory.createLineBorder(color_Border));
+		setOver(over);
+		//setBuffered_Icon(buffered_Icon);
+		setRadius(radius);
+		makeButton();
+	}
+	public Custom_Button(String text) {
+		this(text,Color.BLACK,Custom_ColorPicker.lightgrey_D9D9D9,Color.BLACK,Custom_ColorPicker.lightgrey_B3B3B3,Color.black,Custom_ColorPicker.lime_BFFF00,null, true,0);
+	}
+	
+	public Custom_Button() {
+		this("",Color.BLACK,Custom_ColorPicker.lightgrey_D9D9D9,Color.BLACK,Custom_ColorPicker.lightgrey_B3B3B3,Color.black,Custom_ColorPicker.lime_BFFF00,null, true,0);
+	}
+	
 	public boolean isOver() {
 		return over;
 	}
@@ -160,7 +181,6 @@ public class Custom_Button extends JButton {
 		setIcon(new ImageIcon(buffered_Icon));
 	}
 	private void makeButton(){
-    	setForeground(color_Foreground);
         setContentAreaFilled(false);
         //  Add event mouse
         addMouseListener();
@@ -168,7 +188,7 @@ public class Custom_Button extends JButton {
         setBorder(null);
     }
 	public void resizeIcon(int x,int y) {
-		buffered_Icon = Custom_Function.resize(buffered_Icon, x, y);
+		buffered_Icon = CustomFunction.resize(buffered_Icon, x, y);
 		setBuffered_Icon(buffered_Icon);
 	}
 	private void addMouseListener(){

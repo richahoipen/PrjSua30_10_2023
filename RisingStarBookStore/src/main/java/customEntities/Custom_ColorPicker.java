@@ -13,6 +13,8 @@ public class Custom_ColorPicker{
 	public static final Color lightgrey_D9D9D9 = new Custom_ColorPicker("D9D9D9").toColor();
 	public static final Color lime_BFFF00 = new Custom_ColorPicker("BFFF00").toColor();
 	public static final Color snowwhite_F2F0EB = new Custom_ColorPicker("F2F0EB").toColor();
+	public static final Color darkblue_4F709C = new Custom_ColorPicker("4F709C").toColor();
+	public static final Color lightgrey_B3B3B3 = new Custom_ColorPicker("B3B3B3").toColor();
 	
 	@Override
 	public String toString() {

@@ -358,6 +358,7 @@ public class DataBase_KhachHang implements Method_Select_KhachHang {
 				boolean gioiTinh = rs.getBoolean("gioiTinh");
 				String diaChi = rs.getString("diaChi");
 				KhachHang k = new KhachHang(maKH, tenKH, sdt, gioiTinh, diaChi);
+				//Thêm vào mảng động
 				listKhachHang_DAO.themKH(k);
 			}
 			listKhachHang_DAO.xuatBangTheo_Ten(tenCanTruyVan, dtm_KH);
