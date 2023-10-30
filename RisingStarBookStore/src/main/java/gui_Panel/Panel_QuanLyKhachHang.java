@@ -11,7 +11,7 @@ import customEntities.Custom_Function;
 import customEntities.Custom_ImageIcon;
 import customEntities.Custom_JLabel;
 import customEntities.Custom_Table;
-import dataBase_DAO.DataBase_KhachHang;
+import dataBase_DAO.DataBase_KhachHang_DAO;
 import entities.KhachHang;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
@@ -72,7 +72,7 @@ public class Panel_QuanLyKhachHang extends JPanel implements ActionListener, Mou
 	private JScrollPane scr_DSNV;
 	private Custom_Table tbl_DSKH;
 	private DefaultTableModel dtm_KH;
-	private DataBase_KhachHang sqlKhachHang=new DataBase_KhachHang();
+	private DataBase_KhachHang_DAO sqlKhachHang_DAO=new DataBase_KhachHang_DAO();
     // End of variables declaration//GEN-END:variables
     public Panel_QuanLyKhachHang() {
         initComponents();
@@ -320,7 +320,7 @@ public class Panel_QuanLyKhachHang extends JPanel implements ActionListener, Mou
     }// </editor-fold>//GEN-END:initComponents
     private void addAction()
 	{
-		sqlKhachHang.xuatDanhSachKhachHang(dtm_KH);
+		sqlKhachHang_DAO.xuatDanhSachKhachHang(dtm_KH);
 		btn_Them.addActionListener(this);
 		//btn_Logout.addActionListener(this);
 		btn_CapNhat.addActionListener(this);
@@ -349,7 +349,7 @@ public class Panel_QuanLyKhachHang extends JPanel implements ActionListener, Mou
 		txt_DiaChi.setText("");
 		cbo_GioiTinh.setSelectedItem("Chọn");
 		dtm_KH.setRowCount(0);
-		sqlKhachHang.xuatDanhSachKhachHang(dtm_KH);
+		sqlKhachHang_DAO.xuatDanhSachKhachHang(dtm_KH);
 	}
 	/*
 	 * try 
@@ -447,9 +447,9 @@ public class Panel_QuanLyKhachHang extends JPanel implements ActionListener, Mou
 			k.setDiaChi(diaChi);
 			k.setGioiTinh(gioiTinhBool(gioiTinh));
 			k.setSdt(sdt);
-			sqlKhachHang.themKhachHang(k);
+			sqlKhachHang_DAO.themKhachHang(k);
 			dtm_KH.setRowCount(0);
-			sqlKhachHang.xuatDanhSachKhachHang(dtm_KH);
+			sqlKhachHang_DAO.xuatDanhSachKhachHang(dtm_KH);
 			xoaTrang();
 		}catch(Exception e)
 		{
@@ -483,9 +483,9 @@ public class Panel_QuanLyKhachHang extends JPanel implements ActionListener, Mou
 			String sdt=txt_SoDienThoai.getText();
 			String gioiTinh = (String) cbo_GioiTinh.getSelectedItem();
 			KhachHang k=new KhachHang(maKH, tenKH, sdt, gioiTinhBool(gioiTinh), diaChi);
-			sqlKhachHang.capNhatKhachHang(k);
+			sqlKhachHang_DAO.capNhatKhachHang(k);
 			dtm_KH.setRowCount(0);
-			sqlKhachHang.xuatDanhSachKhachHang(dtm_KH);
+			sqlKhachHang_DAO.xuatDanhSachKhachHang(dtm_KH);
 			//cập nhật xong thì bỏ chọn
 			tbl_DSKH.clearSelection();
 		}

@@ -11,7 +11,8 @@ import customEntities.Custom_Function;
 import customEntities.Custom_ImageIcon;
 import customEntities.Custom_JLabel;
 import customEntities.Custom_Table;
-import dataBase_DAO.DataBase_NhaCungCap;
+import dataBase_DAO.DataBase_NhaCungCap_DAO;
+import dataBase_BUS.DataBase_NhaCungCap_BUS;
 import entities.NhaCungCap;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
@@ -69,7 +70,8 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 	private JScrollPane scr_DSNV;
 	private Custom_Table tbl_DSNCC;
 	private DefaultTableModel dtm_NCC;
-	private DataBase_NhaCungCap sqlNhaCungCap=new DataBase_NhaCungCap();
+	private DataBase_NhaCungCap_DAO sqlNhaCungCap_DAO=new DataBase_NhaCungCap_DAO();
+	private DataBase_NhaCungCap_BUS sqlNhaCungCap_BUS=new DataBase_NhaCungCap_BUS();
     // End of variables declaration//GEN-END:variables
     public Panel_QuanLyNhaCungCap() {
         initComponents();
@@ -302,7 +304,7 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
     }// </editor-fold>//GEN-END:initComponents
     private void addAction()
 	{
-		sqlNhaCungCap.xuatDanhSachNhaCungCap(dtm_NCC);
+		sqlNhaCungCap_DAO.xuatDanhSachNhaCungCap(dtm_NCC);
 		btn_Them.addActionListener(this);
 		btn_CapNhat.addActionListener(this);
 		btn_XoaTrang.addActionListener(this);	
@@ -349,9 +351,8 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 			n.setSdtNCC(sdt);
 			n.setEmail(email);
 			n.setDiaChi(diaChi);
-			sqlNhaCungCap.themNhaCungCap(n);
-			dtm_NCC.setRowCount(0);
-			sqlNhaCungCap.xuatDanhSachNhaCungCap(dtm_NCC);
+			sqlNhaCungCap_DAO.themNhaCungCap(n);
+			xoaTrang();	
 		}catch(Exception e)
 		{
 			e.printStackTrace();
@@ -369,7 +370,7 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 		lbl_txt_MaNCC.setText("");
 		txt_HoTen.requestFocus();
 		dtm_NCC.setRowCount(0);
-		sqlNhaCungCap.xuatDanhSachNhaCungCap(dtm_NCC);
+		sqlNhaCungCap_DAO.xuatDanhSachNhaCungCap(dtm_NCC);
 	}
 	private void capNhatNhaCungCap()
 	{
@@ -382,9 +383,9 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 			String diaChi=txt_DiaChi.getText();
 			String email=txt_Email.getText();
 			NhaCungCap n=new NhaCungCap(maNCC, tenNCC, sdt, email, diaChi);
-			sqlNhaCungCap.capNhatNhaCungCap(n);
+			sqlNhaCungCap_DAO.capNhatNhaCungCap(n);
 			dtm_NCC.setRowCount(0);
-			sqlNhaCungCap.xuatDanhSachNhaCungCap(dtm_NCC);
+			sqlNhaCungCap_DAO.xuatDanhSachNhaCungCap(dtm_NCC);
 			//cập nhật xong thì bỏ chọn
 			tbl_DSNCC.clearSelection();
 		}

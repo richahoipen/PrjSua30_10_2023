@@ -23,7 +23,7 @@ import gui_Frame_Running.Frame_Chinh;
 
 
 
-public class PanelSetting extends javax.swing.JPanel {
+public class Panel_Setting extends javax.swing.JPanel {
 	private JPanel pnNguoiDung;
 	private JLabel lblAvatar,lblChucVu,lblHoTen,lbl_Title_NguoiDung;
 	private Custom_Button btnDangXuat;
@@ -39,7 +39,7 @@ public class PanelSetting extends javax.swing.JPanel {
 	private ButtonGroup btngNgonNgu;
 	private ButtonGroup btngPhongCach;
     // End of variables declaration//GEN-END:variables
-    public PanelSetting() {
+    public Panel_Setting() {
         initComponents();
         setOpaque(false);
         

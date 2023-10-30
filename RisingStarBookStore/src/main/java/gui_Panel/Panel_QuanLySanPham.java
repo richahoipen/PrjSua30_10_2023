@@ -221,7 +221,7 @@ public class Panel_QuanLySanPham extends JPanel {
 		//tbl_DSSP.setFont(new Font("Times New Roman", Font.PLAIN, 5));
 		tbl_DSSP.setColor_Header_Background(Custom_ColorPicker.lightgrey_D9D9D9);
 		tbl_DSSP.setColor_Border(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSSP.align(1,new int[] {6,8,9,10,11});
+		tbl_DSSP.align(2,new int[] {6,8,9,10,11});
 		tbl_DSSP.redrawn_Custom_Table();
 		JScrollPane scr_DSSP = new JScrollPane(tbl_DSSP);
 		

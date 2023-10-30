@@ -8,6 +8,8 @@ import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
 
 import java.awt.Color;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout.Alignment;
@@ -18,6 +20,7 @@ import javax.swing.LayoutStyle;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 public class Panel_TrangChu extends javax.swing.JPanel {
 	// Variables declaration - do not modify//GEN-BEGIN:variables
@@ -82,11 +85,21 @@ public class Panel_TrangChu extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(4, 72, 210));
         jLabel1.setText("Trang chủ");
+        Timer timer =new Timer (1000,e -> {
+			SimpleDateFormat timeFormat=new SimpleDateFormat("HH:mm:ss");
+			SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy");
+			Date now=new Date();
+			String time=timeFormat.format(now);
+			String date=dateFormat.format(now);
+			jLabel1.setText("Trang chủ. Ngày: "+date+", thời gian: "+time);
+			
+		});
+		
         
         jLabel2.setIcon(new ImageIcon("src\\main\\images\\view_image\\Book store 1.png"));
         jLabel3.setIcon(new ImageIcon("src\\main\\images\\view_image\\Book store 2.png"));
         jLabel4.setIcon(new ImageIcon("src\\main\\images\\view_image\\Book Store 3.png"));
-        
+        timer.start();
     }// </editor-fold>//GEN-END:initComponents
 
     

@@ -11,8 +11,10 @@ import customEntities.Custom_Function;
 import customEntities.Custom_ImageIcon;
 import customEntities.Custom_JLabel;
 import customEntities.Custom_Table;
-import dataBase_DAO.DataBase_KhachHang;
+import dataBase_BUS.DataBase_KhachHang_BUS;
+import dataBase_DAO.DataBase_KhachHang_DAO;
 import entities.KhachHang;
+import entities.NhaCungCap;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
 
@@ -69,7 +71,8 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 	private Custom_Table tbl_DSKH;
 	private DefaultTableModel dtm_KH;
     // End of variables declaration//GEN-END:variables
-	private DataBase_KhachHang sqlKhachHang=new DataBase_KhachHang();
+	private DataBase_KhachHang_DAO sqlKhachHang_DAO=new DataBase_KhachHang_DAO();
+	private DataBase_KhachHang_BUS sqlKhachHang_BUS=new DataBase_KhachHang_BUS();
     public Panel_TimKiemKhachHang() {
         initComponents();
         setOpaque(false);
@@ -290,8 +293,8 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 
     private void addAction()
 	{
-		sqlKhachHang.xuatDanhSachKhachHang(dtm_KH);
-		//sqlKhachHang.dayComboBoxMaKH(cbo_MaKH);
+		sqlKhachHang_DAO.xuatDanhSachKhachHang(dtm_KH);
+		//sqlKhachHang_DAO.dayComboBoxMaKH(cbo_MaKH);
 		//btn_Close.addActionListener(this);
 		btn_XoaTrang.addActionListener(this);
 		btn_TimKiem.addActionListener(this);
@@ -308,19 +311,19 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 	{
 		//maKH
 		cbo_MaKH.addItem("Chọn");
-		sqlKhachHang.dayComboBoxMaKH(cbo_MaKH);
+		sqlKhachHang_DAO.dayComboBoxMaKH(cbo_MaKH);
 		//gioiTinh
 		cbo_GioiTinh.addItem("Chọn");
 		cbo_GioiTinh.addItem("Nam");
 		cbo_GioiTinh.addItem("Nữ");
 		//hoTen
 		cbo_HoTen.addItem("Chọn");
-		sqlKhachHang.dayComboBoxTenKH(cbo_HoTen);
+		sqlKhachHang_DAO.dayComboBoxTenKH(cbo_HoTen);
 		//sdt cbo_SoDienThoai
 		cbo_SoDienThoai.addItem("Chọn");
-		sqlKhachHang.dayComboBoxSDT(cbo_SoDienThoai);
+		sqlKhachHang_DAO.dayComboBoxSDT(cbo_SoDienThoai);
 		cbo_DiaChi.addItem("Chọn");
-		sqlKhachHang.dayComboBoxDiaChi(cbo_DiaChi);
+		sqlKhachHang_DAO.dayComboBoxDiaChi(cbo_DiaChi);
 		
 	}
 	private void resetComboBox()
@@ -331,7 +334,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 		cbo_GioiTinh.setSelectedItem("Chọn");
 		cbo_DiaChi.setSelectedItem("Chọn");
 		dtm_KH.setRowCount(0);
-		sqlKhachHang.xuatDanhSachKhachHang(dtm_KH);
+		sqlKhachHang_DAO.xuatDanhSachKhachHang(dtm_KH);
 	}
 	private boolean gioiTinhBool(String gioiTinh)
 	{
@@ -362,7 +365,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 				sdt.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
 		{
 			dtm_KH.setRowCount(0);
-			sqlKhachHang.timKiemTheoMaKH(maKH, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheoMaKH(maKH, dtm_KH);
 		}
 		//Tìm theo tên
 		if(maKH.equalsIgnoreCase("Chọn")&&!tenKH.equalsIgnoreCase("Chọn")&&
@@ -370,7 +373,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 						sdt.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
 		{
 			dtm_KH.setRowCount(0);
-			sqlKhachHang.timKiemTheoTen(tenKH, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheoTen(tenKH, dtm_KH);
 		}
 		//Tìm theo gioiTinh
 		if(maKH.equalsIgnoreCase("Chọn")&&tenKH.equalsIgnoreCase("Chọn")&&
@@ -378,7 +381,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 				sdt.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
 		{
 			dtm_KH.setRowCount(0);
-			sqlKhachHang.timKiemTheoGioiTinh(gioiTinh, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheoGioiTinh(gioiTinh, dtm_KH);
 		}
 		//Tìm theo diaChi
 		if(maKH.equalsIgnoreCase("Chọn")&&tenKH.equalsIgnoreCase("Chọn")&&
@@ -386,7 +389,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 				sdt.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
 		{
 			dtm_KH.setRowCount(0);
-			sqlKhachHang.timKiemTheoDiaChi(diaChi, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheoDiaChi(diaChi, dtm_KH);
 		}
 		
 		
@@ -395,7 +398,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 				!sdt.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
 		{
 			dtm_KH.setRowCount(0);
-			sqlKhachHang.timKiemTheoSDT(sdt, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheoSDT(sdt, dtm_KH);
 		}	
 		//Tìm theo tenKH và địa chỉ
 		if(maKH.equalsIgnoreCase("Chọn")&&!tenKH.equalsIgnoreCase("Chọn")&&
@@ -408,7 +411,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			k.setTenKH(tenKH);
 			k.setDiaChi(diaChi);
 			
-			sqlKhachHang.timKiemTheo_tenKH_diaChi(k, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheo_tenKH_diaChi(k, dtm_KH);
 		}
 		//Tìm theo tenKH và gioiTinh
 		if(maKH.equalsIgnoreCase("Chọn")&&!tenKH.equalsIgnoreCase("Chọn")&&
@@ -419,7 +422,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			KhachHang k=new KhachHang();
 			k.setTenKH(tenKH);
 			k.setGioiTinh(gioiTinhBool(gioiTinh));
-			sqlKhachHang.timKiemTheo_tenKH_gioiTinh(k, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheo_tenKH_gioiTinh(k, dtm_KH);
 		}
 		//tìm theo tenKH và sdt
 		if(maKH.equalsIgnoreCase("Chọn")&&!tenKH.equalsIgnoreCase("Chọn")&&
@@ -430,7 +433,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			KhachHang k=new KhachHang();
 			k.setTenKH(tenKH);
 			k.setSdt(sdt);	
-			sqlKhachHang.timKiemTheo_tenKH_sdt(k, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheo_tenKH_sdt(k, dtm_KH);
 		}
 		//timKiemTheo_sdt_diaChi(KhachHang k, DefaultTableModel dtm_KH) 
 		if(maKH.equalsIgnoreCase("Chọn")&&tenKH.equalsIgnoreCase("Chọn")&&
@@ -441,7 +444,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			KhachHang k=new KhachHang();			
 			k.setSdt(sdt);
 			k.setDiaChi(diaChi);
-			sqlKhachHang.timKiemTheo_sdt_diaChi(k, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheo_sdt_diaChi(k, dtm_KH);
 		}
 		//public void timKiemTheo_sdt_gioiTinh(KhachHang k, DefaultTableModel dtm_KH)
 		if(maKH.equalsIgnoreCase("Chọn")&&tenKH.equalsIgnoreCase("Chọn")&&
@@ -453,7 +456,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			KhachHang k=new KhachHang();			
 			k.setSdt(sdt);
 			k.setGioiTinh(gioiTinhBool(gioiTinh));	
-			sqlKhachHang.timKiemTheo_sdt_gioiTinh(k, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheo_sdt_gioiTinh(k, dtm_KH);
 		}
 		//public void timKiemTheo_diaChi_gioiTinh(KhachHang k, DefaultTableModel dtm_KH)
 		if(maKH.equalsIgnoreCase("Chọn")&&tenKH.equalsIgnoreCase("Chọn")&&
@@ -465,7 +468,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			KhachHang k=new KhachHang();			
 			k.setDiaChi(diaChi);
 			k.setGioiTinh(gioiTinhBool(gioiTinh));	
-			sqlKhachHang.timKiemTheo_diaChi_gioiTinh(k, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheo_diaChi_gioiTinh(k, dtm_KH);
 		}
 		//3 tiêu chí
 		if(maKH.equalsIgnoreCase("Chọn") &&!tenKH.equalsIgnoreCase("Chọn")&&
@@ -478,7 +481,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			k.setTenKH(tenKH);
 			k.setDiaChi(diaChi);
 			k.setSdt(sdt);
-			sqlKhachHang.timKiemTheo_tenKH_sdt_diaChi(k, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheo_tenKH_sdt_diaChi(k, dtm_KH);
 		}
 		//timKiemTheo_tenKH_sdt_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) 
 		if(maKH.equalsIgnoreCase("Chọn") &&!tenKH.equalsIgnoreCase("Chọn")&&
@@ -491,7 +494,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			k.setTenKH(tenKH);
 			k.setSdt(sdt);
 			k.setGioiTinh(gioiTinhBool(gioiTinh));	
-			sqlKhachHang.timKiemTheo_tenKH_sdt_gioiTinh(k, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheo_tenKH_sdt_gioiTinh(k, dtm_KH);
 		}
 		//timKiemTheo_sdt_diaChi_gioiTinh(KhachHang k, DefaultTableModel dtm_KH)
 		if(maKH.equalsIgnoreCase("Chọn") &&tenKH.equalsIgnoreCase("Chọn")&&
@@ -504,7 +507,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			k.setSdt(sdt);
 			k.setGioiTinh(gioiTinhBool(gioiTinh));
 			k.setDiaChi(diaChi);
-			sqlKhachHang.timKiemTheo_sdt_diaChi_gioiTinh(k, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheo_sdt_diaChi_gioiTinh(k, dtm_KH);
 		}
 		//Tìm kiếm theo tenKH, diaChi, gioiTinh
 		if(maKH.equalsIgnoreCase("Chọn") &&!tenKH.equalsIgnoreCase("Chọn")&&
@@ -517,7 +520,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			k.setTenKH(tenKH);
 			k.setGioiTinh(gioiTinhBool(gioiTinh));
 			k.setDiaChi(diaChi);
-			sqlKhachHang.timKiemTheo_tenKH_diaChi_gioiTinh(k, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheo_tenKH_diaChi_gioiTinh(k, dtm_KH);
 		}
 		//Tìm kiếm theo tất cả điều kiện trừ maKH
 		if(maKH.equalsIgnoreCase("Chọn") &&!tenKH.equalsIgnoreCase("Chọn")&&
@@ -530,8 +533,10 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			k.setDiaChi(diaChi);
 			k.setSdt(sdt);
 			k.setGioiTinh(gioiTinhBool(gioiTinh));
-			sqlKhachHang.timKiemTheoTieuChiKhacMaKH(k, dtm_KH);
+			sqlKhachHang_BUS.timKiemTheoTieuChiKhacMaKH(k, dtm_KH);
 		}
+		
+		
 		
 		
 	}

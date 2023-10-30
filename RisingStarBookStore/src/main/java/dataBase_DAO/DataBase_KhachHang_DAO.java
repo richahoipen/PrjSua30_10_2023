@@ -16,10 +16,11 @@ import entities.KhachHang;
 import interface_Method_Database.Method_Select_KhachHang;
 import list_Array_DAO.KhachHang_DAO;
 
-public class DataBase_KhachHang implements Method_Select_KhachHang {
+public class DataBase_KhachHang_DAO 
+{
 	private Connect con = new Connect();
 	KhachHang_DAO listKhachHang_DAO=new KhachHang_DAO();
-	public DataBase_KhachHang() {
+	public DataBase_KhachHang_DAO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -250,6 +251,7 @@ public class DataBase_KhachHang implements Method_Select_KhachHang {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	/*
 	//TÌM KIẾM 1 Tiêu Chí
 	public void timKiemTheoMaKH(String maKHCanTruyVan, DefaultTableModel dtm_KH) {
 		String sqlSelect = "SELECT *\r\n" + "FROM KhachHang\r\n" + "WHERE maKH='" + maKHCanTruyVan + "';";
@@ -443,6 +445,7 @@ public class DataBase_KhachHang implements Method_Select_KhachHang {
 	 * SELECT * FROM KhachHang WHERE tenKH='Van Minh' AND sdt='0976646635';
 	 * TÌM CHI TIẾT CỤ THỂ
 	 */
+	/*
 	@Override
 	public void timKiemTheo_tenKH_sdt(KhachHang k, DefaultTableModel dtm_KH) 
 	{
@@ -488,6 +491,7 @@ public class DataBase_KhachHang implements Method_Select_KhachHang {
 	tenKH='Van Minh'
 	AND diaChi='1 Os street';
 	 */
+	/*
 	@Override
 	public void timKiemTheo_tenKH_diaChi(KhachHang k, DefaultTableModel dtm_KH) {
 	    String sqlSelect = "SELECT * FROM KhachHang WHERE tenKH = ? AND diaChi = ? ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
@@ -526,6 +530,7 @@ public class DataBase_KhachHang implements Method_Select_KhachHang {
 	tenKH='Van Minh'
 	AND gioiTinh=1;
 	 */
+	/*
 	@Override
 	public void timKiemTheo_tenKH_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
 	    String sqlSelect = "SELECT * FROM KhachHang WHERE tenKH = ? AND gioiTinh = ? ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
@@ -561,6 +566,7 @@ public class DataBase_KhachHang implements Method_Select_KhachHang {
 	/*Theo sdt và diaChi
 	 * 
 	 */
+	/*
 	@Override
 	public void timKiemTheo_sdt_diaChi(KhachHang k, DefaultTableModel dtm_KH) {
 	    String sqlSelect = "SELECT * FROM KhachHang WHERE sdt = ? AND diaChi = ? ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
@@ -787,7 +793,7 @@ public class DataBase_KhachHang implements Method_Select_KhachHang {
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 	    }
-	}
+	}*/
 
 
 }

@@ -13,9 +13,13 @@ import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
+
 import javax.imageio.ImageIO;
+
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
@@ -27,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
@@ -48,7 +53,7 @@ import customEntities.CustomIcon;
 import gui_Panel.EmployeeCard;
 import gui_Panel.MainForm;
 import gui_Panel.Menu;
-import gui_Panel.PanelSetting;
+import gui_Panel.Panel_Setting;
 import gui_Panel.Panel_DatHang;
 import gui_Panel.Panel_LapHoaDon;
 import gui_Panel.Panel_QuanLyKhachHang;
@@ -77,7 +82,19 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 	private EmployeeCard employeeCard;
 	private MainForm main;
 	private Animator animator;
-
+	private String timeLabel, dateLabel;
+	public String getTimeLabel() {
+		return timeLabel;
+	}
+	public void setTimeLabel(String timeLabel) {
+		this.timeLabel = timeLabel;
+	}
+	public String getDateLabel() {
+		return dateLabel;
+	}
+	public void setDateLabel(String dateLabel) {
+		this.dateLabel = dateLabel;
+	}
 	public static void main(String[] args) {
 		 try {
 			// Khởi tạo một mảng chứa các giao diện người dùng đã được cài đặt 
@@ -108,8 +125,9 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 	            public void run() {
 	                //SwingAcrylic.prepareSwing();
 	                Frame_Chinh frame = new Frame_Chinh();
-	                frame.setTitle("Rising Star");
+	                frame.setTitle("Rising Star: Quản lý mua bán sách tại hiệu sách tư nhân. ");
 	                frame.setIconImage(new CustomIcon("src/main/images/view_image/Logo.png").getImage());
+	              
 	                frame.setVisible(true);
 	                //SwingAcrylic.processFrame(frame);
 	            }
@@ -149,6 +167,7 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 
         };
         animator = new Animator(500, target);
+        
 		initMenu();
 		initAnimator();
 	}
@@ -163,17 +182,13 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 					main.showForm(new Panel_TrangChu());
 				}
 				if (menuIndex == 1) {
-					if(subMenuIndex == 0)
-						main.showForm(new Panel_LapHoaDon());
-					else if (subMenuIndex == 1)
+					if (subMenuIndex == 0)
 						main.showForm(new Panel_TimKiemHoaDon());
-					else if (subMenuIndex == 2)
+					else if (subMenuIndex == 1)
 						main.showForm(new Panel_ThongKeThuChiLoiNhuan());
 				}
 				if (menuIndex == 2) {
-					if(subMenuIndex == 0)
-						main.showForm(new Panel_DatHang());
-					else if (subMenuIndex == 1)
+					if (subMenuIndex == 0)
 						main.showForm(new Panel_TimKiemDonDat());
 				}
 				if (menuIndex == 3) {
@@ -184,8 +199,12 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 				}
 				if (menuIndex == 4) {
 					if(subMenuIndex == 0)
+						main.showForm(new Panel_LapHoaDon());
+					else if(subMenuIndex == 1)
+						main.showForm(new Panel_DatHang());
+					else if(subMenuIndex == 2)
 						main.showForm(new Panel_QuanLyNhanVien());
-					else if (subMenuIndex == 1)
+					else if (subMenuIndex == 3)
 						main.showForm(new Panel_TimKiemNhanVien());
 				}
 				if (menuIndex == 5) {
@@ -203,7 +222,7 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 						main.showForm(new Panel_TimKiemNhaCungCap());
 				}
 				if (menuIndex == 7) {
-					main.showForm(new PanelSetting());
+					main.showForm(new Panel_Setting());
 				}
 			}
 		});
@@ -219,20 +238,34 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 				popup.setVisible(true);
 			}
 		});
+		
 		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Home.png",30,30), "Trang chủ"));
 		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Bill.png",30,30), "Hóa đơn",
-				"Lập hóa đơn", "Tìm kiếm hóa đơn", "Thống kê thu - chi - lợi nhuận"));
+				 "Tìm kiếm hóa đơn", "Thống kê thu - chi - lợi nhuận"));
 		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Preorder.png",30,30), "Đơn đặt",
-				"Đặt hàng", "Tìm kiếm đơn đặt"));
+				 "Tìm kiếm đơn đặt"));
 		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Customer.png",30,30), "Khách hàng",
 				"Cập nhật", "Tìm kiếm"));
 		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Employee.png",30,30), "Nhân viên",
-				"Cập nhật", "Tìm kiếm"));
+				"Lập hóa đơn","Đặt hàng","Cập nhật", "Tìm kiếm"));
 		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Product.png",30,30), "Sản phẩm",
 				"Cập nhật", "Tìm kiếm", "Thống kê danh sách sản phẩm bán chạy"));
 		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Supplier.png",30,30), "Nhà cung cấp",
 				"Cập nhật", "Tìm kiếm"));
 		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Setting.png",30,30), "Cài đặt chung"));
+		/*
+		Timer timer =new Timer (1000,e -> {
+			SimpleDateFormat timeFormat=new SimpleDateFormat("HH:mm:ss");
+			SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy");
+			Date now=new Date();
+			String time=timeFormat.format(now);
+			String date=dateFormat.format(now);
+			setTimeLabel(time);
+			setDateLabel(date);
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Date.png",30,30),getDateLabel()));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/DongHo.png",30,30), getTimeLabel()));
+		});
+		timer.start();*/
 		
 	}
 	private void initAnimator() {
@@ -282,11 +315,11 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(bg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        
+        addAction();
         pack();
         setLocationRelativeTo(null);
-        addAction();
 	}// </editor-fold>//GEN-END:initComponents
+
 	private void addAction()
 	{
 		addWindowListener(this);
@@ -340,5 +373,4 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 		// TODO Auto-generated method stub
 		
 	}
-	
 }

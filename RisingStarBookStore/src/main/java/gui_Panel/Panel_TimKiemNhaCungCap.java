@@ -11,7 +11,8 @@ import customEntities.Custom_Function;
 import customEntities.Custom_ImageIcon;
 import customEntities.Custom_JLabel;
 import customEntities.Custom_Table;
-import dataBase_DAO.DataBase_NhaCungCap;
+import dataBase_BUS.DataBase_NhaCungCap_BUS;
+import dataBase_DAO.DataBase_NhaCungCap_DAO;
 import entities.NhaCungCap;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
@@ -68,7 +69,8 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 	private JScrollPane scr_DSNV;
 	private Custom_Table tbl_DSNCC;
 	private DefaultTableModel dtm_NCC;
-	private DataBase_NhaCungCap sqlNhaCungCap=new DataBase_NhaCungCap();
+	private DataBase_NhaCungCap_DAO sqlNhaCungCap_DAO=new DataBase_NhaCungCap_DAO();
+	private DataBase_NhaCungCap_BUS sqlNhaCungCap_BUS=new DataBase_NhaCungCap_BUS();
     // End of variables declaration//GEN-END:variables
     public Panel_TimKiemNhaCungCap() {
         initComponents();
@@ -285,7 +287,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
     {
     	btn_XoaTrang.addActionListener(this);
     	btn_TimKiem.addActionListener(this);
-    	sqlNhaCungCap.xuatDanhSachNhaCungCap(dtm_NCC);
+    	sqlNhaCungCap_DAO.xuatDanhSachNhaCungCap(dtm_NCC);
     	//đẩy lên combobox
     	cbo_MaNCC.addActionListener(this);
     	cbo_HoTen.addActionListener(this);
@@ -298,15 +300,15 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
     private void addDataComboBox()
     {
     	cbo_MaNCC.addItem("Chọn");
-    	sqlNhaCungCap.dayComboBoxMaNCC(cbo_MaNCC);
+    	sqlNhaCungCap_DAO.dayComboBoxMaNCC(cbo_MaNCC);
     	cbo_DiaChi.addItem("Chọn");
-    	sqlNhaCungCap.dayComboBoxDiaChi(cbo_DiaChi);
+    	sqlNhaCungCap_DAO.dayComboBoxDiaChi(cbo_DiaChi);
     	cbo_HoTen.addItem("Chọn");
-    	sqlNhaCungCap.dayComboBoxTenNCC(cbo_HoTen);
+    	sqlNhaCungCap_DAO.dayComboBoxTenNCC(cbo_HoTen);
     	cbo_SoDienThoai.addItem("Chọn");
-    	sqlNhaCungCap.dayComboBoxSoDienThoai(cbo_SoDienThoai);
+    	sqlNhaCungCap_DAO.dayComboBoxSoDienThoai(cbo_SoDienThoai);
     	cbo_Email.addItem("Chọn");
-    	sqlNhaCungCap.dayComboBoxEmail(cbo_Email);
+    	sqlNhaCungCap_DAO.dayComboBoxEmail(cbo_Email);
     }
     /*
      * int row=tbl_DSKH.getSelectedRow();
@@ -360,7 +362,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 				email.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
 		{
 			dtm_NCC.setRowCount(0);
-			sqlNhaCungCap.timKiemTheoMaNCC(maNCC, dtm_NCC);
+			sqlNhaCungCap_BUS.timKiemTheoMaNCC(maNCC, dtm_NCC);
 		}
 		if(maNCC.equalsIgnoreCase("Chọn")&&
 				!tenNCC.equalsIgnoreCase("Chọn")&&
@@ -368,7 +370,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 				email.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
 		{
 			dtm_NCC.setRowCount(0);
-			sqlNhaCungCap.timKiemTheoTenNCC(tenNCC, dtm_NCC);
+			sqlNhaCungCap_BUS.timKiemTheoTenNCC(tenNCC, dtm_NCC);
 		}
 		if(maNCC.equalsIgnoreCase("Chọn")&&
 				tenNCC.equalsIgnoreCase("Chọn")&&
@@ -376,7 +378,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 				email.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
 		{
 			dtm_NCC.setRowCount(0);
-			sqlNhaCungCap.timKiemTheoSoDienThoaiNCC(soDienThoai, dtm_NCC);
+			sqlNhaCungCap_BUS.timKiemTheoSoDienThoaiNCC(soDienThoai, dtm_NCC);
 		}
 		if(maNCC.equalsIgnoreCase("Chọn")&&
 				tenNCC.equalsIgnoreCase("Chọn")&&
@@ -384,7 +386,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 				!email.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
 		{
 			dtm_NCC.setRowCount(0);
-			sqlNhaCungCap.timKiemTheoEmail(email, dtm_NCC);
+			sqlNhaCungCap_BUS.timKiemTheoEmail(email, dtm_NCC);
 		}
 		if(maNCC.equalsIgnoreCase("Chọn")&&
 				tenNCC.equalsIgnoreCase("Chọn")&&
@@ -392,7 +394,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 				email.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
 		{
 			dtm_NCC.setRowCount(0);
-			sqlNhaCungCap.timKiemTheoDiaChi(diaChi, dtm_NCC);
+			sqlNhaCungCap_BUS.timKiemTheoDiaChi(diaChi, dtm_NCC);
 		}
 		if(maNCC.equalsIgnoreCase("Chọn")&&
 				!tenNCC.equalsIgnoreCase("Chọn")&&
@@ -402,12 +404,127 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 			dtm_NCC.setRowCount(0);
 			NhaCungCap n=new NhaCungCap();
 			n.setTenNCC(tenNCC);
-			n.setSdtNCC(maNCC);
+			n.setSdtNCC(soDienThoai);
 			n.setEmail(email);
 			n.setDiaChi(diaChi);
-			sqlNhaCungCap.timKiemTheoTieuChiKhacMaNCC(n, dtm_NCC);
+			sqlNhaCungCap_BUS.timKiemTheoTieuChiKhacMaNCC(n, dtm_NCC);
 		}
-		
+		if(maNCC.equalsIgnoreCase("Chọn")&&
+				!tenNCC.equalsIgnoreCase("Chọn")&&
+				soDienThoai.equalsIgnoreCase("Chọn")&&
+				email.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
+		{
+			dtm_NCC.setRowCount(0);
+			NhaCungCap n=new NhaCungCap();
+			n.setTenNCC(tenNCC);
+			n.setDiaChi(diaChi);
+			sqlNhaCungCap_BUS.timKiemTheo_tenNCC_diaChi(n, dtm_NCC);
+		}
+		if(maNCC.equalsIgnoreCase("Chọn")&&
+				!tenNCC.equalsIgnoreCase("Chọn")&&
+				!soDienThoai.equalsIgnoreCase("Chọn")&&
+				email.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		{
+			dtm_NCC.setRowCount(0);
+			NhaCungCap n=new NhaCungCap();
+			n.setTenNCC(tenNCC);
+			n.setSdtNCC(soDienThoai);
+			sqlNhaCungCap_BUS.timKiemTheo_tenNCC_sdtNCC(n, dtm_NCC);
+		}
+		if(maNCC.equalsIgnoreCase("Chọn")&&
+				!tenNCC.equalsIgnoreCase("Chọn")&&
+				soDienThoai.equalsIgnoreCase("Chọn")&&
+				!email.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		{
+			dtm_NCC.setRowCount(0);
+			NhaCungCap n=new NhaCungCap();
+			n.setTenNCC(tenNCC);
+			n.setEmail(email);
+			sqlNhaCungCap_BUS.timKiemTheo_tenNCC_email(n, dtm_NCC);
+		}
+		if(maNCC.equalsIgnoreCase("Chọn")&&
+				tenNCC.equalsIgnoreCase("Chọn")&&
+				!soDienThoai.equalsIgnoreCase("Chọn")&&
+				email.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
+		{
+			dtm_NCC.setRowCount(0);
+			NhaCungCap n=new NhaCungCap();
+			n.setDiaChi(diaChi);
+			n.setSdtNCC(soDienThoai);
+			sqlNhaCungCap_BUS.timKiemTheo_diaChi_sdtNCC(n, dtm_NCC);
+		}
+		if(maNCC.equalsIgnoreCase("Chọn")&&
+				tenNCC.equalsIgnoreCase("Chọn")&&
+				soDienThoai.equalsIgnoreCase("Chọn")&&
+				!email.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
+		{
+			dtm_NCC.setRowCount(0);
+			NhaCungCap n=new NhaCungCap();
+			n.setEmail(email);
+			n.setDiaChi(diaChi);
+			sqlNhaCungCap_BUS.timKiemTheo_diaChi_email(n, dtm_NCC);
+		}
+		if(maNCC.equalsIgnoreCase("Chọn")&&
+				tenNCC.equalsIgnoreCase("Chọn")&&
+				!soDienThoai.equalsIgnoreCase("Chọn")&&
+				!email.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		{
+			dtm_NCC.setRowCount(0);
+			NhaCungCap n=new NhaCungCap();
+			n.setSdtNCC(soDienThoai);
+			n.setEmail(email);
+			sqlNhaCungCap_BUS.timKiemTheo_sdtNCC_email(n, dtm_NCC);
+		}
+		if(maNCC.equalsIgnoreCase("Chọn")&&
+				!tenNCC.equalsIgnoreCase("Chọn")&&
+				!soDienThoai.equalsIgnoreCase("Chọn")&&
+				!email.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		{
+			dtm_NCC.setRowCount(0);
+			NhaCungCap n=new NhaCungCap();
+			n.setTenNCC(tenNCC);
+			n.setSdtNCC(soDienThoai);
+			n.setEmail(email);
+			sqlNhaCungCap_BUS.timKiemTheo_tenNCC_sdtNCC_email(n, dtm_NCC);
+		}
+		if(maNCC.equalsIgnoreCase("Chọn")&&
+				!tenNCC.equalsIgnoreCase("Chọn")&&
+				!soDienThoai.equalsIgnoreCase("Chọn")&&
+				email.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
+		{
+			dtm_NCC.setRowCount(0);
+			NhaCungCap n=new NhaCungCap();
+			n.setTenNCC(tenNCC);
+			n.setSdtNCC(soDienThoai);
+			n.setDiaChi(diaChi);
+			sqlNhaCungCap_BUS.timKiemTheo_tenNCC_sdtNCC_diaChi(n, dtm_NCC);
+		}
+		//public void timKiemTheo_tenNCC_email_diaChi(NhaCungCap ncc, DefaultTableModel dtm_NCC)
+		if(maNCC.equalsIgnoreCase("Chọn")&&
+				!tenNCC.equalsIgnoreCase("Chọn")&&
+				soDienThoai.equalsIgnoreCase("Chọn")&&
+				!email.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
+		{
+			dtm_NCC.setRowCount(0);
+			NhaCungCap n=new NhaCungCap();
+			n.setTenNCC(tenNCC);
+			n.setEmail(email);
+			n.setDiaChi(diaChi);
+			sqlNhaCungCap_BUS.timKiemTheo_tenNCC_email_diaChi(n, dtm_NCC);
+		}
+		//public void timKiemTheo_sdtNCC_email_diaChi(NhaCungCap ncc, DefaultTableModel dtm_NCC)
+		if(maNCC.equalsIgnoreCase("Chọn")&&
+				tenNCC.equalsIgnoreCase("Chọn")&&
+				!soDienThoai.equalsIgnoreCase("Chọn")&&
+				!email.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
+		{
+			dtm_NCC.setRowCount(0);
+			NhaCungCap n=new NhaCungCap();
+			n.setSdtNCC(soDienThoai);
+			n.setEmail(email);
+			n.setDiaChi(diaChi);
+			sqlNhaCungCap_BUS.timKiemTheo_sdtNCC_email_diaChi(n, dtm_NCC);
+		}
 	}
 
 
@@ -457,7 +574,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 		cbo_DiaChi.setSelectedItem("Chọn");
 		cbo_Email.setSelectedItem("Chọn");
 		dtm_NCC.setRowCount(0);
-		sqlNhaCungCap.xuatDanhSachNhaCungCap(dtm_NCC);
+		sqlNhaCungCap_DAO.xuatDanhSachNhaCungCap(dtm_NCC);
 	}
 	
 
