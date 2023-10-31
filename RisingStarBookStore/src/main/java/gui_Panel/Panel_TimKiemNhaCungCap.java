@@ -525,6 +525,17 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 			n.setDiaChi(diaChi);
 			sqlNhaCungCap_BUS.timKiemTheo_sdtNCC_email_diaChi(n, dtm_NCC);
 		}
+		if(!maNCC.equalsIgnoreCase("Chọn")&&
+				!tenNCC.equalsIgnoreCase("Chọn")&&
+				!soDienThoai.equalsIgnoreCase("Chọn")&&
+				!email.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
+		{
+			dtm_NCC.setRowCount(0);
+			sqlNhaCungCap_BUS.timKiemTheoMaNCC(maNCC, dtm_NCC);
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, "Chỉ được tìm kiếm thông qua mã nhà cung cấp.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 
 

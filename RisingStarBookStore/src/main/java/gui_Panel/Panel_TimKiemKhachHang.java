@@ -535,7 +535,17 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			k.setGioiTinh(gioiTinhBool(gioiTinh));
 			sqlKhachHang_BUS.timKiemTheoTieuChiKhacMaKH(k, dtm_KH);
 		}
-		
+		if(!maKH.equalsIgnoreCase("Chọn") &&!tenKH.equalsIgnoreCase("Chọn")&&
+				!gioiTinh.equalsIgnoreCase("Chọn")&&
+				!sdt.equalsIgnoreCase("Chọn") && !diaChi.equalsIgnoreCase("Chọn"))	
+		{
+			
+			dtm_KH.setRowCount(0);
+			sqlKhachHang_BUS.timKiemTheoMaKH(maKH, dtm_KH);
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, "Chỉ được tìm kiếm thông qua mã khách hàng.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		}
 		
 		
 		

@@ -40,6 +40,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -204,17 +205,20 @@ public class Panel_QuanLyNhanVien extends JPanel {
 		lbl_Title_DSNV.setForeground(Color.BLUE);
 		lbl_Title_DSNV.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
-		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà cung cấp","Nhà xuất bản","Năm xuất bản","Tác giả","Số lượng còn","Số lượng bán","Giá Nhập","Giá Bán"},0);
+		dtm_SP = new DefaultTableModel(new String[] {"Mã nhân viên","Tên nhân viên","Số điện thoại","Giới tính","Địa chỉ","Ngày sinh","Chức vụ","Căn cước công dân","Email","Ca làm"},0);
+		/*
 		for (int i = 0; i < 1000; i++) {
 			dtm_SP.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
-		}
+		}*/
+		//NhanVien(String maNV, String tenNV, String sdt, String gioiTinh, String diaChi, Date ngaySinh, String chucVu,String cMND, String email, String caLam)
+				
 		tbl_DSNV = new Custom_Table(dtm_SP);
 		tbl_DSNV.setColor_StripeBackground(Custom_ColorPicker.lightgrey_D9D9D9);
 		tbl_DSNV.setColor_Header_Foreground(Color.BLACK);
 		//tbl_DSNV.setFont(new Font("Times New Roman", Font.PLAIN, 5));
 		tbl_DSNV.setColor_Header_Background(Custom_ColorPicker.lightgrey_D9D9D9);
 		tbl_DSNV.setColor_Border(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSNV.align(2,new int[] {6,8,9,10,11});
+		tbl_DSNV.align(1,new int[] {6,8,9,10,11});
 		tbl_DSNV.redrawn_Custom_Table();
 		JScrollPane scr_DSNV = new JScrollPane(tbl_DSNV);
 		
