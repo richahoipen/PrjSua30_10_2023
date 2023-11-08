@@ -10,9 +10,9 @@ import customEntities.Custom_ComboBox;
 import customEntities.Custom_Function;
 import customEntities.Custom_ImageIcon;
 import customEntities.Custom_JLabel;
-import customEntities.Custom_Table;
-import dataBase_BUS.DataBase_NhaCungCap_BUS;
-import dataBase_DAO.DataBase_NhaCungCap_DAO;
+import customEntities.CustomTable;
+import dataBase_BUS.NhaCungCap_BUS;
+import dataBase_DAO.NhaCungCap_DAO;
 import entities.NhaCungCap;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
@@ -27,6 +27,8 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -66,11 +68,11 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 	private JFormattedTextField ftf_NgaySinh;
 	private BufferedImage bfi_ChonNgay;
 	private Custom_Button btn_TimKiem,btn_XoaTrang;
-	private JScrollPane scr_DSNV;
-	private Custom_Table tbl_DSNCC;
+	private JScrollPane scr_DSNCC;
+	private CustomTable tbl_DSNCC;
 	private DefaultTableModel dtm_NCC;
-	private DataBase_NhaCungCap_DAO sqlNhaCungCap_DAO=new DataBase_NhaCungCap_DAO();
-	private DataBase_NhaCungCap_BUS sqlNhaCungCap_BUS=new DataBase_NhaCungCap_BUS();
+	//private DataBase_NhaCungCap_DAO sqlNhaCungCap_BUS=new DataBase_NhaCungCap_DAO();
+	private NhaCungCap_BUS sqlNhaCungCap_BUS=new NhaCungCap_BUS();
     // End of variables declaration//GEN-END:variables
     public Panel_TimKiemNhaCungCap() {
         initComponents();
@@ -146,15 +148,17 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 		
 		dtm_NCC = new DefaultTableModel(new String[] {"Mã nhà cung cấp","Tên nhà cung cấp","Số điện thoại","Email","Địa chỉ"},0);
 		
-		tbl_DSNCC = new Custom_Table(dtm_NCC);
-		tbl_DSNCC.setColor_StripeBackground(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSNCC.setColor_Header_Foreground(Color.BLACK);
-		//tbl_DSNV.setFont(new Font("Times New Roman", Font.PLAIN, 5));
-		tbl_DSNCC.setColor_Header_Background(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSNCC.setColor_Border(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSNCC.align(3,new int[] {6,8,9,10,11});
-		tbl_DSNCC.redrawn_Custom_Table();
-		JScrollPane scr_DSNV = new JScrollPane(tbl_DSNCC);
+		tbl_DSNCC = new CustomTable();
+		tbl_DSNCC.setModel(dtm_NCC);
+		JScrollPane scr_DSNCC = new JScrollPane(tbl_DSNCC);
+		TableColumnModel columnModel = tbl_DSNCC.getColumnModel();
+
+        // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
+		int[] columnWidths = {8,80,50,10,400};
+        for (int i = 0; i < columnWidths.length; i++) {
+            TableColumn column = columnModel.getColumn(i);
+            column.setPreferredWidth(columnWidths[i]);
+        }
 		
 		btn_TimKiem = new Custom_Button();
 		btn_TimKiem.addActionListener(new ActionListener() {
@@ -198,7 +202,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 								.addGroup(layout.createSequentialGroup()
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(lbl_Title_TK_NCC))
-								.addComponent(scr_DSNV, GroupLayout.DEFAULT_SIZE, 806, Short.MAX_VALUE)))
+								.addComponent(scr_DSNCC, GroupLayout.DEFAULT_SIZE, 806, Short.MAX_VALUE)))
 						.addComponent(lbl_Title_DSNCC))
 					.addContainerGap())
 		);
@@ -211,7 +215,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lbl_Title_DSNCC)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scr_DSNV, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+					.addComponent(scr_DSNCC, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
 					.addGap(0))
 		);
         this.setLayout(layout);
@@ -287,7 +291,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
     {
     	btn_XoaTrang.addActionListener(this);
     	btn_TimKiem.addActionListener(this);
-    	sqlNhaCungCap_DAO.xuatDanhSachNhaCungCap(dtm_NCC);
+    	sqlNhaCungCap_BUS.xuatDanhSachNhaCungCap(dtm_NCC);
     	//đẩy lên combobox
     	cbo_MaNCC.addActionListener(this);
     	cbo_HoTen.addActionListener(this);
@@ -300,15 +304,15 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
     private void addDataComboBox()
     {
     	cbo_MaNCC.addItem("Chọn");
-    	sqlNhaCungCap_DAO.dayComboBoxMaNCC(cbo_MaNCC);
+    	sqlNhaCungCap_BUS.dayComboBoxMaNCC(cbo_MaNCC);
     	cbo_DiaChi.addItem("Chọn");
-    	sqlNhaCungCap_DAO.dayComboBoxDiaChi(cbo_DiaChi);
+    	sqlNhaCungCap_BUS.dayComboBoxDiaChi(cbo_DiaChi);
     	cbo_HoTen.addItem("Chọn");
-    	sqlNhaCungCap_DAO.dayComboBoxTenNCC(cbo_HoTen);
+    	sqlNhaCungCap_BUS.dayComboBoxTenNCC(cbo_HoTen);
     	cbo_SoDienThoai.addItem("Chọn");
-    	sqlNhaCungCap_DAO.dayComboBoxSoDienThoai(cbo_SoDienThoai);
+    	sqlNhaCungCap_BUS.dayComboBoxSoDienThoai(cbo_SoDienThoai);
     	cbo_Email.addItem("Chọn");
-    	sqlNhaCungCap_DAO.dayComboBoxEmail(cbo_Email);
+    	sqlNhaCungCap_BUS.dayComboBoxEmail(cbo_Email);
     }
     /*
      * int row=tbl_DSKH.getSelectedRow();
@@ -339,6 +343,23 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 		cbo_DiaChi.setSelectedItem(diaChi);
 		cbo_Email.setSelectedItem(email);
 	}
+	private boolean checkComboboxNULL()
+	{
+		String maNCC=(String) cbo_MaNCC.getSelectedItem();
+		String tenNCC=(String) cbo_HoTen.getSelectedItem();
+		String soDienThoai=(String) cbo_SoDienThoai.getSelectedItem();
+		String email=(String) cbo_Email.getSelectedItem();
+		String diaChi=(String) cbo_DiaChi.getSelectedItem();
+		if(maNCC!=null && tenNCC!=null && soDienThoai!=null && email!=null && diaChi!=null)
+			return true;
+		else
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+            JOptionPane.showMessageDialog(null, "Dữ liệu tìm kiếm không được rỗng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+		}
+	}
 	private void timKiem()
 	{
 		String maNCC=(String) cbo_MaNCC.getSelectedItem();
@@ -356,13 +377,13 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
 			JOptionPane.showMessageDialog(null, "Vui lòng chọn thông tin để tìm kiếm.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 		}
-		if(!maNCC.equalsIgnoreCase("Chọn")&&
-				tenNCC.equalsIgnoreCase("Chọn")&&
-				soDienThoai.equalsIgnoreCase("Chọn")&&
-				email.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		if(!maNCC.equalsIgnoreCase("Chọn"))
 		{
 			dtm_NCC.setRowCount(0);
 			sqlNhaCungCap_BUS.timKiemTheoMaNCC(maNCC, dtm_NCC);
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, "Tìm kiếm thông qua mã nhà cung cấp.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 		}
 		if(maNCC.equalsIgnoreCase("Chọn")&&
 				!tenNCC.equalsIgnoreCase("Chọn")&&
@@ -585,7 +606,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 		cbo_DiaChi.setSelectedItem("Chọn");
 		cbo_Email.setSelectedItem("Chọn");
 		dtm_NCC.setRowCount(0);
-		sqlNhaCungCap_DAO.xuatDanhSachNhaCungCap(dtm_NCC);
+		sqlNhaCungCap_BUS.xuatDanhSachNhaCungCap(dtm_NCC);
 	}
 	
 
@@ -598,7 +619,8 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 		}
 		if(o.equals(btn_TimKiem))
 		{
-			timKiem();
+			if(checkComboboxNULL())
+				timKiem();
 		}
 		
 	}

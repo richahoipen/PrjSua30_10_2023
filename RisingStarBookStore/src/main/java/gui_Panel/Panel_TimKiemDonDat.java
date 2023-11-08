@@ -4,12 +4,12 @@ import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 import com.toedter.calendar.JDateChooser;
 
+import customEntities.CustomFunction;
+import customEntities.CustomIcon;
 import customEntities.Custom_Button;
 import customEntities.Custom_ColorPicker;
 import customEntities.Custom_ComboBox;
-import customEntities.CustomFunction;
-import customEntities.CustomIcon;
-import customEntities.Custom_Table;
+import customEntities.CustomTable;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
 
@@ -57,7 +57,7 @@ public class Panel_TimKiemDonDat extends JPanel {
 	private JFormattedTextField ftf_NgaySinh;
 	private BufferedImage bfi_ChonNgay;
 	private Custom_Button btn_TimKiem,btn_XoaTrang;
-	private Custom_Table tbl_DSHD,tbl_DSCTHD;
+	private CustomTable tbl_DSHD,tbl_DSCTHD;
 	private DefaultTableModel dtm_SP;
 	private JScrollPane scr_DSCTHD,scr_DSHD;
     // End of variables declaration//GEN-END:variables
@@ -197,11 +197,11 @@ public class Panel_TimKiemDonDat extends JPanel {
 			dtm_SP.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
 		}
 		
-		tbl_DSHD = new Custom_Table();
+		tbl_DSHD = new CustomTable();
 		tbl_DSHD.setModel(dtm_SP);
 		//tbl_DSHD.setFont(new Font("Times New Roman", Font.PLAIN, 5));
 		
-		tbl_DSCTHD = new Custom_Table();
+		tbl_DSCTHD = new CustomTable();
 		tbl_DSCTHD.setModel(dtm_SP);
 
 		//tbl_DSCTHD.setFont(new Font("Times New Roman", Font.PLAIN, 5));

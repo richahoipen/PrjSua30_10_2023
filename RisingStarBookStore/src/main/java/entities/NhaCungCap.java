@@ -70,9 +70,11 @@ public class NhaCungCap
 	public void setListSanPham(List<SanPham> listSanPham) {
 		this.listSanPham = listSanPham;
 	}
+	
+	
 	@Override
 	public int hashCode() {
-		return Objects.hash(maNCC);
+		return Objects.hash(email, maNCC);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -83,7 +85,7 @@ public class NhaCungCap
 		if (getClass() != obj.getClass())
 			return false;
 		NhaCungCap other = (NhaCungCap) obj;
-		return Objects.equals(maNCC, other.maNCC);
+		return Objects.equals(email, other.email) && Objects.equals(maNCC, other.maNCC);
 	}
 	public NhaCungCap() {
 		super();

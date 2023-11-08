@@ -1,46 +1,51 @@
 package gui_Panel;
 
-import com.raven.swing.icon.GoogleMaterialDesignIcons;
-import com.raven.swing.icon.IconFontSwing;
-import com.toedter.calendar.JDateChooser;
+
 
 import customEntities.Custom_Button;
 import customEntities.Custom_ColorPicker;
 import customEntities.Custom_ComboBox;
-import customEntities.Custom_Function;
-import customEntities.Custom_ImageIcon;
+
 import customEntities.Custom_JLabel;
-import customEntities.Custom_Table;
+import dataBase_BUS.NhanVien_BUS;
+import entities.NhanVien;
+import customEntities.CustomTable;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Rectangle;
 
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.border.BevelBorder;
+
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
 import java.awt.GridLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -48,21 +53,23 @@ import java.awt.Dimension;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 
-public class Panel_TimKiemNhanVien extends JPanel {
+public class Panel_TimKiemNhanVien extends JPanel implements ActionListener, MouseListener
+{
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private JPanel pn_TK_NV,pn_Table_DSNV;
 	private Custom_JLabel picture_Logo;
 	private JLabel lbl_Title_TK_NV,lbl_Title_DSNV;
 	private JLabel lbl_MaNV,lbl_HoTen,tK,lbl_ChucVu,lbl_GioiTinh,lbl_NgaySinh,lbl_DiaChi,lbl_CaLam,lbl_CCCD,lbl_SoDienThoai;
-	private Custom_ComboBox cbo_MaNV,cbo_NgonNgu,cbo_GioiTinh,cbo_CaLam;
+	private Custom_ComboBox cbo_MaNV,cbo_ChucVu,cbo_GioiTinh,cbo_CaLam;
 	private JLabel lbl_txt_MatKhau;
 	private Custom_ComboBox cbo_HoTen,cbo_DiaChi,cbo_CCCD,cbo_Ngay,cbo_Thang,cbo_Nam,cbo_SoDienThoai;
 	private JFormattedTextField ftf_NgaySinh;
 	private BufferedImage bfi_ChonNgay;
 	private Custom_Button btn_TimKiem,btn_XoaTrang;
 	private JScrollPane scr_DSNV;
-	private Custom_Table tbl_DSNV;
-	private DefaultTableModel dtm_SP;
+	private CustomTable tbl_DSNV;
+	private DefaultTableModel dtm_NV;
+	private NhanVien_BUS sqlNhanVien_BUS=new NhanVien_BUS();
     // End of variables declaration//GEN-END:variables
     public Panel_TimKiemNhanVien() {
         initComponents();
@@ -146,21 +153,26 @@ public class Panel_TimKiemNhanVien extends JPanel {
 		lbl_txt_MatKhau.setBackground(Custom_ColorPicker.lightgrey_D9D9D9);
 		lbl_txt_MatKhau.setOpaque(true);
 		
-		cbo_NgonNgu = new Custom_ComboBox();
-		cbo_NgonNgu.setForeground(Color.black);
-		cbo_NgonNgu.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		cbo_NgonNgu.setColor_Foreground(Color.black);
-		cbo_NgonNgu.setBackground(Custom_ColorPicker.lightgrey_D9D9D9);
-		cbo_NgonNgu.setColor_Hightlight(Custom_ColorPicker.lightgrey_D9D9D9);
-		cbo_NgonNgu.setColor_Over(Custom_ColorPicker.snowwhite_F2F0EB);
-		cbo_NgonNgu.redraw_Custom_Combobox();
+		cbo_ChucVu = new Custom_ComboBox();
+		cbo_ChucVu.setForeground(Color.black);
+		cbo_ChucVu.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		cbo_ChucVu.setColor_Foreground(Color.black);
+		cbo_ChucVu.setBackground(Custom_ColorPicker.lightgrey_D9D9D9);
+		cbo_ChucVu.setColor_Hightlight(Custom_ColorPicker.lightgrey_D9D9D9);
+		cbo_ChucVu.setColor_Over(Custom_ColorPicker.snowwhite_F2F0EB);
+		cbo_ChucVu.redraw_Custom_Combobox();
 		
-		String[] string_NgayTrongThang = new String[31];
-		for (int i = 0; i < 31; i++) {
-			string_NgayTrongThang[i] = String.format("%02d",i+1);
+		//String[] string_NgayTrongThang = new String[31];
+		//for (int i = 0; i < 31; i++) {
+		//	string_NgayTrongThang[i] = String.format("%d",i+1);
+		//}
+		
+		cbo_Ngay = new Custom_ComboBox();
+		cbo_Ngay.addItem("Chọn");
+		for (int i = 0; i < 31; i++) 
+		{
+			cbo_Ngay.addItem(Integer.toString(i+1));
 		}
-		
-		cbo_Ngay = new Custom_ComboBox(string_NgayTrongThang);
 		cbo_Ngay.setForeground(Color.black);
 		cbo_Ngay.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		cbo_Ngay.setColor_Foreground(Color.black);
@@ -170,12 +182,17 @@ public class Panel_TimKiemNhanVien extends JPanel {
 		cbo_Ngay.setArrowButton_IsVisible(false);
 		cbo_Ngay.redraw_Custom_Combobox();
 		cbo_Ngay.setRadius(0);
-		
+		/*
 		String[] string_ThangTrongNam = new String[12];
 		for (int i = 0; i < 12; i++) {
-			string_ThangTrongNam[i] = String.format("%02d",i+1);
+			string_ThangTrongNam[i] = String.format("%d",i+1);
+		}*/
+		cbo_Thang = new Custom_ComboBox();
+		cbo_Thang.addItem("Chọn");
+		for (int i = 0; i < 12; i++) 
+		{
+			cbo_Thang.addItem(Integer.toString(i+1));
 		}
-		cbo_Thang = new Custom_ComboBox(string_ThangTrongNam);
 		cbo_Thang.setForeground(Color.black);
 		cbo_Thang.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		cbo_Thang.setColor_Foreground(Color.black);
@@ -185,15 +202,21 @@ public class Panel_TimKiemNhanVien extends JPanel {
 		cbo_Thang.setArrowButton_IsVisible(false);
 		cbo_Thang.redraw_Custom_Combobox();
 		cbo_Thang.setRadius(0);
-		
+		/*
 		String[] string_Nam = new String[1500];
 		LocalDate ngayHienTai = LocalDate.now(); 
 		int namHienTai = ngayHienTai.getYear();
 		for (int i = 0; i < 1500; i++) {
 			string_Nam[i] = String.format("%04d",namHienTai-i);
+		}*/
+		LocalDate ngayHienTai = LocalDate.now(); 
+		int namHienTai = ngayHienTai.getYear();
+		cbo_Nam = new Custom_ComboBox();
+		cbo_Nam.addItem("Chọn");
+		for (int i = 0; i <1500; i++) 
+		{
+			cbo_Nam.addItem(Integer.toString(namHienTai-i));
 		}
-		
-		cbo_Nam = new Custom_ComboBox(string_Nam);
 		cbo_Nam.setForeground(Color.black);
 		cbo_Nam.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		cbo_Nam.setColor_Foreground(Color.black);
@@ -235,21 +258,23 @@ public class Panel_TimKiemNhanVien extends JPanel {
 		lbl_Title_DSNV.setForeground(Color.BLUE);
 		lbl_Title_DSNV.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
-		dtm_SP = new DefaultTableModel(new String[] {"Mã nhân viên","Tên nhân viên","Số điện thoại","Giới tính","Địa chỉ","Ngày sinh","Chức vụ","Căn cước công dân","Email","Ca làm"},0);
+		dtm_NV = new DefaultTableModel(new String[] {"Mã nhân viên","Tên nhân viên","Số điện thoại","Giới tính","Địa chỉ","Ngày sinh","Chức vụ","Căn cước công dân","Ca làm"},0);
 		/*
-		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà cung cấp","Nhà xuất bản","Năm xuất bản","Tác giả","Số lượng còn","Số lượng bán","Giá Nhập","Giá Bán"},0);
+		dtm_NV = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà cung cấp","Nhà xuất bản","Năm xuất bản","Tác giả","Số lượng còn","Số lượng bán","Giá Nhập","Giá Bán"},0);
 		for (int i = 0; i < 1000; i++) {
-			dtm_SP.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
+			dtm_NV.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
 		}*/
-		tbl_DSNV = new Custom_Table(dtm_SP);
-		tbl_DSNV.setColor_StripeBackground(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSNV.setColor_Header_Foreground(Color.BLACK);
-		//tbl_DSNV.setFont(new Font("Times New Roman", Font.PLAIN, 5));
-		tbl_DSNV.setColor_Header_Background(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSNV.setColor_Border(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSNV.align(1,new int[] {6,8,9,10,11});
-		tbl_DSNV.redrawn_Custom_Table();
+		tbl_DSNV = new CustomTable();
+		tbl_DSNV.setModel(dtm_NV);
 		JScrollPane scr_DSNV = new JScrollPane(tbl_DSNV);
+		TableColumnModel columnModel = tbl_DSNV.getColumnModel();
+
+        // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
+		int[] columnWidths = {20,100,20,20,350,30,30,50,10};
+        for (int i = 0; i < columnWidths.length; i++) {
+            TableColumn column = columnModel.getColumn(i);
+            column.setPreferredWidth(columnWidths[i]);
+        }
 		
 		btn_TimKiem = new Custom_Button();
 		btn_TimKiem.addActionListener(new ActionListener() {
@@ -335,7 +360,7 @@ public class Panel_TimKiemNhanVien extends JPanel {
         						.addComponent(lbl_txt_MatKhau, GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
         					.addGap(4))
         				.addGroup(gl_pn_TK_NV.createSequentialGroup()
-        					.addComponent(cbo_NgonNgu, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(cbo_ChucVu, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         					.addPreferredGap(ComponentPlacement.RELATED)))
         			.addGroup(gl_pn_TK_NV.createParallelGroup(Alignment.LEADING, false)
         				.addComponent(lbl_NgaySinh, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
@@ -411,7 +436,7 @@ public class Panel_TimKiemNhanVien extends JPanel {
         					.addGap(6)
         					.addGroup(gl_pn_TK_NV.createParallelGroup(Alignment.LEADING)
         						.addComponent(lbl_ChucVu)
-        						.addComponent(cbo_NgonNgu, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(cbo_ChucVu, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
         						.addComponent(lbl_CaLam)
         						.addComponent(cbo_CaLam, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
         				.addGroup(gl_pn_TK_NV.createSequentialGroup()
@@ -421,11 +446,280 @@ public class Panel_TimKiemNhanVien extends JPanel {
         						.addComponent(btn_XoaTrang, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))))
         			.addContainerGap(28, Short.MAX_VALUE))
         );
-        gl_pn_TK_NV.linkSize(SwingConstants.VERTICAL, new Component[] {cbo_MaNV, cbo_HoTen, lbl_txt_MatKhau, cbo_NgonNgu, cbo_Ngay, cbo_Thang, cbo_Nam, cbo_GioiTinh, cbo_CaLam, cbo_CCCD, cbo_SoDienThoai, cbo_DiaChi});
+        gl_pn_TK_NV.linkSize(SwingConstants.VERTICAL, new Component[] {cbo_MaNV, cbo_HoTen, lbl_txt_MatKhau, cbo_ChucVu, cbo_Ngay, cbo_Thang, cbo_Nam, cbo_GioiTinh, cbo_CaLam, cbo_CCCD, cbo_SoDienThoai, cbo_DiaChi});
         gl_pn_TK_NV.linkSize(SwingConstants.VERTICAL, new Component[] {lbl_GioiTinh, lbl_NgaySinh, lbl_DiaChi, lbl_CaLam, lbl_CCCD, lbl_SoDienThoai});
         gl_pn_TK_NV.linkSize(SwingConstants.VERTICAL, new Component[] {btn_TimKiem, btn_XoaTrang});
         gl_pn_TK_NV.linkSize(SwingConstants.HORIZONTAL, new Component[] {lbl_GioiTinh, lbl_DiaChi, lbl_CaLam, lbl_CCCD, lbl_SoDienThoai});
         gl_pn_TK_NV.linkSize(SwingConstants.HORIZONTAL, new Component[] {btn_TimKiem, btn_XoaTrang});
         pn_TK_NV.setLayout(gl_pn_TK_NV);
+        addAction();
     }// </editor-fold>//GEN-END:initComponents
+    private void addAction()
+    {
+    	btn_TimKiem.addActionListener(this);
+    	btn_XoaTrang.addActionListener(this);
+    	cbo_CaLam.addActionListener(this);
+    	cbo_CCCD.addActionListener(this);
+    	cbo_ChucVu.addActionListener(this);
+    	cbo_DiaChi.addActionListener(this);
+    	cbo_GioiTinh.addActionListener(this);
+    	cbo_HoTen.addActionListener(this);
+    	cbo_MaNV.addActionListener(this);
+    	cbo_Nam.addActionListener(this);
+    	cbo_Ngay.addActionListener(this);
+    	cbo_SoDienThoai.addActionListener(this);
+    	cbo_Thang.addActionListener(this);
+    	tbl_DSNV.addMouseListener(this);
+    	addCombobox();
+    	resetTable();
+    }
+    private void resetTable()
+    {
+    	dtm_NV.setRowCount(0);
+    	sqlNhanVien_BUS.xuatDanhSachNhanVien(dtm_NV);
+    }
+    private void addCombobox()
+    {
+    	cbo_MaNV.addItem("Chọn");
+    	sqlNhanVien_BUS.dayComboBoxMaNV(cbo_MaNV);
+    	cbo_HoTen.addItem("Chọn");
+    	sqlNhanVien_BUS.dayComboBoxTenNV(cbo_HoTen);
+    	cbo_CCCD.addItem("Chọn");
+    	sqlNhanVien_BUS.dayComboBoxCCCD(cbo_CCCD);
+    	cbo_SoDienThoai.addItem("Chọn");
+    	sqlNhanVien_BUS.dayComboBoxSDT(cbo_SoDienThoai);
+    	cbo_DiaChi.addItem("Chọn");
+    	sqlNhanVien_BUS.dayComboBoxDiaChi(cbo_DiaChi);
+    	cbo_GioiTinh.addItem("Chọn");
+    	sqlNhanVien_BUS.dayComboBoxGioiTinh(cbo_GioiTinh);
+    	//LocalDate ngayHienTai=LocalDate.now();   	
+    	cbo_Ngay.setSelectedItem("Chọn");
+    	cbo_Thang.setSelectedItem("Chọn");
+    	cbo_Nam.setSelectedItem("Chọn");
+    	cbo_CaLam.addItem("Chọn");
+    	sqlNhanVien_BUS.dayComboBoxCaLam(cbo_CaLam);
+    	cbo_ChucVu.addItem("Chọn");
+    	sqlNhanVien_BUS.dayComboChucVu(cbo_ChucVu);
+    	
+    }
+    private void xoaTrang()
+    {
+    	
+    	cbo_Ngay.setSelectedItem("Chọn");
+    	cbo_Thang.setSelectedItem("Chọn");
+    	cbo_Nam.setSelectedItem("Chọn");
+    	String chon="Chọn";
+    	cbo_MaNV.setSelectedItem(chon);
+    	cbo_HoTen.setSelectedItem(chon);
+    	cbo_CCCD.setSelectedItem(chon);
+    	cbo_ChucVu.setSelectedItem(chon);
+    	cbo_CaLam.setSelectedItem(chon);
+    	cbo_GioiTinh.setSelectedItem(chon);
+    	cbo_DiaChi.setSelectedItem(chon);
+    	cbo_SoDienThoai.setSelectedItem(chon);
+    	resetTable();
+    }
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		int row=tbl_DSNV.getSelectedRow();
+		String maNV=tbl_DSNV.getValueAt(row, 0).toString();
+		String tenNV=tbl_DSNV.getValueAt(row, 1).toString();
+		String sdt=tbl_DSNV.getValueAt(row, 2).toString();
+		String gioiTinh=tbl_DSNV.getValueAt(row, 3).toString();
+		String diaChi=tbl_DSNV.getValueAt(row, 4).toString();
+		String chucVu=tbl_DSNV.getValueAt(row, 6).toString();
+		String cCCD=tbl_DSNV.getValueAt(row, 7).toString();
+		String caLam=tbl_DSNV.getValueAt(row, 8).toString();
+		cbo_MaNV.setSelectedItem(maNV);
+		cbo_HoTen.setSelectedItem(tenNV);
+		cbo_SoDienThoai.setSelectedItem(sdt);
+		cbo_GioiTinh.setSelectedItem(gioiTinh);
+		cbo_DiaChi.setSelectedItem(diaChi);
+		cbo_ChucVu.setSelectedItem(chucVu);
+		cbo_CCCD.setSelectedItem(cCCD);
+		cbo_CaLam.setSelectedItem(caLam);
+		String matKhau=sqlNhanVien_BUS.getMatKhau(maNV);
+		lbl_txt_MatKhau.setText(matKhau);
+		Date ngaySinh=sqlNhanVien_BUS.getNgaySinh(maNV);
+		java.sql.Date sqlDateNgaySinh = new java.sql.Date(ngaySinh.getTime());
+		NhanVien n=new NhanVien();
+		n.setNgaySinh(sqlDateNgaySinh);
+		LocalDate ngaySinh_LocalDate=n.getNgaySinhLocalDate();
+		cbo_Ngay.setSelectedItem(ngaySinh_LocalDate.getDayOfMonth());
+		cbo_Thang.setSelectedItem(ngaySinh_LocalDate.getMonthValue());
+		cbo_Nam.setSelectedItem(ngaySinh_LocalDate.getYear());
+	}
+	private boolean checkComboboxNULL()
+	{
+		String maNV=(String) cbo_MaNV.getSelectedItem();
+		String tenNV=(String) cbo_HoTen.getSelectedItem();
+		String sdt=(String) cbo_SoDienThoai.getSelectedItem();
+		String gioiTinh=(String) cbo_GioiTinh.getSelectedItem();
+		String diaChi=(String) cbo_DiaChi.getSelectedItem();
+		String ngay=(String) cbo_Ngay.getSelectedItem();
+		String thang=(String) cbo_Thang.getSelectedItem();
+		String nam=(String) cbo_Nam.getSelectedItem();
+		String chucVu=(String) cbo_ChucVu.getSelectedItem();
+		String cCCCD=(String) cbo_CCCD.getSelectedItem();
+		String caLam=(String) cbo_CaLam.getSelectedItem();
+		if(maNV!=null && tenNV!=null && sdt!=null && gioiTinh!=null 
+				&& diaChi!=null && ngay!=null && thang!=null && nam!=null && chucVu!=null && cCCCD!=null && caLam!=null)
+		{
+			return true;
+		}
+		else
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+            JOptionPane.showMessageDialog(null, "Dữ liệu tìm kiếm không được rỗng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+		}
+	}
+	private void timKiem()
+	{
+		String maNV=(String) cbo_MaNV.getSelectedItem();
+		String tenNV=(String) cbo_HoTen.getSelectedItem();
+		String sdt=(String) cbo_SoDienThoai.getSelectedItem();
+		String gioiTinh=(String) cbo_GioiTinh.getSelectedItem();
+		String diaChi=(String) cbo_DiaChi.getSelectedItem();
+		String ngay=(String) cbo_Ngay.getSelectedItem();
+		String thang=(String) cbo_Thang.getSelectedItem();
+		String nam=(String) cbo_Nam.getSelectedItem();
+		String chucVu=(String) cbo_ChucVu.getSelectedItem();
+		String cCCCD=(String) cbo_CCCD.getSelectedItem();
+		String caLam=(String) cbo_CaLam.getSelectedItem();
+		String chon="Chọn";
+		if(maNV.equalsIgnoreCase(chon) && tenNV.equalsIgnoreCase(chon) && sdt.equalsIgnoreCase(chon) && gioiTinh.equalsIgnoreCase(chon) &&
+				diaChi.equalsIgnoreCase(chon)  && chucVu.equalsIgnoreCase(chon) && cCCCD.equalsIgnoreCase(chon) && caLam.equalsIgnoreCase(chon)&&
+				ngay.equalsIgnoreCase(chon)&&thang.equalsIgnoreCase(chon) && nam.equalsIgnoreCase(chon))
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, "Vui lòng chọn thông tin để tìm kiếm.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		}
+		if(!maNV.equalsIgnoreCase(chon) )
+		{
+			dtm_NV.setRowCount(0);
+			sqlNhanVien_BUS.timKiemTheo_maNV(maNV, dtm_NV);
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, "Tìm kiếm theo mã nhân viên.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		}
+		if(maNV.equalsIgnoreCase(chon) && !tenNV.equalsIgnoreCase(chon) && sdt.equalsIgnoreCase(chon) && gioiTinh.equalsIgnoreCase(chon) &&
+				diaChi.equalsIgnoreCase(chon)  && chucVu.equalsIgnoreCase(chon) && cCCCD.equalsIgnoreCase(chon) && caLam.equalsIgnoreCase(chon)&&
+				ngay.equalsIgnoreCase(chon)&&thang.equalsIgnoreCase(chon) && nam.equalsIgnoreCase(chon))
+		{
+			dtm_NV.setRowCount(0);
+			sqlNhanVien_BUS.timKiemTheo_tenNV(tenNV, dtm_NV);
+		}
+		if(maNV.equalsIgnoreCase(chon) && tenNV.equalsIgnoreCase(chon) && !sdt.equalsIgnoreCase(chon) && gioiTinh.equalsIgnoreCase(chon) &&
+				diaChi.equalsIgnoreCase(chon)  && chucVu.equalsIgnoreCase(chon) && cCCCD.equalsIgnoreCase(chon) && caLam.equalsIgnoreCase(chon)&&
+				ngay.equalsIgnoreCase(chon)&&thang.equalsIgnoreCase(chon) && nam.equalsIgnoreCase(chon))
+		{
+			dtm_NV.setRowCount(0);
+			sqlNhanVien_BUS.timKiemTheo_sdt(sdt, dtm_NV);
+		}
+		if(maNV.equalsIgnoreCase(chon) && tenNV.equalsIgnoreCase(chon) && sdt.equalsIgnoreCase(chon) && !gioiTinh.equalsIgnoreCase(chon) &&
+				diaChi.equalsIgnoreCase(chon)  && chucVu.equalsIgnoreCase(chon) && cCCCD.equalsIgnoreCase(chon) && caLam.equalsIgnoreCase(chon)&&
+				ngay.equalsIgnoreCase(chon)&&thang.equalsIgnoreCase(chon) && nam.equalsIgnoreCase(chon))
+		{
+			dtm_NV.setRowCount(0);
+			sqlNhanVien_BUS.timKiemTheo_gioiTinh(gioiTinh, dtm_NV);
+		}
+		if(maNV.equalsIgnoreCase(chon) && tenNV.equalsIgnoreCase(chon) && sdt.equalsIgnoreCase(chon) && gioiTinh.equalsIgnoreCase(chon) &&
+				diaChi.equalsIgnoreCase(chon)  && !chucVu.equalsIgnoreCase(chon) && cCCCD.equalsIgnoreCase(chon) && caLam.equalsIgnoreCase(chon)&&
+				ngay.equalsIgnoreCase(chon)&&thang.equalsIgnoreCase(chon) && nam.equalsIgnoreCase(chon))
+		{
+			dtm_NV.setRowCount(0);
+			sqlNhanVien_BUS.timKiemTheo_chucVu(chucVu, dtm_NV);
+		}
+		if(maNV.equalsIgnoreCase(chon) && tenNV.equalsIgnoreCase(chon) && sdt.equalsIgnoreCase(chon) && gioiTinh.equalsIgnoreCase(chon) &&
+				diaChi.equalsIgnoreCase(chon)  && chucVu.equalsIgnoreCase(chon) && !cCCCD.equalsIgnoreCase(chon) && caLam.equalsIgnoreCase(chon)&&
+				ngay.equalsIgnoreCase(chon)&&thang.equalsIgnoreCase(chon) && nam.equalsIgnoreCase(chon))
+		{
+			dtm_NV.setRowCount(0);
+			sqlNhanVien_BUS.timKiemTheo_cCCD(cCCCD, dtm_NV);
+		}
+		if(maNV.equalsIgnoreCase(chon) && tenNV.equalsIgnoreCase(chon) && sdt.equalsIgnoreCase(chon) && gioiTinh.equalsIgnoreCase(chon) &&
+				diaChi.equalsIgnoreCase(chon)  && chucVu.equalsIgnoreCase(chon) && cCCCD.equalsIgnoreCase(chon) && !caLam.equalsIgnoreCase(chon)&&
+				ngay.equalsIgnoreCase(chon)&&thang.equalsIgnoreCase(chon) && nam.equalsIgnoreCase(chon))
+		{
+			dtm_NV.setRowCount(0);
+			sqlNhanVien_BUS.timKiemTheo_caLam(caLam, dtm_NV);
+		}
+		if(maNV.equalsIgnoreCase(chon) && tenNV.equalsIgnoreCase(chon) && sdt.equalsIgnoreCase(chon) && gioiTinh.equalsIgnoreCase(chon) &&
+				diaChi.equalsIgnoreCase(chon)  && chucVu.equalsIgnoreCase(chon) && cCCCD.equalsIgnoreCase(chon) && caLam.equalsIgnoreCase(chon)&&
+				!ngay.equalsIgnoreCase(chon)&&thang.equalsIgnoreCase(chon) && nam.equalsIgnoreCase(chon))
+		{
+			int ngay_Int=Integer.parseInt(ngay);
+			dtm_NV.setRowCount(0);
+			sqlNhanVien_BUS.timKiemTheo_ngaySinh(ngay_Int, dtm_NV);
+		}
+		if(maNV.equalsIgnoreCase(chon) && tenNV.equalsIgnoreCase(chon) && sdt.equalsIgnoreCase(chon) && gioiTinh.equalsIgnoreCase(chon) &&
+				diaChi.equalsIgnoreCase(chon)  && chucVu.equalsIgnoreCase(chon) && cCCCD.equalsIgnoreCase(chon) && caLam.equalsIgnoreCase(chon)&&
+				ngay.equalsIgnoreCase(chon)&&!thang.equalsIgnoreCase(chon) && nam.equalsIgnoreCase(chon))
+		{
+			int thang_Int=Integer.parseInt(thang);
+			dtm_NV.setRowCount(0);
+			sqlNhanVien_BUS.timKiemTheo_thangSinh(thang_Int, dtm_NV);
+		}
+		if(maNV.equalsIgnoreCase(chon) && tenNV.equalsIgnoreCase(chon) && sdt.equalsIgnoreCase(chon) && gioiTinh.equalsIgnoreCase(chon) &&
+				diaChi.equalsIgnoreCase(chon)  && chucVu.equalsIgnoreCase(chon) && cCCCD.equalsIgnoreCase(chon) && caLam.equalsIgnoreCase(chon)&&
+				ngay.equalsIgnoreCase(chon)&&thang.equalsIgnoreCase(chon) && !nam.equalsIgnoreCase(chon))
+		{
+			int nam_Int=Integer.parseInt(nam);
+			dtm_NV.setRowCount(0);
+			sqlNhanVien_BUS.timKiemTheo_namSinh(nam_Int, dtm_NV);
+		}
+				
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object o=e.getSource();
+		if(o.equals(btn_XoaTrang))
+		{
+			xoaTrang();
+		}
+		if(o.equals(btn_TimKiem))
+		{
+			if(checkComboboxNULL())
+				timKiem();
+		}
+	}
 }

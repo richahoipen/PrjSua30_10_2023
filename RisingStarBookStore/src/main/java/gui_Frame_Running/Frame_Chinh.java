@@ -50,16 +50,17 @@ import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 
 import customEntities.CustomIcon;
+import gui_Dialog.Message;
 import gui_Panel.EmployeeCard;
 import gui_Panel.MainForm;
 import gui_Panel.Menu;
-import gui_Panel.Panel_Setting;
 import gui_Panel.Panel_DatHang;
 import gui_Panel.Panel_LapHoaDon;
 import gui_Panel.Panel_QuanLyKhachHang;
 import gui_Panel.Panel_QuanLyNhaCungCap;
 import gui_Panel.Panel_QuanLyNhanVien;
 import gui_Panel.Panel_QuanLySanPham;
+import gui_Panel.Panel_Setting;
 import gui_Panel.Panel_ThongKeSanPhamBanChay;
 import gui_Panel.Panel_ThongKeThuChiLoiNhuan;
 import gui_Panel.Panel_TimKiemDonDat;
@@ -83,6 +84,8 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 	private MainForm main;
 	private Animator animator;
 	private String timeLabel, dateLabel;
+	private Message m;
+	
 	public String getTimeLabel() {
 		return timeLabel;
 	}
@@ -334,11 +337,14 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 	public void windowClosing(WindowEvent e) {
 		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
         UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+        
 		int response = JOptionPane.showConfirmDialog(null, "Bạn có lưu trước khi muốn thoát chương trình không ?", "Thông báo !!!!", JOptionPane.YES_NO_OPTION);
 
         if (response == JOptionPane.YES_OPTION) {
             // Xử lý khi người dùng chọn "Yes"
-            JOptionPane.showMessageDialog(null, "Đã lưu thay đổi.");
+        	//Tìm hiểu frame null
+        	m=new Message(null,true);
+            m.showMessage("Đã lưu thay đổi.");
             System.exit(0);
         }
 		

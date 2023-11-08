@@ -1,14 +1,14 @@
-package list_Array_DAO;
+package arrayList_Entities;
 
 import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
 
-import entities.KhachHang;
-import entities.NhaCungCap;
-import interface_Method_ArrayList.method_ArrayList_NhaCungCap;
 
-public class NhaCungCap_DAO implements method_ArrayList_NhaCungCap
+import entities.NhaCungCap;
+import interface_Method_ArrayList.Method_ArrayList_NhaCungCap;
+
+public class List_NhaCungCap implements Method_ArrayList_NhaCungCap
 {
 	private ArrayList<NhaCungCap> listNhaCungCap;
 
@@ -20,7 +20,7 @@ public class NhaCungCap_DAO implements method_ArrayList_NhaCungCap
 		this.listNhaCungCap = listNhaCungCap;
 	}
 
-	public NhaCungCap_DAO() {
+	public List_NhaCungCap() {
 		super();
 		// TODO Auto-generated constructor stub
 		setListNhaCungCap(new ArrayList<NhaCungCap>());

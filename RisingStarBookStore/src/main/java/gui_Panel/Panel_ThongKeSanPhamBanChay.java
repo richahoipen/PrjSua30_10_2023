@@ -5,12 +5,12 @@ import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 import com.toedter.calendar.JDateChooser;
 
+import customEntities.CustomFunction;
+import customEntities.CustomIcon;
 import customEntities.Custom_Button;
 import customEntities.Custom_ColorPicker;
 import customEntities.Custom_ComboBox;
-import customEntities.CustomFunction;
-import customEntities.CustomIcon;
-import customEntities.Custom_Table;
+import customEntities.CustomTable;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
 import gui_Panel.lineChart.LineChart;
@@ -67,7 +67,7 @@ public class Panel_ThongKeSanPhamBanChay extends JPanel {
 	private LineChart lineChart;
 	private Custom_Button btnXuatBaoCao;
 	private JScrollPane scr_DSSP;
-	private Custom_Table tbl_DSSP;
+	private CustomTable tbl_DSSP;
 	private DefaultTableModel dtm_SP;
     // End of variables declaration//GEN-END:variables
     public Panel_ThongKeSanPhamBanChay() {
@@ -146,7 +146,7 @@ public class Panel_ThongKeSanPhamBanChay extends JPanel {
 		for (int i = 0; i < 1000; i++) {
 			dtm_SP.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","15000đ","23","32"});
 		}
-		tbl_DSSP = new Custom_Table();
+		tbl_DSSP = new CustomTable();
 		tbl_DSSP.setModel(dtm_SP);
 		scr_DSSP = new JScrollPane(tbl_DSSP);
 		

@@ -1,6 +1,5 @@
 package swing;
 
-import com.raven.event.EventMenuSelected;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -9,6 +8,8 @@ import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
+
+import com.raven.event.EventMenuSelected;
 
 public class PopupMenu extends javax.swing.JDialog {
 

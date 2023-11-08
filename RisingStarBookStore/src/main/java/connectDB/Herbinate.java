@@ -19,7 +19,7 @@ import entities.NhanVien;
 import entities.SanPham;
 import entities.TaiKhoan;
 public class Herbinate {
-
+	//Cẩn thận Khi RUN
 	public static void main(String[] args) {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("risingstar");
 		EntityManager em = emf.createEntityManager();
@@ -39,7 +39,7 @@ public class Herbinate {
 			SanPham sanPham1=new SanPham("SP1", "Conan tập 1","Truyện tranh ","Gosho","Kim Đồng",2000,100,"Nhật Bản",1000000,1000000*1.2,imageBytesConan100 );
 			SanPham sanPham2=new SanPham("SP2", "Conan tập 2","Truyện tranh ","Gosho","Kim Đồng",2000,100,"Nhật Bản",1000000,1000000*1.2,imageBytesConan97);
 			//NhanVien(String maNV, String tenNV, String sdt, String gioiTinh, String diaChi, Date ngaySinh, String chucVu,String cMND, String email)
-			NhanVien nhanVien1=new NhanVien("NV1","Nguyen Minh", "0911646636", "Nam","23 Tran Hung Dao HCM",(java.sql.Date) new Date(),"Nhan vien","060205000123", "minhtrd@gmail.com","Buổi sáng");
+			NhanVien nhanVien1=new NhanVien("NV1","Nguyen Minh", "0911646636", "Nam","23 Tran Hung Dao HCM",(java.sql.Date) new Date(),"Nhan vien","060205000123","Buổi sáng");
 			//TaiKhoan(String maTK, String matKhau) 
 			TaiKhoan taiKhoan1=new TaiKhoan("1234");
 			//DonDatHang(String maDDH, Date ngayDat)

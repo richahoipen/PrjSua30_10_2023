@@ -10,23 +10,24 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
+import arrayList_Entities.List_KhachHang;
 import connectDB.Connect;
 import customEntities.Custom_ComboBox;
 import entities.KhachHang;
-import interface_Method_Database.Method_Select_KhachHang;
-import list_Array_DAO.KhachHang_DAO;
+import interface_Method_DAO.KhachHang_Method;
 
-public class DataBase_KhachHang_DAO 
+
+public class KhachHang_DAO implements KhachHang_Method
 {
 	private Connect con = new Connect();
-	KhachHang_DAO listKhachHang_DAO=new KhachHang_DAO();
-	public DataBase_KhachHang_DAO() {
+	List_KhachHang list_KhachHang=new List_KhachHang();
+	public KhachHang_DAO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	/*
-	 * public void xuatDanhSachHangHoaKho(DefaultTableModel tableModel) { String
+	 * public boolean xuatDanhSachHangHoaKho(DefaultTableModel tableModel) { String
 	 * sqlSelect="Select*from HangHoaKho ORDER BY tenHangHoa;"; try { ResultSet
 	 * rs=con.resultSet(sqlSelect); while(rs.next()) { String
 	 * maHangHoa=rs.getString("maHangHoa"); String
@@ -48,7 +49,7 @@ public class DataBase_KhachHang_DAO
 	 * JOptionPane.showMessageDialog(null, e.getMessage()); } }
 	 * 
 	 */
-	public void xuatDanhSachKhachHang(DefaultTableModel dtm_KH) {
+	public boolean xuatDanhSachKhachHang(DefaultTableModel dtm_KH) {
 		String sqlSelect = "SELECT *\r\n" + "FROM KhachHang\r\n"
 				+ "ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 		try {
@@ -64,19 +65,22 @@ public class DataBase_KhachHang_DAO
 				KhachHang k = new KhachHang(maKH, tenKH, sdt, gioiTinh, diaChi);
 				String[] row = { maKH, tenKH, sdt, k.traVeGioiTinh(), diaChi };
 				dtm_KH.addRow(row);
+				
 			}
 			con.con().close();
 			con.stmt().close();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 
 	/*
-	 * public void themHangHoaKho(HangHoaKho h) { try { String sqlInsert =
+	 * public boolean themHangHoaKho(HangHoaKho h) { try { String sqlInsert =
 	 * "insert into HangHoaKho(maHangHoa,tenHangHoa,ngaySanXuat,ngayHetHan,giaCa,soLuong) \r\n"
 	 * + "values ('" + h.getMaHangHoa() + "','" + h.getTenHangHoa()+ "','" +
 	 * h.getNgaySanXuatLocalDate() + "','" + h.getNgayHetHanLocalDate() + "'," +
@@ -100,8 +104,7 @@ public class DataBase_KhachHang_DAO
 			con.stmt().executeUpdate(sqlInsert);
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
-			JOptionPane.showMessageDialog(null, "Đã thêm dữ liệu khách hàng thành công.", "Thông báo",
-					JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Đã thêm dữ liệu khách hàng thành công.", "Thông báo",JOptionPane.INFORMATION_MESSAGE);
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -113,7 +116,7 @@ public class DataBase_KhachHang_DAO
 	}
 
 	/*
-	 * public void capNhatHangHoaKho(HangHoaKho h) { String
+	 * public boolean capNhatHangHoaKho(HangHoaKho h) { String
 	 * sqlUpdate="UPDATE HangHoaKho\r\n" +
 	 * "		SET maHangHoa='"+h.getMaHangHoa()+"',\r\n" +
 	 * "		tenHangHoa='"+h.getTenHangHoa()+"',\r\n" +
@@ -163,7 +166,7 @@ public class DataBase_KhachHang_DAO
 		}
 	}
 	//Đẩy lên combobox
-	public void dayComboBoxMaKH(Custom_ComboBox cbMaKH) {
+	public boolean dayComboBoxMaKH(Custom_ComboBox cbMaKH) {
 		String sqlSelectMaKH = "SELECT maKH\r\n" + "FROM KhachHang\r\n"
 				+ "ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 		try {
@@ -181,15 +184,17 @@ public class DataBase_KhachHang_DAO
 			// cbMaKH.setMyVector(maKHArray);
 			con.con().close();
 			con.stmt().close();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 
-	public void dayComboBoxTenKH(Custom_ComboBox cbo_HoTen) {
+	public boolean dayComboBoxTenKH(Custom_ComboBox cbo_HoTen) {
 		String sqlSelectTenKH = "SELECT tenKH\r\n" + "FROM KhachHang\r\n" + "ORDER BY tenKH ASC;";
 		try {
 			ResultSet rs = con.resultSet(sqlSelectTenKH);
@@ -202,15 +207,17 @@ public class DataBase_KhachHang_DAO
 			}
 			con.con().close();
 			con.stmt().close();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 
-	public void dayComboBoxSDT(Custom_ComboBox cbo_SoDienThoai) {
+	public boolean dayComboBoxSDT(Custom_ComboBox cbo_SoDienThoai) {
 		String sqlSelectSDT = "SELECT sdt\r\n" + "FROM KhachHang\r\n" + "ORDER BY sdt ASC;";
 		try {
 			ResultSet rs = con.resultSet(sqlSelectSDT);
@@ -223,15 +230,17 @@ public class DataBase_KhachHang_DAO
 			}
 			con.con().close();
 			con.stmt().close();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 
-	public void dayComboBoxDiaChi(Custom_ComboBox cbo_DiaChi) {
+	public boolean dayComboBoxDiaChi(Custom_ComboBox cbo_DiaChi) {
 		String sqlSelectDiaChi = "SELECT diaChi\r\n" + "FROM KhachHang\r\n" + "ORDER BY diaChi ASC;";
 		try {
 			ResultSet rs = con.resultSet(sqlSelectDiaChi);
@@ -244,16 +253,16 @@ public class DataBase_KhachHang_DAO
 			}
 			con.con().close();
 			con.stmt().close();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
-	/*
-	//TÌM KIẾM 1 Tiêu Chí
-	public void timKiemTheoMaKH(String maKHCanTruyVan, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheoMaKH(String maKHCanTruyVan, DefaultTableModel dtm_KH) {
 		String sqlSelect = "SELECT *\r\n" + "FROM KhachHang\r\n" + "WHERE maKH='" + maKHCanTruyVan + "';";
 		try {
 			ResultSet rs = con.resultSet(sqlSelect);
@@ -268,14 +277,17 @@ public class DataBase_KhachHang_DAO
 				KhachHang k = new KhachHang(maKH, tenKH, sdt, gioiTinh, diaChi);
 				String[] row = { maKH, tenKH, sdt, k.traVeGioiTinh(), diaChi };
 				dtm_KH.addRow(row);
+				
 			}
 			con.con().close();
 			con.stmt().close();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 
@@ -287,7 +299,7 @@ public class DataBase_KhachHang_DAO
 		return -1;
 	}
 
-	public void timKiemTheoGioiTinh(String gioiTinhCanTruyVan, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheoGioiTinh(String gioiTinhCanTruyVan, DefaultTableModel dtm_KH) {
 		String sqlSelect = "SELECT *\r\n" + "FROM KhachHang\r\n" + "WHERE gioiTinh="
 				+ chuyenGioiTinhThanhInt(gioiTinhCanTruyVan) + "\r\n"
 				+ "ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
@@ -307,21 +319,23 @@ public class DataBase_KhachHang_DAO
 			}
 			con.con().close();
 			con.stmt().close();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 	//Tìm Kiếm theo địa chỉ
-	public void timKiemTheoDiaChi(String diaChiCanTruyVan, DefaultTableModel dtm_KH) 
+	public boolean timKiemTheoDiaChi(String diaChiCanTruyVan, DefaultTableModel dtm_KH) 
 	{
 		//Lấy hết data KhachHang
 		String sqlSelect = "select * from [dbo].[KhachHang]\r\n"
 				+ "ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 		try {
-			//List<KhachHang> listKhachHang_DAO=new ArrayList<>();
+			//List<KhachHang> list_KhachHang=new ArrayList<>();
 			ResultSet rs = con.resultSet(sqlSelect);
 			// KhachHang(String maKH, String tenKH, String sdt, boolean gioiTinh, String
 			// diaChi)
@@ -332,21 +346,23 @@ public class DataBase_KhachHang_DAO
 				boolean gioiTinh = rs.getBoolean("gioiTinh");
 				String diaChi = rs.getString("diaChi");
 				KhachHang k = new KhachHang(maKH, tenKH, sdt, gioiTinh, diaChi);
-				listKhachHang_DAO.themKH(k);
+				list_KhachHang.themKH(k);
 			}
-			listKhachHang_DAO.xuatBangTheo_DiaChi(diaChiCanTruyVan, dtm_KH);
+			list_KhachHang.xuatBangTheo_DiaChi(diaChiCanTruyVan, dtm_KH);
 			
 			con.con().close();
 			con.stmt().close();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 
-	public void timKiemTheoTen(String tenCanTruyVan, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheoTen(String tenCanTruyVan, DefaultTableModel dtm_KH) {
 		String sqlSelect = "select * from [dbo].[KhachHang]\r\n"
 				+ "ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 		try {
@@ -361,20 +377,22 @@ public class DataBase_KhachHang_DAO
 				String diaChi = rs.getString("diaChi");
 				KhachHang k = new KhachHang(maKH, tenKH, sdt, gioiTinh, diaChi);
 				//Thêm vào mảng động
-				listKhachHang_DAO.themKH(k);
+				list_KhachHang.themKH(k);
 			}
-			listKhachHang_DAO.xuatBangTheo_Ten(tenCanTruyVan, dtm_KH);
+			list_KhachHang.xuatBangTheo_Ten(tenCanTruyVan, dtm_KH);
 			con.con().close();
 			con.stmt().close();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 
-	public void timKiemTheoSDT(String sdtTruyVan, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheoSDT(String sdtTruyVan, DefaultTableModel dtm_KH) {
 		String sqlSelect = "SELECT *\r\n" + "FROM KhachHang\r\n" + "WHERE sdt='" + sdtTruyVan + "'\r\n"
 				+ "ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 		try {
@@ -393,15 +411,17 @@ public class DataBase_KhachHang_DAO
 			}
 			con.con().close();
 			con.stmt().close();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 	//Tìm kiếm khách hàng khác maKH
-	public void timKiemTheoTieuChiKhacMaKH(KhachHang k, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheoTieuChiKhacMaKH(KhachHang k, DefaultTableModel dtm_KH) {
 		String sqlSelect = "select * from [dbo].[KhachHang]\r\n"
 				+ "ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 		try {
@@ -433,11 +453,13 @@ public class DataBase_KhachHang_DAO
 			}
 			con.con().close();
 			con.stmt().close();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 
@@ -445,9 +467,8 @@ public class DataBase_KhachHang_DAO
 	 * SELECT * FROM KhachHang WHERE tenKH='Van Minh' AND sdt='0976646635';
 	 * TÌM CHI TIẾT CỤ THỂ
 	 */
-	/*
 	@Override
-	public void timKiemTheo_tenKH_sdt(KhachHang k, DefaultTableModel dtm_KH) 
+	public boolean timKiemTheo_tenKH_sdt(KhachHang k, DefaultTableModel dtm_KH) 
 	{
 		String sqlSelect="select * from [dbo].[KhachHang]\r\n"
 				+ "ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
@@ -477,11 +498,13 @@ public class DataBase_KhachHang_DAO
 			}
 			con.con().close();
 			con.stmt().close();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 	/*
@@ -491,9 +514,8 @@ public class DataBase_KhachHang_DAO
 	tenKH='Van Minh'
 	AND diaChi='1 Os street';
 	 */
-	/*
 	@Override
-	public void timKiemTheo_tenKH_diaChi(KhachHang k, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheo_tenKH_diaChi(KhachHang k, DefaultTableModel dtm_KH) {
 	    String sqlSelect = "SELECT * FROM KhachHang WHERE tenKH = ? AND diaChi = ? ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 
 	    try {
@@ -515,11 +537,13 @@ public class DataBase_KhachHang_DAO
 
 	        con.con().close();
 	        preparedStatement.close();
+	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return false;
 	    }
 	}
 
@@ -530,9 +554,8 @@ public class DataBase_KhachHang_DAO
 	tenKH='Van Minh'
 	AND gioiTinh=1;
 	 */
-	/*
 	@Override
-	public void timKiemTheo_tenKH_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheo_tenKH_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
 	    String sqlSelect = "SELECT * FROM KhachHang WHERE tenKH = ? AND gioiTinh = ? ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 
 	    try {
@@ -554,11 +577,13 @@ public class DataBase_KhachHang_DAO
 
 	        con.con().close();
 	        preparedStatement.close();
+	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return false;
 	    }
 	}
 
@@ -566,9 +591,8 @@ public class DataBase_KhachHang_DAO
 	/*Theo sdt và diaChi
 	 * 
 	 */
-	/*
 	@Override
-	public void timKiemTheo_sdt_diaChi(KhachHang k, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheo_sdt_diaChi(KhachHang k, DefaultTableModel dtm_KH) {
 	    String sqlSelect = "SELECT * FROM KhachHang WHERE sdt = ? AND diaChi = ? ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 
 	    try {
@@ -590,16 +614,18 @@ public class DataBase_KhachHang_DAO
 
 	        con.con().close();
 	        preparedStatement.close();
+	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return false;
 	    }
 	}
 
 	@Override
-	public void timKiemTheo_sdt_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheo_sdt_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
 	    String sqlSelect = "SELECT * FROM KhachHang WHERE sdt = ? AND gioiTinh = ? ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 
 	    try {
@@ -621,17 +647,19 @@ public class DataBase_KhachHang_DAO
 
 	        con.con().close();
 	        preparedStatement.close();
+	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return false;
 	    }
 	}
 
 	//Tìm kiếm theo địa chỉ giới tính
 	@Override
-	public void timKiemTheo_diaChi_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheo_diaChi_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
 	    String sqlSelect = "SELECT * FROM KhachHang WHERE diaChi = ? AND gioiTinh = ? ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 
 	    try {
@@ -653,18 +681,20 @@ public class DataBase_KhachHang_DAO
 
 	        con.con().close();
 	        preparedStatement.close();
+	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return false;
 	    }
 	}
 
 
 
 	@Override
-	public void timKiemTheo_tenKH_sdt_diaChi(KhachHang k, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheo_tenKH_sdt_diaChi(KhachHang k, DefaultTableModel dtm_KH) {
 	    String sqlSelect = "SELECT * FROM KhachHang WHERE tenKH = ? AND sdt = ? AND diaChi = ? ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 
 	    try {
@@ -687,17 +717,19 @@ public class DataBase_KhachHang_DAO
 
 	        con.con().close();
 	        preparedStatement.close();
+	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return false;
 	    }
 	}
 
 
 	@Override
-	public void timKiemTheo_tenKH_sdt_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheo_tenKH_sdt_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
 	    String sqlSelect = "SELECT * FROM KhachHang WHERE tenKH = ? AND sdt = ? AND gioiTinh = ? ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 
 	    try {
@@ -720,17 +752,19 @@ public class DataBase_KhachHang_DAO
 
 	        con.con().close();
 	        preparedStatement.close();
+	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return false;
 	    }
 	}
 
 
 	@Override
-	public void timKiemTheo_tenKH_diaChi_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheo_tenKH_diaChi_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
 	    String sqlSelect = "SELECT * FROM KhachHang WHERE tenKH = ? AND diaChi = ? AND gioiTinh = ? ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 
 	    try {
@@ -753,18 +787,20 @@ public class DataBase_KhachHang_DAO
 
 	        con.con().close();
 	        preparedStatement.close();
+	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return false;
 	    }
 	}
 
 
 
 	@Override
-	public void timKiemTheo_sdt_diaChi_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
+	public boolean timKiemTheo_sdt_diaChi_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) {
 	    String sqlSelect = "SELECT * FROM KhachHang WHERE sdt = ? AND diaChi = ? AND gioiTinh = ? ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;";
 
 	    try {
@@ -787,13 +823,15 @@ public class DataBase_KhachHang_DAO
 
 	        con.con().close();
 	        preparedStatement.close();
+	        return true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return false;
 	    }
-	}*/
+	}
 
 
 }

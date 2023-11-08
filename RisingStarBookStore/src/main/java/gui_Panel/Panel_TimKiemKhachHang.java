@@ -10,9 +10,9 @@ import customEntities.Custom_ComboBox;
 import customEntities.Custom_Function;
 import customEntities.Custom_ImageIcon;
 import customEntities.Custom_JLabel;
-import customEntities.Custom_Table;
-import dataBase_BUS.DataBase_KhachHang_BUS;
-import dataBase_DAO.DataBase_KhachHang_DAO;
+import customEntities.CustomTable;
+import dataBase_BUS.KhachHang_BUS;
+import dataBase_DAO.KhachHang_DAO;
 import entities.KhachHang;
 import entities.NhaCungCap;
 import gui_Dialog.Message;
@@ -28,6 +28,8 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -67,12 +69,12 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 	private JFormattedTextField ftf_NgaySinh;
 	private BufferedImage bfi_ChonNgay;
 	private Custom_Button btn_TimKiem,btn_XoaTrang;
-	private JScrollPane scr_DSNV;
-	private Custom_Table tbl_DSKH;
+	private JScrollPane scr_DSKH;
+	private CustomTable tbl_DSKH;
 	private DefaultTableModel dtm_KH;
     // End of variables declaration//GEN-END:variables
-	private DataBase_KhachHang_DAO sqlKhachHang_DAO=new DataBase_KhachHang_DAO();
-	private DataBase_KhachHang_BUS sqlKhachHang_BUS=new DataBase_KhachHang_BUS();
+	//private DataBase_KhachHang_DAO sqlKhachHang_DAO=new DataBase_KhachHang_DAO();
+	private KhachHang_BUS sqlKhachHang_BUS=new KhachHang_BUS();
     public Panel_TimKiemKhachHang() {
         initComponents();
         setOpaque(false);
@@ -156,15 +158,18 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 		for (int i = 0; i < 1000; i++) {
 			dtm_KH.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
 		}*/
-		tbl_DSKH = new Custom_Table(dtm_KH);
-		tbl_DSKH.setColor_StripeBackground(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSKH.setColor_Header_Foreground(Color.BLACK);
-		//tbl_DSNV.setFont(new Font("Times New Roman", Font.PLAIN, 5));
-		tbl_DSKH.setColor_Header_Background(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSKH.setColor_Border(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSKH.align(3,new int[] {6,8,9,10,11});
-		tbl_DSKH.redrawn_Custom_Table();
-		JScrollPane scr_DSNV = new JScrollPane(tbl_DSKH);
+		tbl_DSKH = new CustomTable();
+		tbl_DSKH.setModel(dtm_KH);
+		
+		JScrollPane scr_DSKH = new JScrollPane(tbl_DSKH);
+		TableColumnModel columnModel = tbl_DSKH.getColumnModel();
+
+        // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
+		int[] columnWidths = {8,80,50,10,400};
+        for (int i = 0; i < columnWidths.length; i++) {
+            TableColumn column = columnModel.getColumn(i);
+            column.setPreferredWidth(columnWidths[i]);
+        }
 		
 		btn_TimKiem = new Custom_Button();
 		btn_TimKiem.setText("Tìm kiếm");
@@ -204,7 +209,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 								.addGroup(layout.createSequentialGroup()
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(lbl_Title_TK_KH))
-								.addComponent(scr_DSNV, GroupLayout.DEFAULT_SIZE, 806, Short.MAX_VALUE)))
+								.addComponent(scr_DSKH, GroupLayout.DEFAULT_SIZE, 806, Short.MAX_VALUE)))
 						.addComponent(lbl_Title_DSKH))
 					.addContainerGap())
 		);
@@ -217,7 +222,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lbl_Title_DSKH)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scr_DSNV, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+					.addComponent(scr_DSKH, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
 					.addGap(0))
 		);
         this.setLayout(layout);
@@ -293,8 +298,10 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 
     private void addAction()
 	{
-		sqlKhachHang_DAO.xuatDanhSachKhachHang(dtm_KH);
-		//sqlKhachHang_DAO.dayComboBoxMaKH(cbo_MaKH);
+    	cbo_GioiTinh.getMyVector().add("Nam");
+		cbo_GioiTinh.getMyVector().add("Nữ");
+    	sqlKhachHang_BUS.xuatDanhSachKhachHang(dtm_KH);
+		//sqlKhachHang_BUS.dayComboBoxMaKH(cbo_MaKH);
 		//btn_Close.addActionListener(this);
 		btn_XoaTrang.addActionListener(this);
 		btn_TimKiem.addActionListener(this);
@@ -311,20 +318,37 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 	{
 		//maKH
 		cbo_MaKH.addItem("Chọn");
-		sqlKhachHang_DAO.dayComboBoxMaKH(cbo_MaKH);
+		sqlKhachHang_BUS.dayComboBoxMaKH(cbo_MaKH);
 		//gioiTinh
 		cbo_GioiTinh.addItem("Chọn");
 		cbo_GioiTinh.addItem("Nam");
 		cbo_GioiTinh.addItem("Nữ");
 		//hoTen
 		cbo_HoTen.addItem("Chọn");
-		sqlKhachHang_DAO.dayComboBoxTenKH(cbo_HoTen);
+		sqlKhachHang_BUS.dayComboBoxTenKH(cbo_HoTen);
 		//sdt cbo_SoDienThoai
 		cbo_SoDienThoai.addItem("Chọn");
-		sqlKhachHang_DAO.dayComboBoxSDT(cbo_SoDienThoai);
+		sqlKhachHang_BUS.dayComboBoxSDT(cbo_SoDienThoai);
 		cbo_DiaChi.addItem("Chọn");
-		sqlKhachHang_DAO.dayComboBoxDiaChi(cbo_DiaChi);
+		sqlKhachHang_BUS.dayComboBoxDiaChi(cbo_DiaChi);
 		
+	}
+	private boolean checkComboboxNULL()
+	{
+		String maKH=(String) cbo_MaKH.getSelectedItem();
+		String tenKH=(String) cbo_HoTen.getSelectedItem();
+		String gioiTinh=(String) cbo_GioiTinh.getSelectedItem();
+		String diaChi=(String) cbo_DiaChi.getSelectedItem();
+		String sdt=(String) cbo_SoDienThoai.getSelectedItem();
+		if(maKH!=null && tenKH!=null && gioiTinh!=null && diaChi!=null && sdt!=null)
+		{
+			return true;
+		}	
+		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+        JOptionPane.showMessageDialog(null, "Dữ liệu tìm kiếm không được rỗng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		return false;
+			
 	}
 	private void resetComboBox()
 	{
@@ -334,7 +358,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 		cbo_GioiTinh.setSelectedItem("Chọn");
 		cbo_DiaChi.setSelectedItem("Chọn");
 		dtm_KH.setRowCount(0);
-		sqlKhachHang_DAO.xuatDanhSachKhachHang(dtm_KH);
+		sqlKhachHang_BUS.xuatDanhSachKhachHang(dtm_KH);
 	}
 	private boolean gioiTinhBool(String gioiTinh)
 	{
@@ -360,12 +384,13 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			JOptionPane.showMessageDialog(null, "Vui lòng chọn thông tin để tìm kiếm.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 		}
 		//Tìm theo MaKH
-		if(!maKH.equalsIgnoreCase("Chọn")&&tenKH.equalsIgnoreCase("Chọn")&&
-				gioiTinh.equalsIgnoreCase("Chọn")&&
-				sdt.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		if(!maKH.equalsIgnoreCase("Chọn"))
 		{
 			dtm_KH.setRowCount(0);
 			sqlKhachHang_BUS.timKiemTheoMaKH(maKH, dtm_KH);
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, "Tìm kiếm thông qua mã khách hàng.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 		}
 		//Tìm theo tên
 		if(maKH.equalsIgnoreCase("Chọn")&&!tenKH.equalsIgnoreCase("Chọn")&&
@@ -571,7 +596,11 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 		}
 		if(o.equals(btn_TimKiem))
 		{		
-			timKiem();
+			if(checkComboboxNULL())
+			{
+				timKiem();
+			}	
+				
 		}
 	}
 	

@@ -1,9 +1,5 @@
 package gui_Panel;
 
-import com.raven.swing.icon.GoogleMaterialDesignIcons;
-import com.raven.swing.icon.IconFontSwing;
-
-import customEntities.Custom_ImageIcon;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
 
@@ -19,6 +15,12 @@ import javax.swing.JLabel;
 import javax.swing.LayoutStyle;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import com.raven.swing.icon.GoogleMaterialDesignIcons;
+import com.raven.swing.icon.IconFontSwing;
+
+import customEntities.Custom_ImageIcon;
+
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 

@@ -5,14 +5,15 @@ import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 import com.toedter.calendar.JDateChooser;
 
+import customEntities.CustomFunction;
+import customEntities.CustomIcon;
 import customEntities.Custom_Button;
 import customEntities.Custom_ColorPicker;
 import customEntities.Custom_ComboBox;
-import customEntities.CustomFunction;
-import customEntities.CustomIcon;
-import customEntities.Custom_Table;
+import customEntities.CustomTable;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
+import gui_Panel.barchart.*;
 import gui_Panel.lineChart.LineChart;
 
 import java.awt.Color;
@@ -55,7 +56,6 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.SystemColor;
 import javax.swing.JEditorPane;
-import gui_Panel.barchart.*;
 
 public class Panel_ThongKeThuChiLoiNhuan extends JPanel {
 	// Variables declaration - do not modify//GEN-BEGIN:variables
@@ -66,7 +66,7 @@ public class Panel_ThongKeThuChiLoiNhuan extends JPanel {
 	private LineChart lineChart;
 	private Custom_Button btnXuatBaoCao;
 	private JScrollPane scr_DSHD;
-	private Custom_Table tbl_DSHD;
+	private CustomTable tbl_DSHD;
 	private DefaultTableModel dtm_HD;
     // End of variables declaration//GEN-END:variables
     public Panel_ThongKeThuChiLoiNhuan() {
@@ -149,7 +149,7 @@ public class Panel_ThongKeThuChiLoiNhuan extends JPanel {
 		for (int i = 0; i < 1000; i++) {
 			dtm_HD.addRow(new String[] {"HD0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","15000đ","12000đ","3000đ"});
 		}
-		tbl_DSHD = new Custom_Table();
+		tbl_DSHD = new CustomTable();
 		tbl_DSHD.setModel(dtm_HD);
 		scr_DSHD = new JScrollPane(tbl_DSHD);
 		

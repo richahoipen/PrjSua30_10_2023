@@ -1,14 +1,5 @@
 package gui_Panel;
 
-import com.raven.swing.icon.GoogleMaterialDesignIcons;
-import com.raven.swing.icon.IconFontSwing;
-
-import customEntities.Custom_Button;
-import customEntities.Custom_ColorPicker;
-import customEntities.Custom_ComboBox;
-import customEntities.Custom_ImageIcon;
-import customEntities.Custom_JLabel;
-import customEntities.Custom_Table;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
 
@@ -21,12 +12,26 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+
+import com.raven.swing.icon.GoogleMaterialDesignIcons;
+import com.raven.swing.icon.IconFontSwing;
+
+import customEntities.Custom_Button;
+import customEntities.Custom_ColorPicker;
+import customEntities.Custom_ComboBox;
+import customEntities.Custom_ImageIcon;
+import customEntities.Custom_JLabel;
+import customEntities.CustomTable;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
@@ -52,7 +57,7 @@ public class Panel_QuanLySanPham extends JPanel {
 	private Custom_JLabel lbl_hinhAnhSP;
 	private Custom_Button btn_Them,btn_XoaTrang,btn_CapNhat,btn_ChonAnh;
 	private JScrollPane scr_DSSP;
-	private Custom_Table tbl_DSSP;
+	private CustomTable tbl_DSSP;
 	private DefaultTableModel dtm_SP;
     // End of variables declaration//GEN-END:variables
     public Panel_QuanLySanPham() {
@@ -215,15 +220,20 @@ public class Panel_QuanLySanPham extends JPanel {
 		for (int i = 0; i < 1000; i++) {
 			dtm_SP.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
 		}
-		tbl_DSSP = new Custom_Table(dtm_SP);
-		tbl_DSSP.setColor_StripeBackground(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSSP.setColor_Header_Foreground(Color.BLACK);
-		//tbl_DSSP.setFont(new Font("Times New Roman", Font.PLAIN, 5));
-		tbl_DSSP.setColor_Header_Background(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSSP.setColor_Border(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSSP.align(2,new int[] {6,8,9,10,11});
-		tbl_DSSP.redrawn_Custom_Table();
+		
+		
+		
+		tbl_DSSP = new CustomTable();
+		tbl_DSSP.setModel(dtm_SP);
 		JScrollPane scr_DSSP = new JScrollPane(tbl_DSSP);
+		TableColumnModel columnModel = tbl_DSSP.getColumnModel();
+
+        // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
+		int[] columnWidths = {100, 175, 130, 85, 250, 220, 100, 130, 100,100,70,70};
+        for (int i = 0; i < columnWidths.length; i++) {
+            TableColumn column = columnModel.getColumn(i);
+            column.setPreferredWidth(columnWidths[i]);
+        }
 		
 		btn_ChonAnh = new Custom_Button();
 		btn_ChonAnh.addActionListener(new ActionListener() {

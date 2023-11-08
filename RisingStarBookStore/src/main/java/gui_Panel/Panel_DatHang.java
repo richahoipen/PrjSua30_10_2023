@@ -5,13 +5,13 @@ import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 import com.toedter.calendar.JDateChooser;
 
+import customEntities.CustomFunction;
+import customEntities.CustomIcon;
 import customEntities.Custom_Button;
 import customEntities.Custom_ColorPicker;
 import customEntities.Custom_ComboBox;
-import customEntities.CustomFunction;
-import customEntities.CustomIcon;
+import customEntities.CustomTable;
 import customEntities.ScrollBarCustom;
-import customEntities.Custom_Table;
 import gui_Dialog.Message;
 import gui_Frame_Running.*;
 
@@ -61,7 +61,7 @@ public class Panel_DatHang extends JPanel {
 	private JLabel lbl_Title_DSSP;
 	private JFormattedTextField ftf_NgaySinh;
 	private BufferedImage bfi_ChonNgay;
-	private Custom_Table tbl_DSCTDD;
+	private CustomTable tbl_DSCTDD;
 	private DefaultTableModel dtm_SP;
 	private JScrollPane scr_DSSP,scr_DSDD;
 	private JLabel lbl_Title_CTDD;
@@ -79,7 +79,7 @@ public class Panel_DatHang extends JPanel {
 	private JLabel lbl_txt_SoDienThoai;
 	private JLabel lbl_txt_TongTien;
 	private JScrollPane scr_DSCTDD;
-	private Custom_Table tbl_DSSP;
+	private CustomTable tbl_DSSP;
     // End of variables declaration//GEN-END:variables
     public Panel_DatHang() {
         initComponents();
@@ -119,7 +119,7 @@ public class Panel_DatHang extends JPanel {
 			dtm_SP.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
 		}
 		
-		tbl_DSCTDD = new Custom_Table();
+		tbl_DSCTDD = new CustomTable();
 		tbl_DSCTDD.setModel(dtm_SP);
 		
 		scr_DSSP = new JScrollPane(tbl_DSCTDD);
@@ -140,7 +140,7 @@ public class Panel_DatHang extends JPanel {
 		pnLapDatHang = new JPanel();
 		pnLapDatHang.setBackground(Color.WHITE);
 		
-		tbl_DSSP= new Custom_Table();
+		tbl_DSSP= new CustomTable();
 		tbl_DSSP.setModel(dtm_SP);
 		scr_DSCTDD = new JScrollPane(tbl_DSSP);
 		

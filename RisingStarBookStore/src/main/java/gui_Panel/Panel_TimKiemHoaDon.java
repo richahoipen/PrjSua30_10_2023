@@ -10,7 +10,7 @@ import customEntities.Custom_ComboBox;
 import customEntities.Custom_Function;
 import customEntities.Custom_ImageIcon;
 import customEntities.Custom_JLabel;
-import customEntities.Custom_Table;
+import customEntities.CustomTable;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
 
@@ -24,6 +24,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -59,8 +60,8 @@ public class Panel_TimKiemHoaDon extends JPanel {
 	private JFormattedTextField ftf_NgaySinh;
 	private BufferedImage bfi_ChonNgay;
 	private Custom_Button btn_TimKiem,btn_XoaTrang;
-	private Custom_Table tbl_DSHD,tbl_DSCTHD;
-	private DefaultTableModel dtm_SP;
+	private CustomTable tbl_DSHD,tbl_DSCTHD;
+	private DefaultTableModel dtm_HD;
 	private JScrollPane scr_DSCTHD,scr_DSHD;
     // End of variables declaration//GEN-END:variables
     public Panel_TimKiemHoaDon() {
@@ -194,31 +195,22 @@ public class Panel_TimKiemHoaDon extends JPanel {
 		lbl_Title_DSHD.setForeground(Color.BLUE);
 		lbl_Title_DSHD.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
-		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà cung cấp","Nhà xuất bản","Năm xuất bản","Tác giả","Số lượng còn","Số lượng bán","Giá Nhập","Giá Bán"},0);
+		dtm_HD = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà cung cấp","Nhà xuất bản","Năm xuất bản","Tác giả","Số lượng còn","Số lượng bán","Giá Nhập","Giá Bán"},0);
 		for (int i = 0; i < 1000; i++) {
-			dtm_SP.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
+			dtm_HD.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
 		}
-		
-		tbl_DSHD = new Custom_Table(dtm_SP);
-		tbl_DSHD.setColor_StripeBackground(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSHD.setColor_Header_Foreground(Color.BLACK);
-		//tbl_DSHD.setFont(new Font("Times New Roman", Font.PLAIN, 5));
-		tbl_DSHD.setColor_Header_Background(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSHD.setColor_Border(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSHD.align(2,new int[] {6,8,9,10,11});
-		tbl_DSHD.redrawn_Custom_Table();
-		
-		tbl_DSCTHD = new Custom_Table(dtm_SP);
-		tbl_DSCTHD.setColor_StripeBackground(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSCTHD.setColor_Header_Foreground(Color.BLACK);
-		//tbl_DSCTHD.setFont(new Font("Times New Roman", Font.PLAIN, 5));
-		tbl_DSCTHD.setColor_Header_Background(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSCTHD.setColor_Border(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSCTHD.align(2,new int[] {6,8,9,10,11});
-		tbl_DSCTHD.redrawn_Custom_Table();
+		tbl_DSHD = new CustomTable();
+		tbl_DSHD.setModel(dtm_HD);
 		JScrollPane scr_DSHD = new JScrollPane(tbl_DSHD);
+		TableColumnModel columnModel = tbl_DSHD.getColumnModel();
 		
+		tbl_DSCTHD = new CustomTable();
+		tbl_DSCTHD.setModel(dtm_HD);
 		JScrollPane scr_DSCTHD = new JScrollPane(tbl_DSCTHD);
+		//TableColumnModel columnModel = tbl_DSCTHD.getColumnModel();
+		//JScrollPane scr_DSHD = new JScrollPane(tbl_DSHD);
+		
+	
 		
 		btn_TimKiem = new Custom_Button();
 		btn_TimKiem.addActionListener(new ActionListener() {

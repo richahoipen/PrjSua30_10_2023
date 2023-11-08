@@ -2,7 +2,7 @@ package entities;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.ZoneId;
+
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +40,6 @@ public class NhanVien
 	private String chucVu;
 	@Column(name = "cMND", length = 100, columnDefinition = "nvarchar(30)",nullable = true)
 	private String cMND;
-	@Column(name = "email", length = 100, columnDefinition = "nvarchar(120)",nullable = true)
-	private String email;
 	@Column(name = "caLam", length = 100, columnDefinition = "nvarchar(20)",nullable = true)
 	private String caLam;
 	public String getCaLam() {
@@ -62,7 +60,7 @@ public class NhanVien
 	//Hàm xử lí Date
 	public LocalDate getNgaySinhLocalDate()
 	{
-		return ngaySinh.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		return ngaySinh.toLocalDate();
 	}
 	public List<HoaDon> getListHoaDon() {
 		return listHoaDon;
@@ -129,12 +127,7 @@ public class NhanVien
 	public void setcMND(String cMND) {
 		this.cMND = cMND;
 	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	
 	public TaiKhoan getTaiKhoan() {
 		return taiKhoan;
 	}
@@ -146,7 +139,7 @@ public class NhanVien
 		// TODO Auto-generated constructor stub
 	}
 	public NhanVien(String maNV, String tenNV, String sdt, String gioiTinh, String diaChi, Date ngaySinh, String chucVu,
-			String cMND, String email, String caLam) {
+			String cMND, String caLam) {
 		super();
 		this.maNV = maNV;
 		this.tenNV = tenNV;
@@ -156,7 +149,6 @@ public class NhanVien
 		this.ngaySinh = ngaySinh;
 		this.chucVu = chucVu;
 		this.cMND = cMND;
-		this.email = email;
 		this.caLam=caLam;
 	}
 	@Override

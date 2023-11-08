@@ -10,10 +10,10 @@ import customEntities.Custom_ComboBox;
 import customEntities.Custom_Function;
 import customEntities.Custom_ImageIcon;
 import customEntities.Custom_JLabel;
-import customEntities.Custom_Table;
-import dataBase_DAO.DataBase_NhaCungCap_DAO;
-import dataBase_BUS.DataBase_NhaCungCap_BUS;
+import customEntities.CustomTable;
+import dataBase_DAO.NhaCungCap_DAO;
 import entities.NhaCungCap;
+import dataBase_BUS.NhaCungCap_BUS;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
 
@@ -27,6 +27,8 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -67,11 +69,11 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 	private JFormattedTextField ftf_NgaySinh;
 	private BufferedImage bfi_ChonNgay;
 	private Custom_Button btn_Them,btn_XoaTrang,btn_CapNhat;
-	private JScrollPane scr_DSNV;
-	private Custom_Table tbl_DSNCC;
+	private JScrollPane scr_DSNCC;
+	private CustomTable tbl_DSNCC;
 	private DefaultTableModel dtm_NCC;
-	private DataBase_NhaCungCap_DAO sqlNhaCungCap_DAO=new DataBase_NhaCungCap_DAO();
-	private DataBase_NhaCungCap_BUS sqlNhaCungCap_BUS=new DataBase_NhaCungCap_BUS();
+	//private NhaCungCap_DAO sqlNhaCungCap_BUS=new NhaCungCap_DAO();
+	private NhaCungCap_BUS sqlNhaCungCap_BUS=new NhaCungCap_BUS();
     // End of variables declaration//GEN-END:variables
     public Panel_QuanLyNhaCungCap() {
         initComponents();
@@ -151,15 +153,17 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 		for (int i = 0; i < 1000; i++) {
 			dtm_NCC.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
 		}*/
-		tbl_DSNCC = new Custom_Table(dtm_NCC);
-		tbl_DSNCC.setColor_StripeBackground(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSNCC.setColor_Header_Foreground(Color.BLACK);
-		//tbl_DSNV.setFont(new Font("Times New Roman", Font.PLAIN, 5));
-		tbl_DSNCC.setColor_Header_Background(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSNCC.setColor_Border(Custom_ColorPicker.lightgrey_D9D9D9);
-		tbl_DSNCC.align(3,new int[] {6,8,9,10,11});
-		tbl_DSNCC.redrawn_Custom_Table();
-		JScrollPane scr_DSNV = new JScrollPane(tbl_DSNCC);
+		tbl_DSNCC = new CustomTable();
+		tbl_DSNCC.setModel(dtm_NCC);
+		JScrollPane scr_DSNCC = new JScrollPane(tbl_DSNCC);
+		TableColumnModel columnModel = tbl_DSNCC.getColumnModel();
+
+        // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
+		int[] columnWidths = {8,80,50,10,400};
+        for (int i = 0; i < columnWidths.length; i++) {
+            TableColumn column = columnModel.getColumn(i);
+            column.setPreferredWidth(columnWidths[i]);
+        }
 		
 		btn_Them = new Custom_Button();
 		btn_Them.addActionListener(new ActionListener() {
@@ -216,7 +220,7 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 								.addGroup(layout.createSequentialGroup()
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(lbl_Title_QL_NCC))
-								.addComponent(scr_DSNV, GroupLayout.DEFAULT_SIZE, 806, Short.MAX_VALUE)))
+								.addComponent(scr_DSNCC, GroupLayout.DEFAULT_SIZE, 806, Short.MAX_VALUE)))
 						.addComponent(lbl_Title_DSNCC))
 					.addContainerGap())
 		);
@@ -229,7 +233,7 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lbl_Title_DSNCC)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scr_DSNV, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+					.addComponent(scr_DSNCC, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
 					.addGap(0))
 		);
         this.setLayout(layout);
@@ -304,7 +308,7 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
     }// </editor-fold>//GEN-END:initComponents
     private void addAction()
 	{
-		sqlNhaCungCap_DAO.xuatDanhSachNhaCungCap(dtm_NCC);
+		sqlNhaCungCap_BUS.xuatDanhSachNhaCungCap(dtm_NCC);
 		btn_Them.addActionListener(this);
 		btn_CapNhat.addActionListener(this);
 		btn_XoaTrang.addActionListener(this);	
@@ -351,7 +355,8 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 			n.setSdtNCC(sdt);
 			n.setEmail(email);
 			n.setDiaChi(diaChi);
-			sqlNhaCungCap_DAO.themNhaCungCap(n);
+			
+			sqlNhaCungCap_BUS.themNhaCungCap(n);
 			xoaTrang();	
 		}catch(Exception e)
 		{
@@ -370,7 +375,7 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 		lbl_txt_MaNCC.setText("");
 		txt_HoTen.requestFocus();
 		dtm_NCC.setRowCount(0);
-		sqlNhaCungCap_DAO.xuatDanhSachNhaCungCap(dtm_NCC);
+		sqlNhaCungCap_BUS.xuatDanhSachNhaCungCap(dtm_NCC);
 	}
 	private void capNhatNhaCungCap()
 	{
@@ -383,9 +388,9 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 			String diaChi=txt_DiaChi.getText();
 			String email=txt_Email.getText();
 			NhaCungCap n=new NhaCungCap(maNCC, tenNCC, sdt, email, diaChi);
-			sqlNhaCungCap_DAO.capNhatNhaCungCap(n);
+			sqlNhaCungCap_BUS.capNhatNhaCungCap(n);
 			dtm_NCC.setRowCount(0);
-			sqlNhaCungCap_DAO.xuatDanhSachNhaCungCap(dtm_NCC);
+			sqlNhaCungCap_BUS.xuatDanhSachNhaCungCap(dtm_NCC);
 			//cập nhật xong thì bỏ chọn
 			tbl_DSNCC.clearSelection();
 		}
@@ -466,12 +471,12 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 	}
 	
 	/*
-	 * int row=tbl_DSKH.getSelectedRow();
-		lbl_txt_MaKH.setText(tbl_DSKH.getValueAt(row, 0).toString());
-		txt_HoTen.setText(tbl_DSKH.getValueAt(row, 1).toString());
-		txt_SoDienThoai.setText(tbl_DSKH.getValueAt(row, 2).toString());
-		cbo_GioiTinh.setSelectedItem(tbl_DSKH.getValueAt(row, 3).toString());
-		txt_DiaChi.setText(tbl_DSKH.getValueAt(row, 4).toString());
+	 * int row=tbl_DSNCC.getSelectedRow();
+		lbl_txt_MaKH.setText(tbl_DSNCC.getValueAt(row, 0).toString());
+		txt_HoTen.setText(tbl_DSNCC.getValueAt(row, 1).toString());
+		txt_SoDienThoai.setText(tbl_DSNCC.getValueAt(row, 2).toString());
+		cbo_GioiTinh.setSelectedItem(tbl_DSNCC.getValueAt(row, 3).toString());
+		txt_DiaChi.setText(tbl_DSNCC.getValueAt(row, 4).toString());
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {

@@ -1,11 +1,12 @@
 package gui_Dialog;
 
-import com.raven.swing.icon.GoogleMaterialDesignIcons;
-import com.raven.swing.icon.IconFontSwing;
 import java.awt.Color;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
+
+import com.raven.swing.icon.GoogleMaterialDesignIcons;
+import com.raven.swing.icon.IconFontSwing;
 
 public class Message extends javax.swing.JDialog {
 
@@ -20,7 +21,7 @@ public class Message extends javax.swing.JDialog {
     private boolean ok;
     private final Animator animator;
     private boolean show = true;
-
+    
     public Message(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();

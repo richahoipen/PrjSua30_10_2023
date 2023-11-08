@@ -1,4 +1,4 @@
-package list_Array_DAO;
+package arrayList_Entities;
 
 import java.util.ArrayList;
 
@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 import entities.KhachHang;
-import interface_Method_ArrayList.method_ArrayList_KhachHang;
+import interface_Method_ArrayList.Method_ArrayList_KhachHang;
 
-public class KhachHang_DAO implements method_ArrayList_KhachHang
+public class List_KhachHang implements Method_ArrayList_KhachHang
 {
 	private ArrayList<KhachHang> listKhachHang;
 
@@ -20,7 +20,7 @@ public class KhachHang_DAO implements method_ArrayList_KhachHang
 		this.listKhachHang = listKhachHang;
 	}
 
-	public KhachHang_DAO() {
+	public List_KhachHang() {
 		super();
 		setListKhachHang(new ArrayList<KhachHang>());
 	}
