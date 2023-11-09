@@ -35,6 +35,14 @@ public class SanPham
 	private int namXuatBan;
 	@Column(name = "soLuong", length = 100,nullable = true)
 	private int soLuong;
+	@Column(name = "soLuongBan", length = 100,nullable = true)
+	private int soLuongBan;
+	public int getSoLuongBan() {
+		return soLuongBan;
+	}
+	public void setSoLuongBan(int soLuongBan) {
+		this.soLuongBan = soLuongBan;
+	}
 	@Column(name = "ngonNgu", length = 100,columnDefinition = "nvarchar(50)",nullable = true)
 	private String ngonNgu;
 	@Column(name = "giaNhap", length = 100,nullable = true)
@@ -44,6 +52,7 @@ public class SanPham
 	@Lob
     @Column(name = "hinhAnh", columnDefinition = "VARBINARY(MAX)")
     private byte[] hinhAnh;
+	private String maNhaCungCap;
 	public byte[] getHinhAnh() {
 		return hinhAnh;
 	}
@@ -143,7 +152,7 @@ public class SanPham
 		// TODO Auto-generated constructor stub
 	}
 	public SanPham(String maSP, String tenSP, String loaiSP, String tacGia, String nhaXuatBan, int namXuatBan,
-			int soLuong, String ngonNgu, double giaNhap, double giaBan,byte[] hinhAnh) {
+			int soLuong,int soLuongBan ,String ngonNgu, double giaNhap, double giaBan,byte[] hinhAnh) {
 		super();
 		this.maSP = maSP;
 		this.tenSP = tenSP;
@@ -156,7 +165,15 @@ public class SanPham
 		this.giaNhap = giaNhap;
 		this.giaBan = giaBan;
 		this.hinhAnh=hinhAnh;
+		this.soLuongBan = soLuongBan;
 	}
+	public String getMaNhaCungCap() {
+		return maNhaCungCap;
+	}
+	public void setMaNhaCungCap(String maNhaCungCap) {
+		this.maNhaCungCap = maNhaCungCap;
+	}
+	
 	
 	
 }

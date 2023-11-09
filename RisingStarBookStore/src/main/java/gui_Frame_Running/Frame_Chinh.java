@@ -56,6 +56,7 @@ import gui_Panel.MainForm;
 import gui_Panel.Menu;
 import gui_Panel.Panel_DatHang;
 import gui_Panel.Panel_LapHoaDon;
+import gui_Panel.Panel_LapHoaDon2;
 import gui_Panel.Panel_QuanLyKhachHang;
 import gui_Panel.Panel_QuanLyNhaCungCap;
 import gui_Panel.Panel_QuanLyNhanVien;
@@ -202,7 +203,7 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 				}
 				if (menuIndex == 4) {
 					if(subMenuIndex == 0)
-						main.showForm(new Panel_LapHoaDon());
+						main.showForm(new Panel_LapHoaDon2());
 					else if(subMenuIndex == 1)
 						main.showForm(new Panel_DatHang());
 					else if(subMenuIndex == 2)

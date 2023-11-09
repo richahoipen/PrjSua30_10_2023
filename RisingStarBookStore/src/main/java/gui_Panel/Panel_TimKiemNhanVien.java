@@ -517,6 +517,7 @@ public class Panel_TimKiemNhanVien extends JPanel implements ActionListener, Mou
     	cbo_GioiTinh.setSelectedItem(chon);
     	cbo_DiaChi.setSelectedItem(chon);
     	cbo_SoDienThoai.setSelectedItem(chon);
+    	lbl_txt_MatKhau.setText("");
     	resetTable();
     }
 	@Override
@@ -672,7 +673,34 @@ public class Panel_TimKiemNhanVien extends JPanel implements ActionListener, Mou
 			dtm_NV.setRowCount(0);
 			sqlNhanVien_BUS.timKiemTheo_namSinh(nam_Int, dtm_NV);
 		}
-				
+		if(maNV.equalsIgnoreCase(chon) && tenNV.equalsIgnoreCase(chon) && sdt.equalsIgnoreCase(chon) && gioiTinh.equalsIgnoreCase(chon) &&
+				!diaChi.equalsIgnoreCase(chon)  && chucVu.equalsIgnoreCase(chon) && cCCCD.equalsIgnoreCase(chon) && caLam.equalsIgnoreCase(chon)&&
+				ngay.equalsIgnoreCase(chon)&&thang.equalsIgnoreCase(chon) && nam.equalsIgnoreCase(chon))
+		{
+			dtm_NV.setRowCount(0);
+			sqlNhanVien_BUS.timKiemTheo_diaChi(diaChi, dtm_NV);
+		}
+		boolean hasTwoNonChonStrings = false;
+		int nonChonCount = 0;
+
+		String[] stringsToCheck = {maNV, tenNV, sdt, gioiTinh, diaChi, ngay, thang, nam, chucVu, cCCCD, caLam};
+
+		for (String str : stringsToCheck) {
+		    if (!str.equals("Chọn")) {
+		        nonChonCount++;
+		        if (nonChonCount >= 2) {
+		            hasTwoNonChonStrings = true;
+		            break;
+		        }
+		    }
+		}
+		if(hasTwoNonChonStrings)
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+            JOptionPane.showMessageDialog(null, "Không thể tìm kiếm Nhân viên thông qua 2 hoặc nhiều thuộc tính.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
+		
 	}
 
 

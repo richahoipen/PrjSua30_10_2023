@@ -124,11 +124,11 @@ public class Panel_DatHang extends JPanel {
 		
 		scr_DSSP = new JScrollPane(tbl_DSCTDD);
 		
-		lbl_Title_DSSP = new JLabel("Danh sách sản phẩm");
+		lbl_Title_DSSP = new JLabel("Chọn sản phẩm");
 		lbl_Title_DSSP.setForeground(Custom_ColorPicker.darkblue_4F709C);
 		lbl_Title_DSSP.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
-		lbl_Title_CTDD = new JLabel("Chi tiết đơn đặt");
+		lbl_Title_CTDD = new JLabel("Giỏ hàng");
 		lbl_Title_CTDD.setForeground(Custom_ColorPicker.darkblue_4F709C);
 		lbl_Title_CTDD.setFont(new Font("SansSerif", Font.BOLD, 12));
 		

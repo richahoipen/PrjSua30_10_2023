@@ -156,6 +156,9 @@ public class NhanVien_BUS implements NhanVien_Method
 		return sqlNhanVien_DAO.timKiemTheo_namSinh(nam, dtm_NV);
 	}
 
-	
-
+	@Override
+	public boolean timKiemTheo_diaChi(String diaChi, DefaultTableModel dtm_NV) {
+		// TODO Auto-generated method stub
+		return sqlNhanVien_DAO.timKiemTheo_diaChi(diaChi, dtm_NV);
+	}
 }

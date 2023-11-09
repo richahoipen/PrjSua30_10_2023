@@ -36,8 +36,8 @@ public class Herbinate {
 			//NhaCungCap(String maNCC, String tenNCC, String diaChi, String sdtNCC, String email)
 			NhaCungCap nhaCungCap1=new NhaCungCap("NCC1", "Alex","8981646656", "alex@gmail.com", "192 Paul Street USA");
 			//SanPham(String maSP, String tenSP, String loaiSP, String tacGia, String nhaXuatBan, int soLuong,String ngonNgu, double giaNhap)
-			SanPham sanPham1=new SanPham("SP1", "Conan tập 1","Truyện tranh ","Gosho","Kim Đồng",2000,100,"Nhật Bản",1000000,1000000*1.2,imageBytesConan100 );
-			SanPham sanPham2=new SanPham("SP2", "Conan tập 2","Truyện tranh ","Gosho","Kim Đồng",2000,100,"Nhật Bản",1000000,1000000*1.2,imageBytesConan97);
+			SanPham sanPham1=new SanPham("SP1", "Conan tập 1","Truyện tranh ","Gosho","Kim Đồng",2000,100,10,"Nhật Bản",1000000,1000000*1.2,imageBytesConan100 );
+			SanPham sanPham2=new SanPham("SP2", "Conan tập 2","Truyện tranh ","Gosho","Kim Đồng",2000,100,10,"Nhật Bản",1000000,1000000*1.2,imageBytesConan97);
 			//NhanVien(String maNV, String tenNV, String sdt, String gioiTinh, String diaChi, Date ngaySinh, String chucVu,String cMND, String email)
 			NhanVien nhanVien1=new NhanVien("NV1","Nguyen Minh", "0911646636", "Nam","23 Tran Hung Dao HCM",(java.sql.Date) new Date(),"Nhan vien","060205000123","Buổi sáng");
 			//TaiKhoan(String maTK, String matKhau) 

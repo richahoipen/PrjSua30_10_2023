@@ -564,7 +564,7 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
 		{
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Địa chỉ không hợp lệ do có kí tự đặc biệt.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        JOptionPane.showMessageDialog(null, "Địa chỉ không hợp lệ.", "Warning", JOptionPane.WARNING_MESSAGE);
 	        txt_DiaChi.requestFocus();
 	        return false;
 		}

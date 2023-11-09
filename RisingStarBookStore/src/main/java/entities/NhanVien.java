@@ -62,6 +62,19 @@ public class NhanVien
 	{
 		return ngaySinh.toLocalDate();
 	}
+	//Lấy ngày tháng năm
+	public int getNgay()
+	{
+		return getNgaySinhLocalDate().getDayOfMonth();
+	}
+	public int getThang()
+	{
+		return getNgaySinhLocalDate().getMonthValue();
+	}
+	public int getNam()
+	{
+		return getNgaySinhLocalDate().getYear();
+	}
 	public List<HoaDon> getListHoaDon() {
 		return listHoaDon;
 	}

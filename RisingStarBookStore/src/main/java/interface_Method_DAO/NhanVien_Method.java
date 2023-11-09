@@ -37,6 +37,7 @@ public interface NhanVien_Method
 	public boolean timKiemTheo_ngaySinh(int ngay,DefaultTableModel dtm_NV);
 	public boolean timKiemTheo_thangSinh(int thang,DefaultTableModel dtm_NV);
 	public boolean timKiemTheo_namSinh(int nam,DefaultTableModel dtm_NV);
+	public boolean timKiemTheo_diaChi(String diaChi,DefaultTableModel dtm_NV);
 	//tìm kiếm theo 2 thuộc tính
 	
 }

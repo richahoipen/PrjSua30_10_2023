@@ -898,5 +898,45 @@ public class NhanVien_DAO implements NhanVien_Method {
 			return false;
 		}
 	}
+	@Override
+	public boolean timKiemTheo_diaChi(String diaChi_CanTim, DefaultTableModel dtm_NV) {
+		String sqlSelect="SELECT *\r\n"
+				+ "FROM NhanVien\r\n"
+				+ "WHERE diaChi = ?\r\n"
+				+ "ORDER BY CAST(SUBSTRING(maNV, 3, LEN(maNV)) AS INT) ASC;";
+		try {
+
+			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);	
+			preparedStatement.setNString(1, diaChi_CanTim);
+			ResultSet rs = preparedStatement.executeQuery();
+			// NhanVien(String maNV, String tenNV, String sdt, String gioiTinh, String diaChi, Date ngaySinh, String chucVu,String cMND, String caLam)					
+			while (rs.next()) 
+			{
+				String maNV = rs.getNString("maNV");
+				String tenNV = rs.getNString("tenNV");
+				String sdt = rs.getNString("sdt");
+				String gioiTinh = rs.getNString("gioiTinh");
+				String diaChi = rs.getNString("diaChi");
+				Date ngaySinh = rs.getDate("ngaySinh");
+				String chucVu = rs.getNString("chucVu");
+				String cMND = rs.getNString("cMND");
+				String caLam = rs.getNString("caLam");
+				NhanVien n = new NhanVien(maNV, tenNV, sdt, gioiTinh, diaChi, ngaySinh, chucVu, cMND, caLam);
+				String[] row = { n.getMaNV(), n.getTenNV(), n.getSdt(), n.getGioiTinh(), n.getDiaChi(),
+						n.getNgaySinhToString(), n.getChucVu(), n.getcMND(), n.getCaLam() };
+				dtm_NV.addRow(row);
+			}
+			
+			con.con().close();
+			con.stmt().close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	}
 	
 }

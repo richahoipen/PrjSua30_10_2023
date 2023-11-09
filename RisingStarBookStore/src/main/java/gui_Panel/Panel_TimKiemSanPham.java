@@ -12,6 +12,8 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
@@ -209,14 +211,25 @@ public class Panel_TimKiemSanPham extends JPanel {
 		lbl_Title_DSSP.setForeground(Color.BLUE);
 		lbl_Title_DSSP.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
-		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà cung cấp","Nhà xuất bản","Năm xuất bản","Tác giả","Số lượng còn","Số lượng bán","Giá Nhập","Giá Bán"},0);
+		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại","Ngôn ngữ","Nhà cung cấp","NXB","Năm XB","Tác giả","SL còn","SL bán","Giá Nhập","Giá Bán"},0);
+		
 		for (int i = 0; i < 1000; i++) {
 			dtm_SP.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
 		}
+		
+		
+		
 		tbl_DSSP = new CustomTable();
 		tbl_DSSP.setModel(dtm_SP);
 		JScrollPane scr_DSSP = new JScrollPane(tbl_DSSP);
-		
+		TableColumnModel columnModel = tbl_DSSP.getColumnModel();
+
+        // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
+		int[] columnWidths = {100, 175, 130, 85, 250, 220, 60, 130, 60,60,70,70};
+        for (int i = 0; i < columnWidths.length; i++) {
+            TableColumn column = columnModel.getColumn(i);
+            column.setPreferredWidth(columnWidths[i]);
+        }
 		btn_TimKiem = new Custom_Button();
 		btn_TimKiem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

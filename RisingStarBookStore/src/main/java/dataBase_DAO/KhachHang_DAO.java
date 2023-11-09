@@ -94,6 +94,19 @@ public class KhachHang_DAO implements KhachHang_Method
 	public boolean themKhachHang(KhachHang k) {
 
 		try {
+			 // Kiểm tra xem email đã tồn tại trong bảng chưa
+			String checkSDTQuery = "SELECT 1 FROM [dbo].[KhachHang] WHERE sdt = ?";
+	        PreparedStatement checkSDTStatement = con.con().prepareStatement(checkSDTQuery);
+	        checkSDTStatement.setString(1, k.getSdt());
+	        ResultSet resultSet = checkSDTStatement.executeQuery();
+
+	        if (resultSet.next()) {
+	            UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+	            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+	            JOptionPane.showMessageDialog(null, "Số điện thoại đã tồn tại trong hệ thống.", "Lỗi",
+	                    JOptionPane.ERROR_MESSAGE);
+	            return false;
+	        }
 			String sqlInsert="DECLARE @NextIndex INT;\r\n"
 					+ "SELECT @NextIndex = ISNULL(MAX(CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT)), 0) + 1 FROM KhachHang;\r\n"
 					+ "DECLARE @NewMaKH VARCHAR(20);\r\n"
@@ -140,6 +153,19 @@ public class KhachHang_DAO implements KhachHang_Method
 				+ "WHERE [maKH] = '" + k.getMaKH() + "';";*/
 		String sqlUpdate = "UPDATE [dbo].[KhachHang] SET tenKH = ?, sdt = ?, gioiTinh = ?, diaChi = ? WHERE maKH = ?";
 		try {
+			String checkSDTQuery = "SELECT 1 FROM [dbo].[KhachHang] WHERE sdt = ?";
+	        PreparedStatement checkSDTStatement = con.con().prepareStatement(checkSDTQuery);
+	        checkSDTStatement.setString(1, k.getSdt());
+	        ResultSet resultSet = checkSDTStatement.executeQuery();
+
+	        if (resultSet.next()) {
+	            UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+	            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+	            JOptionPane.showMessageDialog(null, "Số điện thoại đã tồn tại trong hệ thống.", "Lỗi",
+	                    JOptionPane.ERROR_MESSAGE);
+	            return false;
+	        }
+	        
 			PreparedStatement preparedStatement = con.con().prepareStatement(sqlUpdate);
 		    
 		    // Gán giá trị cho các tham số

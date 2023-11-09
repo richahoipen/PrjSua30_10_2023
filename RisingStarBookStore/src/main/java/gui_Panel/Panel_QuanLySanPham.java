@@ -2,11 +2,13 @@ package gui_Panel;
 
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
+import image.ImageToBytesExample;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -23,11 +25,15 @@ import customEntities.Custom_ColorPicker;
 import customEntities.Custom_ComboBox;
 import customEntities.Custom_ImageIcon;
 import customEntities.Custom_JLabel;
+import dataBase_BUS.NhaCungCap_BUS;
+import dataBase_BUS.SanPham_BUS;
+import entities.SanPham;
 import customEntities.CustomTable;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -35,15 +41,29 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
 import java.awt.GridLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 
-public class Panel_QuanLySanPham extends JPanel {
+public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseListener
+{
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private JPanel pn_Master,pn_Header,pn_QL_SP,pn_Table_DSSP;
 	private Custom_JLabel picture_Logo;
@@ -59,6 +79,10 @@ public class Panel_QuanLySanPham extends JPanel {
 	private JScrollPane scr_DSSP;
 	private CustomTable tbl_DSSP;
 	private DefaultTableModel dtm_SP;
+	private NhaCungCap_BUS sqlNhaCungCap_BUS=new NhaCungCap_BUS();
+	private SanPham_BUS sqlSanPham_BUS=new SanPham_BUS();
+	private boolean daChon=false;
+	private byte[] duLieuAnh;
     // End of variables declaration//GEN-END:variables
     public Panel_QuanLySanPham() {
         initComponents();
@@ -216,10 +240,9 @@ public class Panel_QuanLySanPham extends JPanel {
 		lbl_Title_DSSP.setForeground(Color.BLUE);
 		lbl_Title_DSSP.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
-		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà cung cấp","Nhà xuất bản","Năm xuất bản","Tác giả","Số lượng còn","Số lượng bán","Giá Nhập","Giá Bán"},0);
-		for (int i = 0; i < 1000; i++) {
-			dtm_SP.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
-		}
+		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại","Ngôn ngữ","Nhà cung cấp","NXB","Năm XB","Tác giả","SL còn","SL bán","Giá Nhập","Giá Bán"},0);
+		
+		
 		
 		
 		
@@ -229,7 +252,7 @@ public class Panel_QuanLySanPham extends JPanel {
 		TableColumnModel columnModel = tbl_DSSP.getColumnModel();
 
         // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
-		int[] columnWidths = {100, 175, 130, 85, 250, 220, 100, 130, 100,100,70,70};
+		int[] columnWidths = {100, 175, 130, 85, 100, 220, 60, 130, 60,60,70,70};
         for (int i = 0; i < columnWidths.length; i++) {
             TableColumn column = columnModel.getColumn(i);
             column.setPreferredWidth(columnWidths[i]);
@@ -486,5 +509,411 @@ public class Panel_QuanLySanPham extends JPanel {
         gl_pn_QL_SP.linkSize(SwingConstants.HORIZONTAL, new Component[] {btn_ChonAnh, btn_Them, btn_CapNhat, btn_XoaTrang});
         gl_pn_QL_SP.linkSize(SwingConstants.HORIZONTAL, new Component[] {lbl_MaSP, lbl_TenSP, lbl_LoaiSP, lbl_NgonNgu, lbl_NhaCungCap, lbl_NamXuatBan, lbl_TacGia, lbl_SoLuongCon, lbl_SoLuongBan, lbl_GiaNhap, lbl_GiaBan});
         pn_QL_SP.setLayout(gl_pn_QL_SP);
+        addAction();
     }// </editor-fold>//GEN-END:initComponents
+    private void addAction()
+    {
+    	btn_Them.addActionListener(this);
+    	btn_XoaTrang.addActionListener(this);
+    	btn_CapNhat.addActionListener(this);
+    	btn_ChonAnh.addActionListener(this);
+    	tbl_DSSP.addMouseListener(this);
+    	addCombobox();
+    	resetTable();
+    	
+    }
+    private void addCombobox()
+    {
+    	//TenSP
+    	cbo_TenSP.addItem("Chọn");
+    	cbo_TenSP.addItem("Doraemon tập 1");
+    	cbo_TenSP.getMyVector().add("Doraemon tập 1");
+    	cbo_TenSP.addItem("Doraemon tập 2");
+    	cbo_TenSP.getMyVector().add("Doraemon tập 2");
+    	cbo_TenSP.addItem("Mắt biếc");
+    	cbo_TenSP.getMyVector().add("Mắt biếc");
+    	cbo_TenSP.addItem("Harry Potter");
+    	cbo_TenSP.getMyVector().add("Harry Potter");
+    	cbo_TenSP.addItem("Doraemon tập 5");
+    	cbo_TenSP.getMyVector().add("Doraemon tập 5");
+    	cbo_TenSP.addItem("Cô tiên xanh");
+    	cbo_TenSP.getMyVector().add("Cô tiên xanh");
+    	cbo_TenSP.addItem("Doraemon tập 50");
+    	cbo_TenSP.getMyVector().add("Doraemon tập 50");
+    	cbo_TenSP.addItem("Ba chàng lính ngự lâm");
+    	cbo_TenSP.getMyVector().add("Ba chàng lính ngự lâm");
+    	//loaiSP
+    	cbo_LoaiSP.addItem("Chọn");
+    	cbo_LoaiSP.addItem("Sách thiếu nhi");
+    	cbo_LoaiSP.getMyVector().add("Sách thiếu nhi");
+    	cbo_LoaiSP.addItem("Tiểu thuyết");
+    	cbo_LoaiSP.getMyVector().add("Tiểu thuyết");
+    	cbo_LoaiSP.addItem("Truyện tranh");
+    	cbo_LoaiSP.getMyVector().add("Truyện tranh");
+    	//nha cung cap
+    	cbo_NhaCungCap.addItem("Chọn");
+    	sqlNhaCungCap_BUS.dayComboBoxMaNCC(cbo_NhaCungCap);
+    	//ngon ngu
+    	cbo_NgonNgu.addItem("Chọn");
+    	cbo_NgonNgu.addItem("Tiếng việt");
+    	cbo_NgonNgu.getMyVector().add("Tiếng việt");
+    	cbo_NgonNgu.addItem("Tiếng anh");
+    	cbo_NgonNgu.getMyVector().add("Tiếng anh");
+    	cbo_NgonNgu.addItem("Tiếng pháp");
+    	cbo_NgonNgu.getMyVector().add("Tiếng pháp");
+    	cbo_NgonNgu.addItem("Tiếng trung");
+    	cbo_NgonNgu.getMyVector().add("Tiếng trung");
+    	cbo_NgonNgu.addItem("Tiếng hàn");
+    	cbo_NgonNgu.getMyVector().add("Tiếng hàn");
+    	cbo_NgonNgu.addItem("Tiếng nhật");
+    	cbo_NgonNgu.getMyVector().add("Tiếng nhật");
+    	cbo_NgonNgu.addItem("Tiếng đức");
+    	cbo_NgonNgu.getMyVector().add("Tiếng đức");
+    	
+    }
+    private void resetTable()
+    {
+    	dtm_SP.setRowCount(0);
+    	sqlSanPham_BUS.xuatDanhSachSanPham(dtm_SP);
+    }
+    private void xoaTrang()
+    {
+    	cbo_TenSP.setSelectedItem("Chọn");
+    	cbo_LoaiSP.setSelectedItem("Chọn");
+    	cbo_NgonNgu.setSelectedItem("Chọn");
+    	cbo_NhaCungCap.setSelectedItem("Chọn");
+    	txt_NhaXuatBan.setText("");
+    	txt_GiaBan.setText("");
+    	txt_GiaNhap.setText("");
+    	txt_TacGia.setText("");
+    	lbl_txt_SoLuongBan.setText("");
+    	txt_TacGia.setText("");
+    	LocalDate ngayHienTai=LocalDate.now();
+    	spn_NamXuatBan.setValue(ngayHienTai.getYear());
+    	spn_SoLuongCon.setValue(0);
+    	
+    }
+    private boolean checkComboboxNULL()
+    {
+    	String tenSP=(String) cbo_TenSP.getSelectedItem();
+    	String loaiSP=(String) cbo_LoaiSP.getSelectedItem();
+    	String ngonNgu=(String) cbo_NgonNgu.getSelectedItem();
+    	String nhaCungCap=(String) cbo_NhaCungCap.getSelectedItem();
+    	if(tenSP!=null && loaiSP!=null && ngonNgu!=null && nhaCungCap!=null)
+    	{
+    		return true;
+    	}
+    	else
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+            JOptionPane.showMessageDialog(null, "Dữ liệu ở thanh xổ không được rỗng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+    	}
+    }
+    private boolean checkJSpinner()
+    {
+    	Object namXuatBan=spn_NamXuatBan.getValue();
+    	Object soLuong=spn_SoLuongCon.getValue();
+    	if(namXuatBan instanceof String || soLuong instanceof String)
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+            JOptionPane.showMessageDialog(null, "Năm xuất bản hoặc số lượng không được là chuỗi.", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+    		return false; 		
+    	}
+    	else
+    	{
+    		return true;
+    	}
+    }
+    private boolean kiemTraRangBuoc()
+    {
+    	//SanPham(String maSP, String tenSP, String loaiSP, String tacGia, String nhaXuatBan, int namXuatBan,
+		//int soLuong, String ngonNgu, double giaNhap, double giaBan,byte[] hinhAnh) 
+    	String tenSP=(String) cbo_TenSP.getSelectedItem();
+    	String loaiSP=(String) cbo_LoaiSP.getSelectedItem();
+    	String tacGia=txt_TacGia.getText();
+    	String nhaXuatBan=txt_NhaXuatBan.getText();
+    	int namXuatBan=(int) spn_NamXuatBan.getValue();
+    	int soLuong=(int)spn_SoLuongCon.getValue();
+    	String ngonNgu=(String) cbo_NgonNgu.getSelectedItem();
+    	String giaNhap=txt_GiaNhap.getText();
+    	
+    	String giaBan=txt_GiaNhap.getText();
+    	
+    	
+    	String nhaCungCap=(String) cbo_NhaCungCap.getSelectedItem();
+    	LocalDate ngayHienTai=LocalDate.now();
+    	String chon="Chọn";
+    	if(tenSP.equalsIgnoreCase(chon) || loaiSP.equalsIgnoreCase(chon) || tacGia.trim().equals("") ||
+    			nhaXuatBan.trim().equals("")|| namXuatBan==0|| soLuong==0||
+    				ngonNgu.equalsIgnoreCase(chon)|| giaNhap.trim().equals("")||nhaCungCap.equalsIgnoreCase(chon)||
+    				giaBan.trim().equals(""))
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập hết dữ liệu.", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            return false;
+    	}
+    	
+    	if(!checkComboboxNULL())
+    		return false;
+    	if(!checkJSpinner())
+    		return false;
+    	if(!tacGia.matches("^[\\p{Lu}][\\p{Ll}]+(\\s[\\p{Lu}][\\p{Ll}]+)*$"))
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Tên tác giả không hợp lệ.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        txt_TacGia.requestFocus();
+	        return false;
+    	}
+    	if(namXuatBan<=1800)
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Năm xuất bản trước 1800.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        return false;
+    	}
+    	if(namXuatBan>ngayHienTai.getYear())
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Năm xuất bản sau năm hiện tại.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        return false;
+    	}
+    	
+    	if(soLuong<=0)
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Số lượng phải lớn hơn 0.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        return false;
+    	}
+    	if(!giaNhap.matches("\\d+"))
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Giá nhập phải là số.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        txt_GiaNhap.requestFocus();
+	        return false;
+    	}
+    	double giaNhap_Double=Double.parseDouble(giaNhap);
+    	
+    	if(giaNhap_Double<=0)
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Giá nhập phải lớn hơn 0.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        txt_GiaNhap.requestFocus();
+	        return false;
+    	}
+    	double giaBan_Double=Double.parseDouble(giaBan);
+    	if(!giaBan.matches("\\d+"))
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Giá bán phải là số.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        txt_GiaNhap.requestFocus();
+	        return false;
+    	}
+    	if(giaBan_Double<=0)
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Giá bán phải lớn hơn 0.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        txt_GiaNhap.requestFocus();
+	        return false;
+    	}
+    	if(isDaChon()==false)
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Vui lòng thêm ảnh.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        txt_GiaNhap.requestFocus();
+	        return false;
+    	}
+    			
+    	
+    	return true;
+    }
+    private byte[] getBytes(BufferedImage image) throws IOException 
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, "jpg", baos);
+        return baos.toByteArray();
+    }
+    private void chonAnh()
+    {
+    	JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(Panel_QuanLySanPham.this);
+        
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try {
+                // Load the selected image
+                BufferedImage image = ImageIO.read(selectedFile);
+                lbl_hinhAnhSP.setIcon(new ImageIcon(image)); // Hiển thị ảnh trong JLabel
+                setDaChon(true);
+                // Convert the loaded image to bytes
+                byte[] imageData = getBytes(image);
+                // Do something with the imageData byte array
+                setDuLieuAnh(imageData);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+    	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+    	        JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+    	        txt_GiaNhap.requestFocus();
+            }
+        }
+    }
+    private void themSP()
+    {
+    	//SanPham(String maSP, String tenSP, String loaiSP, String tacGia, String nhaXuatBan, int namXuatBan,
+    			//int soLuong, String ngonNgu, double giaNhap, double giaBan,byte[] hinhAnh) 
+		String tenSP=(String) cbo_TenSP.getSelectedItem();
+		String loaiSP=(String) cbo_LoaiSP.getSelectedItem();
+		String tacGia=txt_TacGia.getText();
+		String nhaXuatBan=txt_NhaXuatBan.getText();
+		int namXuatBan=(Integer)spn_NamXuatBan.getValue();
+		int soLuong=(Integer)spn_SoLuongCon.getValue();
+		String ngonNgu=(String) cbo_NgonNgu.getSelectedItem();
+		String giaNhap=txt_GiaNhap.getText();   
+		double giaNhap_Double=Double.parseDouble(giaNhap);
+		String giaBan=txt_GiaBan.getText();
+		double giaBan_Double=Double.parseDouble(giaBan);
+		String nhaCungCap=(String) cbo_NhaCungCap.getSelectedItem();	
+		SanPham s=new SanPham();
+		s.setTenSP(tenSP);
+		s.setLoaiSP(loaiSP);
+		s.setTacGia(tacGia);
+		s.setNhaXuatBan(nhaXuatBan);
+		s.setNamXuatBan(namXuatBan);
+		s.setSoLuong(soLuong);
+		s.setNgonNgu(ngonNgu);
+		s.setGiaNhap(giaNhap_Double);
+		s.setGiaBan(giaBan_Double);
+		s.setMaNhaCungCap(nhaCungCap);
+		s.setHinhAnh(getDuLieuAnh());
+		sqlSanPham_BUS.themSanPham(s, dtm_SP);
+		resetTable();
+    }
+    private void capNhatSP()
+    {
+    	
+    }
+    public ImageIcon createImageIconFromBytes(byte[] imageData) {
+        if (imageData != null) {
+            try {
+                ByteArrayInputStream stream = new ByteArrayInputStream(imageData);
+                BufferedImage image = ImageIO.read(stream);
+                return new ImageIcon(image);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		int row=tbl_DSSP.getSelectedRow();
+		//dtm_SP = new DefaultTableModel(new String[] 
+		//{"Mã sản phẩm","Tên sản phẩm","Loại","Ngôn ngữ","Nhà cung cấp","NXB","Năm XB","Tác giả","SL còn","SL bán","Giá Nhập","Giá Bán"},0);
+		lbl_txt_MaSP.setText(tbl_DSSP.getValueAt(row, 0).toString());
+		cbo_TenSP.setSelectedItem(tbl_DSSP.getValueAt(row, 1).toString());
+		cbo_LoaiSP.setSelectedItem(tbl_DSSP.getValueAt(row, 2).toString());
+		cbo_NgonNgu.setSelectedItem(tbl_DSSP.getValueAt(row, 3).toString());
+		cbo_NhaCungCap.setSelectedItem(tbl_DSSP.getValueAt(row, 4).toString());
+		txt_NhaXuatBan.setText(tbl_DSSP.getValueAt(row, 5).toString());
+		spn_NamXuatBan.setValue(Integer.parseInt(tbl_DSSP.getValueAt(row, 6).toString()));
+		txt_TacGia.setText(tbl_DSSP.getValueAt(row, 7).toString());
+		spn_SoLuongCon.setValue(Integer.parseInt(tbl_DSSP.getValueAt(row, 8).toString()));
+		lbl_txt_SoLuongBan.setText(tbl_DSSP.getValueAt(row, 9).toString());
+		txt_GiaNhap.setText(tbl_DSSP.getValueAt(row, 10).toString());
+		txt_GiaBan.setText(tbl_DSSP.getValueAt(row, 11).toString());
+		ImageIcon imageIcon = createImageIconFromBytes(sqlSanPham_BUS.getBytesAnh(tbl_DSSP.getValueAt(row, 0).toString()));
+        lbl_hinhAnhSP.setIcon(imageIcon);
+	}
+
+
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o=e.getSource();
+		if(o.equals(btn_XoaTrang))
+		{
+			xoaTrang();
+		}
+		if(o.equals(btn_Them))
+		{
+			if(kiemTraRangBuoc())
+			{
+				themSP();
+			}
+		}
+		if(o.equals(btn_ChonAnh))
+		{
+			chonAnh();
+		}
+		
+	}
+
+
+
+	public boolean isDaChon() {
+		return daChon;
+	}
+
+
+
+	public void setDaChon(boolean daChon) {
+		this.daChon = daChon;
+	}
+
+
+
+	public byte[] getDuLieuAnh() {
+		return duLieuAnh;
+	}
+
+
+
+	public void setDuLieuAnh(byte[] duLieuAnh) {
+		this.duLieuAnh = duLieuAnh;
+	}
 }

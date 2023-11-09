@@ -66,6 +66,14 @@ where tenNV=?
 ORDER BY CAST(SUBSTRING(maNV, 3, LEN(maNV)) AS INT) ASC;
 --Theo ngày sinh
 SELECT *
-FROM NhanVien
-WHERE DAY(ngaySinh)=31 AND MONTH(ngaySinh)=2 
+FROM [dbo].[NhanVien]
+WHERE year(ngaySinh)=2000
 ORDER BY CAST(SUBSTRING(maNV, 3, LEN(maNV)) AS INT) ASC;
+--Tìm kiếm all
+-- NhanVien(String maNV, String tenNV, String sdt, String gioiTinh, String diaChi, Date ngaySinh, String chucVu,String cMND, String caLam)
+			
+SELECT *
+FROM [dbo].[NhanVien]
+where tenNV=N'Trần Văn Đạt' or sdt=N'0878146635' or gioiTinh=N'Nam' or diaChi=N'57 Trường Chinh, tpHCM' or ngaySinh='1999-10-01' or chucVu=N'Nhân viên' or cMND='081725000123' or caLam=N'Sáng'
+ORDER BY CAST(SUBSTRING(maNV, 3, LEN(maNV)) AS INT) ASC;
+--2 thuộc tính
