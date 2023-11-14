@@ -1,5 +1,0 @@
-package enums;
-
-public enum LoaiVPP {
-	DUNGCUHOCSINH,DUNGCUVE,DUNGCUVANPHONG,SANPHAMDIENTU
-}

@@ -131,3 +131,15 @@ select * from [dbo].[KhachHang]
 ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;
 --
 SELECT * FROM [dbo].[KhachHang] ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;
+--
+SELECT  TOP 1 *
+FROM [dbo].[KhachHang]
+WHERE sdt = '0917646656';
+--
+SELECT *
+FROM KhachHang
+ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;
+--
+SELECT TOP 1 diaChi
+FROM [dbo].[KhachHang]
+WHERE sdt = '0917646656';

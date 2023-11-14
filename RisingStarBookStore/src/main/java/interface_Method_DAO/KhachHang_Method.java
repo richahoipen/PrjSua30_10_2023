@@ -46,4 +46,6 @@ public interface KhachHang_Method
 	public boolean timKiemTheo_tenKH_sdt_gioiTinh(KhachHang k,DefaultTableModel dtm_KH);
 	public boolean timKiemTheo_tenKH_diaChi_gioiTinh(KhachHang k,DefaultTableModel dtm_KH);
 	public boolean timKiemTheo_sdt_diaChi_gioiTinh(KhachHang k,DefaultTableModel dtm_KH);
+	//Xử lí đăng Nhập
+	
 }

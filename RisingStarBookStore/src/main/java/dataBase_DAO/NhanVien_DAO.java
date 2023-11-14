@@ -938,5 +938,33 @@ public class NhanVien_DAO implements NhanVien_Method {
 			return false;
 		}
 	}
+	@Override
+	public String getTenNV(String maNV_CanTim) {
+		String sqlSelect="select tenNV\r\n"
+				+ "FROM [dbo].[NhanVien]\r\n"
+				+ "where maNV=?;";
+		try {
+			String ten_LayVe="";
+			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);	
+			preparedStatement.setNString(1,maNV_CanTim);
+			ResultSet rs = preparedStatement.executeQuery();
+			// NhanVien(String maNV, String tenNV, String sdt, String gioiTinh, String diaChi, Date ngaySinh, String chucVu,String cMND, String caLam)					
+			while (rs.next()) 
+			{
+				String tenNV=rs.getNString("tenNV");
+				ten_LayVe+=tenNV;
+			}
+			
+			con.con().close();
+			con.stmt().close();
+			return ten_LayVe;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
+	}
 	
 }

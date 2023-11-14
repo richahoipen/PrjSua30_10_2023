@@ -39,5 +39,6 @@ public interface NhanVien_Method
 	public boolean timKiemTheo_namSinh(int nam,DefaultTableModel dtm_NV);
 	public boolean timKiemTheo_diaChi(String diaChi,DefaultTableModel dtm_NV);
 	//tìm kiếm theo 2 thuộc tính
-	
+	//Lấy tên
+	public String getTenNV(String maNV_CanTim);
 }

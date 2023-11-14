@@ -51,26 +51,26 @@ import com.raven.swing.icon.IconFontSwing;
 
 import customEntities.CustomIcon;
 import gui_Dialog.Message;
-import gui_Panel.EmployeeCard;
-import gui_Panel.MainForm;
-import gui_Panel.Menu;
-import gui_Panel.Panel_DatHang;
-import gui_Panel.Panel_LapHoaDon;
-import gui_Panel.Panel_LapHoaDon2;
-import gui_Panel.Panel_QuanLyKhachHang;
-import gui_Panel.Panel_QuanLyNhaCungCap;
-import gui_Panel.Panel_QuanLyNhanVien;
-import gui_Panel.Panel_QuanLySanPham;
-import gui_Panel.Panel_Setting;
-import gui_Panel.Panel_ThongKeSanPhamBanChay;
-import gui_Panel.Panel_ThongKeThuChiLoiNhuan;
-import gui_Panel.Panel_TimKiemDonDat;
-import gui_Panel.Panel_TimKiemHoaDon;
-import gui_Panel.Panel_TimKiemKhachHang;
-import gui_Panel.Panel_TimKiemNhaCungCap;
-import gui_Panel.Panel_TimKiemNhanVien;
-import gui_Panel.Panel_TimKiemSanPham;
-import gui_Panel.Panel_TrangChu;
+import gui_Panel_Setting.*;
+import gui_Panel_DonDat.Panel_TimKiemDonDat;
+import gui_Panel_HoaDon.Panel_ThongKeThuChiLoiNhuan;
+import gui_Panel_HoaDon.Panel_TimKiemHoaDon;
+import gui_Panel_KhachHang.Panel_QuanLyKhachHang;
+import gui_Panel_KhachHang.Panel_TimKiemKhachHang;
+import gui_Panel_NhaCungCap.Panel_QuanLyNhaCungCap;
+import gui_Panel_NhaCungCap.Panel_TimKiemNhaCungCap;
+import gui_Panel_NhanVien.Panel_DatHang;
+import gui_Panel_NhanVien.Panel_LapHoaDon;
+import gui_Panel_NhanVien.Panel_QuanLyNhanVien;
+import gui_Panel_NhanVien.Panel_TimKiemNhanVien;
+import gui_Panel_Other.EmployeeCard;
+import gui_Panel_Other.MainForm;
+import gui_Panel_Other.Menu;
+import gui_Panel_SanPham.Panel_QuanLySanPham;
+import gui_Panel_SanPham.Panel_ThongKeSanPhamBanChay;
+import gui_Panel_SanPham.Panel_TimKiemSanPham;
+//sửa lại import 
+import gui_Panel_TrangChu.Panel_TrangChu;
 import net.miginfocom.swing.MigLayout;
 import swing.MenuItem;
 import swing.PanelTransparent;
@@ -128,7 +128,7 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 	            @Override
 	            public void run() {
 	                //SwingAcrylic.prepareSwing();
-	                Frame_Chinh frame = new Frame_Chinh();
+	                Frame_Chinh frame = new Frame_Chinh("NV1");
 	                frame.setTitle("Rising Star: Quản lý mua bán sách tại hiệu sách tư nhân. ");
 	                frame.setIconImage(new CustomIcon("src/main/images/view_image/Logo.png").getImage());
 	              
@@ -137,18 +137,18 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 	            }
 	        });
 	}
-	public Frame_Chinh() {
+	public Frame_Chinh(String maNV) {
 		initBackground();
-		initComponents();
+		initComponents(maNV);
 	}
 	
-	private void initComponents() {
+	private void initComponents(String maNV) {
 		//  Init google icon font
         IconFontSwing.register(GoogleMaterialDesignIcons.getIconFont());
 		layout = new MigLayout("fill", "10[]10[100%, fill]10", "10[fill, top]10");
         bg.setLayout(layout);
-        menu = new Menu();
-        employeeCard = new EmployeeCard();
+        menu = new Menu(maNV);
+        employeeCard = new EmployeeCard(maNV);
         main = new MainForm();
         TimingTarget target = new TimingTargetAdapter() {
             @Override
@@ -172,11 +172,11 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
         };
         animator = new Animator(500, target);
         
-		initMenu();
+		initMenu(maNV);
 		initAnimator();
 	}
-	private void initMenu() {
-		menu = new Menu();
+	private void initMenu(String maNV) {
+		menu = new Menu(maNV);
 		bg.add(menu, "w 230!, spany 2");    // Span Y 2cell
 		menu.addEvent(new EventMenuSelected() {
 			@Override
@@ -203,9 +203,9 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 				}
 				if (menuIndex == 4) {
 					if(subMenuIndex == 0)
-						main.showForm(new Panel_LapHoaDon2());
+						main.showForm(new Panel_LapHoaDon(maNV));
 					else if(subMenuIndex == 1)
-						main.showForm(new Panel_DatHang());
+						main.showForm(new Panel_DatHang(maNV));
 					else if(subMenuIndex == 2)
 						main.showForm(new Panel_QuanLyNhanVien());
 					else if (subMenuIndex == 3)
@@ -342,10 +342,9 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 		int response = JOptionPane.showConfirmDialog(null, "Bạn có lưu trước khi muốn thoát chương trình không ?", "Thông báo !!!!", JOptionPane.YES_NO_OPTION);
 
         if (response == JOptionPane.YES_OPTION) {
-            // Xử lý khi người dùng chọn "Yes"
-        	//Tìm hiểu frame null
-        	m=new Message(null,true);
-            m.showMessage("Đã lưu thay đổi.");
+        	UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, "Đã lưu", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
         }
 		

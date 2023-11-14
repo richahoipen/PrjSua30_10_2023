@@ -2,8 +2,10 @@ package entities;
 
 
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -15,6 +17,9 @@ import jakarta.persistence.Table;
 @Table(name = "CTDonDatHang")
 public class CTDonDatHang 
 {
+	@Id
+	@Column(name = "sTT", length = 100,nullable = false)
+	private int sTT;
 	@Column(name = "donGia", length = 100,nullable = true)
 	private double donGia;
 	@Column(name = "soLuong", length = 100,nullable = true)
@@ -28,17 +33,22 @@ public class CTDonDatHang
 		this.thanhTien = thanhTien;
 	}
 	//Nối với SanPham và CTDonDatHang
-	@EmbeddedId
+	
 	@OneToOne
     @JoinColumn(name = "maSP")
 	private SanPham sanPham;
 	//Nối SanPham 
-	@Id
+	
 	@ManyToOne
-    @JoinColumn(name = "maDDH")
+    @JoinColumn(name = "maDDH",nullable = true)
 	private DonDatHang donDatHang;
 
-	
+	public int getsTT() {
+		return sTT;
+	}
+	public void setsTT(int sTT) {
+		this.sTT = sTT;
+	}
 	public double getDonGia() {
 		return donGia;
 	}
@@ -67,10 +77,28 @@ public class CTDonDatHang
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public CTDonDatHang(double donGia, int soLuong, double thanhTien) {
+	
+	public CTDonDatHang(int sTT, double donGia, int soLuong, double thanhTien) {
+		super();
+		this.sTT = sTT;
 		this.donGia = donGia;
 		this.soLuong = soLuong;
 		this.thanhTien = thanhTien;
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(sTT);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CTDonDatHang other = (CTDonDatHang) obj;
+		return sTT == other.sTT;
 	}
 	
 	

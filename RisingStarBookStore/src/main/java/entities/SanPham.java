@@ -173,6 +173,23 @@ public class SanPham
 	public void setMaNhaCungCap(String maNhaCungCap) {
 		this.maNhaCungCap = maNhaCungCap;
 	}
+	public SanPham(String maSP, String tenSP, String loaiSP, String tacGia, String nhaXuatBan, int namXuatBan,
+			int soLuong, int soLuongBan, String ngonNgu, double giaNhap, double giaBan, String maNhaCungCap) {
+		super();
+		this.maSP = maSP;
+		this.tenSP = tenSP;
+		this.loaiSP = loaiSP;
+		this.tacGia = tacGia;
+		this.nhaXuatBan = nhaXuatBan;
+		this.namXuatBan = namXuatBan;
+		this.soLuong = soLuong;
+		this.soLuongBan = soLuongBan;
+		this.ngonNgu = ngonNgu;
+		this.giaNhap = giaNhap;
+		this.giaBan = giaBan;
+		this.maNhaCungCap = maNhaCungCap;
+	}
+	
 	
 	
 	

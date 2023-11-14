@@ -1,10 +1,10 @@
 package entities;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
+
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +19,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "DonDatHang")
-
 public class DonDatHang 
 {
 	@Id
@@ -52,7 +51,7 @@ public class DonDatHang
 	//Các hàm về Date
 	public LocalDate getNgayDatLocalDate()
 	{
-		return ngayDat.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		return ngayDat.toLocalDate();
 	}
 	public String getNgayDatToString()
 	{

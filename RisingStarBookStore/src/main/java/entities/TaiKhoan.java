@@ -37,7 +37,7 @@ public class TaiKhoan
 	public void setNhanVien(NhanVien nhanVien) {
 		this.nhanVien = nhanVien;
 	}
-	
+	private String maCuaNV;
 	public TaiKhoan() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -45,5 +45,11 @@ public class TaiKhoan
 	public TaiKhoan(String matKhau) {
 		super();
 		this.matKhau = matKhau;
+	}
+	public String getMaCuaNV() {
+		return maCuaNV;
+	}
+	public void setMaCuaNV(String maCuaNV) {
+		this.maCuaNV = maCuaNV;
 	}
 }

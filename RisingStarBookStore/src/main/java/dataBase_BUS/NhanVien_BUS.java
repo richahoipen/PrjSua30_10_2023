@@ -161,4 +161,16 @@ public class NhanVien_BUS implements NhanVien_Method
 		// TODO Auto-generated method stub
 		return sqlNhanVien_DAO.timKiemTheo_diaChi(diaChi, dtm_NV);
 	}
+
+	public NhanVien_BUS() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public String getTenNV(String maNV_CanTim) {
+		// TODO Auto-generated method stub
+		return sqlNhanVien_DAO.getTenNV(maNV_CanTim);
+	}
+	
 }

@@ -77,3 +77,27 @@ FROM [dbo].[NhanVien]
 where tenNV=N'Trần Văn Đạt' or sdt=N'0878146635' or gioiTinh=N'Nam' or diaChi=N'57 Trường Chinh, tpHCM' or ngaySinh='1999-10-01' or chucVu=N'Nhân viên' or cMND='081725000123' or caLam=N'Sáng'
 ORDER BY CAST(SUBSTRING(maNV, 3, LEN(maNV)) AS INT) ASC;
 --2 thuộc tính
+--XỬ LÝ ĐĂNG NHẬP
+select maNV from [dbo].[TaiKhoan]
+ORDER BY CAST(SUBSTRING(maNV, 3, LEN(maNV)) AS INT) ASC;
+
+select matKhau from [dbo].[TaiKhoan]
+ORDER BY CAST(SUBSTRING(maNV, 3, LEN(maNV)) AS INT) ASC;
+--Xuất xử lí
+
+SELECT TaiKhoan.maNV ,TaiKhoan.matKhau 
+FROM [dbo].[TaiKhoan]  
+INNER JOIN [dbo].[NhanVien] ON TaiKhoan.maNV = NhanVien.maNV
+WHERE NhanVien.chucVu = 'Nhân viên';
+
+SELECT TaiKhoan.matKhau 
+FROM [dbo].[TaiKhoan]  
+INNER JOIN [dbo].[NhanVien] ON TaiKhoan.maNV = NhanVien.maNV
+WHERE NhanVien.chucVu = 'Nhân viên';
+--Dữ liệu TaiKhoan
+SELECT *
+FROM [dbo].[TaiKhoan]
+--Lấy tên NV
+select tenNV
+FROM [dbo].[NhanVien]
+where maNV='NV3';
