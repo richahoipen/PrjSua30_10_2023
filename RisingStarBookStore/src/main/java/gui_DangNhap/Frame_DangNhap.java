@@ -175,14 +175,15 @@ public class Frame_DangNhap extends JFrame implements ActionListener
 		{
 			if(t.getMaCuaNV().equalsIgnoreCase(maNV) && t.getMatKhau().equalsIgnoreCase(matKhau))
 				return true;
-				break;
 		}
 		return false;
 	}
 	public void load_Frame_Chinh(String maNV)
 	{
-		Frame_Chinh frame_Chinh = new Frame_Chinh(maNV);
-		frame_Chinh.setVisible(true);
+		Frame_Chinh frame = new Frame_Chinh(maNV);
+		frame.setTitle("Rising Star: Quản lý mua bán sách tại hiệu sách tư nhân. ");
+        frame.setIconImage(new CustomIcon("src/main/images/view_image/Logo.png").getImage());
+		frame.setVisible(true);
 		Frame_DangNhap.this.dispose();
 	}
 	@Override
