@@ -26,6 +26,9 @@ public class DonDatHang
 	private String maDDH;
 	@Column(name = "ngayDat", length = 100, columnDefinition = "varchar(20)",nullable = true)
 	private Date ngayDat;
+	@Column(name = "daLapHoaDon", length = 100,nullable = true)
+	private boolean daLapHoaDon;
+	
 	//Nối với NhanVien
 	@ManyToOne
     @JoinColumn(name = "maNV")
@@ -91,14 +94,21 @@ public class DonDatHang
 	public void setNhanVien(NhanVien nhanVien) {
 		this.nhanVien = nhanVien;
 	}
+	public boolean isDaLapHoaDon() {
+		return daLapHoaDon;
+	}
+	public void setDaLapHoaDon(boolean daLapHoaDon) {
+		this.daLapHoaDon = daLapHoaDon;
+	}
 	public DonDatHang() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public DonDatHang(String maDDH, Date ngayDat) {
+	public DonDatHang(String maDDH, Date ngayDat,boolean daLapHoaDon) {
 		super();
 		this.maDDH = maDDH;
 		this.ngayDat = ngayDat;
+		this.daLapHoaDon=daLapHoaDon;
 	}
 	
 }

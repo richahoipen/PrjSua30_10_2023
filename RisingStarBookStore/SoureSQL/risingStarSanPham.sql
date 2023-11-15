@@ -68,3 +68,6 @@ WHERE sdt = '0917646656';
 SELECT TOP 1 gioiTinh
 FROM [dbo].[KhachHang]
 WHERE sdt = '0917646656';
+
+select * from [dbo].[TaiKhoan]
+where 

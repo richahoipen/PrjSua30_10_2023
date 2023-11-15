@@ -43,8 +43,8 @@ public class Herbinate {
 			//TaiKhoan(String maTK, String matKhau) 
 			TaiKhoan taiKhoan1=new TaiKhoan("1234");
 			//DonDatHang(String maDDH, Date ngayDat)
-			DonDatHang donDatHang1=new DonDatHang("DDH1",(java.sql.Date) new Date());
-			DonDatHang donDatHang2=new DonDatHang("DDH2",(java.sql.Date) new Date());
+			DonDatHang donDatHang1=new DonDatHang("DDH1",(java.sql.Date) new Date(),false);
+			DonDatHang donDatHang2=new DonDatHang("DDH2",(java.sql.Date) new Date(),false);
 			//KhachHang(String maKH, String tenKH, String sdt, boolean gioiTinh, String diaChi)
 			KhachHang khachHang1=new KhachHang("KH1","Bill Joen","7891646635",true,"13 Ohio");
 			//HoaDon(String maHD, Date ngayLap)

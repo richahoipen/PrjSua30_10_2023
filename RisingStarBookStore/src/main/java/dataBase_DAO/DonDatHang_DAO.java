@@ -26,8 +26,8 @@ public class DonDatHang_DAO implements DonDatHang_Method
 				+ "SELECT @NextIndex = ISNULL(MAX(CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT)), 0) + 1 FROM DonDatHang;\r\n"
 				+ "DECLARE @NewMaDDH VARCHAR(20);\r\n"
 				+ "SET  @NewMaDDH = 'DDH' + CAST(@NextIndex AS VARCHAR);\r\n"
-				+ "insert into [dbo].[DonDatHang]([maDDH],[maKH],[maNV],[ngayDat])\r\n"
-				+ "values (@NewMaDDH,?,?,?)\r\n"
+				+ "insert into [dbo].[DonDatHang]([maDDH],[maKH],[maNV],[ngayDat],[daLapHoaDon])\r\n"
+				+ "values (@NewMaDDH,?,?,?,?)\r\n"
 				+ "update [dbo].[CTDonDatHang]\r\n"
 				+ "set maDDH=@NewMaDDH\r\n"
 				+ "where maDDH is null";
@@ -38,6 +38,7 @@ public class DonDatHang_DAO implements DonDatHang_Method
 			preparedStatement_Insert.setNString(1,maKH);
 			preparedStatement_Insert.setNString(2,maNV);
 			preparedStatement_Insert.setDate(3,d.getNgayDat());
+			preparedStatement_Insert.setBoolean(4, false);
 			preparedStatement_Insert.executeUpdate();
 			
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));

@@ -1,4 +1,4 @@
-package gui_Panel_Other;
+package gui_Panel_Others;
 
 import com.raven.event.EventMenu;
 import com.raven.event.EventMenuSelected;
