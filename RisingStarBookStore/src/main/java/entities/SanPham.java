@@ -12,7 +12,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+
 import jakarta.persistence.Table;
 
 @Entity
@@ -81,18 +81,12 @@ public class SanPham
 	public void setListCTHoaDon(List<CTHoaDon> listCTHoaDon) {
 		this.listCTHoaDon = listCTHoaDon;
 	}
-	public CTDonDatHang getcTDonDatHang() {
-		return cTDonDatHang;
-	}
-	public void setcTDonDatHang(CTDonDatHang cTDonDatHang) {
-		this.cTDonDatHang = cTDonDatHang;
-	}
+	
 	//Nối với CTHoaDon
 	@OneToMany(mappedBy = "sanPham", cascade = CascadeType.ALL)
 	List<CTHoaDon> listCTHoaDon=new ArrayList<>();
 	//Nối với CTDonDatHang
-	@OneToOne(mappedBy = "sanPham", cascade = CascadeType.ALL)
-	private CTDonDatHang cTDonDatHang;
+	
 	public String getMaSP() {
 		return maSP;
 	}

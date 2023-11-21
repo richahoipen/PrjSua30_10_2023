@@ -14,5 +14,9 @@ public interface CTDonDatHang_Method {
 	public boolean getGioiTinh_KhachHang(String sdt);
 	public boolean xuat_GioHang(DefaultTableModel dtm_CTDD);
 	public double tinhTongTien_GioHang();
-	
+	//Xuất chi tiết đơn đặt
+	public boolean xuat_CTDDH_TheoDonDat(String maDDH,DefaultTableModel dtm_CTDDH);
+	//Các đơn đã đặt
+	public boolean themCTDonDatHang_Voi_DonDaDat(SanPham s,CTDonDatHang c,String maDDH);
+	public boolean xoaCTDonDatHang_Voi_DonDaDat(SanPham s,String maDDH);
 }

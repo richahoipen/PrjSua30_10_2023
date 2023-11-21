@@ -51,4 +51,7 @@ public interface NhaCungCap_Method
 	public boolean timKiemTheo_tenNCC_sdtNCC_diaChi(NhaCungCap ncc, DefaultTableModel dtm_NCC);
 	public boolean timKiemTheo_tenNCC_email_diaChi(NhaCungCap ncc, DefaultTableModel dtm_NCC);
 	public boolean timKiemTheo_sdtNCC_email_diaChi(NhaCungCap ncc, DefaultTableModel dtm_NCC);
+	//
+	public String getMaNhaCungCap(String tenNCC);
+	public String getTenNhaCungCap(String maNCC);
 }

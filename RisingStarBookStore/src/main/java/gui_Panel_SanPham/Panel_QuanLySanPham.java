@@ -256,7 +256,7 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
 		TableColumnModel columnModel = tbl_DSSP.getColumnModel();
 
         // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
-		int[] columnWidths = {100, 175, 130, 85, 100, 220, 60, 130, 60,60,70,70};
+		int[] columnWidths = {100, 175, 130, 85, 150, 150, 60, 130, 60,60,70,70};
         for (int i = 0; i < columnWidths.length; i++) {
             TableColumn column = columnModel.getColumn(i);
             column.setPreferredWidth(columnWidths[i]);
@@ -556,7 +556,7 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     	cbo_LoaiSP.getMyVector().add("Truyện tranh");
     	//nha cung cap
     	cbo_NhaCungCap.addItem("Chọn");
-    	sqlNhaCungCap_BUS.dayComboBoxMaNCC(cbo_NhaCungCap);
+    	sqlNhaCungCap_BUS.dayComboBoxTenNCC(cbo_NhaCungCap);
     	//ngon ngu
     	cbo_NgonNgu.addItem("Chọn");
     	cbo_NgonNgu.addItem("Tiếng việt");
@@ -791,52 +791,71 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     {
     	//SanPham(String maSP, String tenSP, String loaiSP, String tacGia, String nhaXuatBan, int namXuatBan,
     			//int soLuong, String ngonNgu, double giaNhap, double giaBan,byte[] hinhAnh) 
-		String tenSP=(String) cbo_TenSP.getSelectedItem();
-		String loaiSP=(String) cbo_LoaiSP.getSelectedItem();
-		String tacGia=txt_TacGia.getText();
-		String nhaXuatBan=txt_NhaXuatBan.getText();
-		int namXuatBan=(Integer)spn_NamXuatBan.getValue();
-		int soLuong=(Integer)spn_SoLuongCon.getValue();
-		String ngonNgu=(String) cbo_NgonNgu.getSelectedItem();
-		String giaNhap=txt_GiaNhap.getText();   
-		double giaNhap_Double=Double.parseDouble(giaNhap);
-		String giaBan=txt_GiaBan.getText();
-		double giaBan_Double=Double.parseDouble(giaBan);
-		String nhaCungCap=(String) cbo_NhaCungCap.getSelectedItem();	
-		SanPham s=new SanPham();
-		s.setTenSP(tenSP);
-		s.setLoaiSP(loaiSP);
-		s.setTacGia(tacGia);
-		s.setNhaXuatBan(nhaXuatBan);
-		s.setNamXuatBan(namXuatBan);
-		s.setSoLuong(soLuong);
-		s.setNgonNgu(ngonNgu);
-		s.setGiaNhap(giaNhap_Double);
-		s.setGiaBan(giaBan_Double);
-		s.setMaNhaCungCap(nhaCungCap);
-		s.setHinhAnh(getDuLieuAnh());
-		sqlSanPham_BUS.themSanPham(s, dtm_SP);
-		resetTable();
+    	try
+    	{
+    		String tenSP=(String) cbo_TenSP.getSelectedItem();
+    		String loaiSP=(String) cbo_LoaiSP.getSelectedItem();
+    		String tacGia=txt_TacGia.getText();
+    		String nhaXuatBan=txt_NhaXuatBan.getText();
+    		int namXuatBan=(Integer)spn_NamXuatBan.getValue();
+    		int soLuong=(Integer)spn_SoLuongCon.getValue();
+    		String ngonNgu=(String) cbo_NgonNgu.getSelectedItem();
+    		String giaNhap=txt_GiaNhap.getText();   
+    		double giaNhap_Double=Double.parseDouble(giaNhap);
+    		String giaBan=txt_GiaBan.getText();
+    		double giaBan_Double=Double.parseDouble(giaBan);
+    		String nhaCungCap=(String) cbo_NhaCungCap.getSelectedItem();	
+    		SanPham s=new SanPham();
+    		s.setTenSP(tenSP);
+    		s.setLoaiSP(loaiSP);
+    		s.setTacGia(tacGia);
+    		s.setNhaXuatBan(nhaXuatBan);
+    		s.setNamXuatBan(namXuatBan);
+    		s.setSoLuong(soLuong);
+    		s.setNgonNgu(ngonNgu);
+    		s.setGiaNhap(giaNhap_Double);
+    		s.setGiaBan(giaBan_Double);
+    		s.setMaNhaCungCap(sqlNhaCungCap_BUS.getMaNhaCungCap(nhaCungCap));
+    		s.setHinhAnh(getDuLieuAnh());
+    		sqlSanPham_BUS.themSanPham(s, dtm_SP);
+    		resetTable();
+    	}catch(Exception e)
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+	        resetTable();
+    	}
+		
     }
     private void capNhatSP()
     {
-    	String maSP=lbl_txt_MaSP.getText();
-    	String tenSP=(String) cbo_TenSP.getSelectedItem();
-		String loaiSP=(String) cbo_LoaiSP.getSelectedItem();
-		String tacGia=txt_TacGia.getText();
-		String nhaXuatBan=txt_NhaXuatBan.getText();
-		int namXuatBan=(Integer)spn_NamXuatBan.getValue();
-		int soLuong=(Integer)spn_SoLuongCon.getValue();
-		String ngonNgu=(String) cbo_NgonNgu.getSelectedItem();
-		String giaNhap=txt_GiaNhap.getText();   
-		double giaNhap_Double=Double.parseDouble(giaNhap);
-		String giaBan=txt_GiaBan.getText();
-		double giaBan_Double=Double.parseDouble(giaBan);
-		String nhaCungCap=(String) cbo_NhaCungCap.getSelectedItem();
-		SanPham s=new SanPham(maSP, tenSP, loaiSP, tacGia, nhaXuatBan, namXuatBan, soLuong, soLuong, ngonNgu, giaNhap_Double, giaBan_Double, duLieuAnh);
-		s.setMaNhaCungCap(nhaCungCap);
-		sqlSanPham_BUS.capNhatSanPham(s, dtm_SP);
-		resetTable();
+    	try
+    	{
+    		String maSP=lbl_txt_MaSP.getText();
+        	String tenSP=(String) cbo_TenSP.getSelectedItem();
+    		String loaiSP=(String) cbo_LoaiSP.getSelectedItem();
+    		String tacGia=txt_TacGia.getText();
+    		String nhaXuatBan=txt_NhaXuatBan.getText();
+    		int namXuatBan=(Integer)spn_NamXuatBan.getValue();
+    		int soLuong=(Integer)spn_SoLuongCon.getValue();
+    		String ngonNgu=(String) cbo_NgonNgu.getSelectedItem();
+    		String giaNhap=txt_GiaNhap.getText();   
+    		double giaNhap_Double=Double.parseDouble(giaNhap);
+    		String giaBan=txt_GiaBan.getText();
+    		double giaBan_Double=Double.parseDouble(giaBan);
+    		String nhaCungCap=(String) cbo_NhaCungCap.getSelectedItem();
+    		SanPham s=new SanPham(maSP, tenSP, loaiSP, tacGia, nhaXuatBan, namXuatBan, soLuong, soLuong, ngonNgu, giaNhap_Double, giaBan_Double, duLieuAnh);
+    		s.setMaNhaCungCap(sqlNhaCungCap_BUS.getMaNhaCungCap(nhaCungCap));
+    		sqlSanPham_BUS.capNhatSanPham(s, dtm_SP);
+    		resetTable();
+    	}catch(Exception e)
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+	        resetTable();
+    	}
     }
     public ImageIcon createImageIconFromBytes(byte[] imageData) {
         if (imageData != null) {

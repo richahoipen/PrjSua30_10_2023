@@ -2,7 +2,7 @@
 --CTDonDatHang
 SELECT *
 FROM [dbo].[CTDonDatHang]
-ORDER BY CAST(SUBSTRING(maSP, 3, LEN(maSP)) AS INT) ASC;
+ORDER BY sTT;
 SELECT *
 FROM [dbo].[SanPham]
 --DonDatHang
@@ -67,3 +67,46 @@ values (@NewSTT,?,?,?,?)
 
 --Hoa Don
 select *from [dbo].[CTHoaDon]
+select*from [dbo].[NhanVien]
+--HoaDon
+select *from [dbo].[HoaDon]
+
+select*from NhanVien
+select*from TaiKhoan
+
+--Thêm
+DECLARE @NewSTT INT;
+SET @NewSTT = ISNULL((SELECT MAX(sTT) FROM [dbo].[CTDonDatHang]), 0) + 1;
+insert into [dbo].[CTDonDatHang] ([sTT],[maSP],[donGia],[soLuong],[thanhTien])
+values (@NewSTT,N'SP5',2031,2,2213)
+
+SELECT *
+FROM [dbo].[CTDonDatHang]
+where maDDH is null and maSP=
+--Xuất danh sách đơn đặt hàng
+SELECT *
+FROM [dbo].[DonDatHang]
+where maNV=N'NV1' and daLapHoaDon=0
+--Lấy tên kheo ma
+SELECT tenKH
+FROM [dbo].[KhachHang]
+where maKH='KH12'
+--Xuất ctddh
+select * from [dbo].[CTDonDatHang]
+where maDDH=N'DDH1'
+--Cập nhật chi tiết khi đã có đơn đặt hàng
+select* from [dbo].[CTDonDatHang]
+select* from [dbo].[DonDatHang]  where maNV=N'NV1' and maKH=N'KH12'
+--Thêm CTDDH
+DECLARE @NewSTT INT;
+SET @NewSTT = ISNULL((SELECT MAX(sTT) FROM [dbo].[CTDonDatHang]), 0) + 1;
+insert into [dbo].[CTDonDatHang] ([sTT],[maSP],[donGia],[soLuong],[thanhTien],[maDDH])
+values (@NewSTT,?,?,?,?,?)
+--Xóa ctdd
+delete from [dbo].[CTDonDatHang]
+where maDDH=N'DDH3' and  maSP=N'SP6'
+
+SELECT KhachHang.tenKH, KhachHang.sdt,KhachHang.gioiTinh
+FROM [dbo].[KhachHang]
+INNER JOIN [dbo].[DonDatHang] ON KhachHang.maKH = DonDatHang.maKH
+where maDDH=N'DDH1'

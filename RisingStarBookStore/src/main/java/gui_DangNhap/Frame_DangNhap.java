@@ -92,7 +92,7 @@ public class Frame_DangNhap extends JFrame implements ActionListener
 		txt_MatKhau = new JPasswordField();
 		
 		cbo_ChucVu = new JComboBox();
-		cbo_ChucVu.setModel(new DefaultComboBoxModel(new String[] {"Nhân viên", "Nhân viên quản lý"}));
+		cbo_ChucVu.setModel(new DefaultComboBoxModel(new String[] {"Nhân viên", "Nhân viên quản lí"}));
 		
 		btn_DangNhap = new Custom_Button();
 		/*

@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import connectDB.Connect;
 import customEntities.Custom_ComboBox;
-
+import dataBase_BUS.NhaCungCap_BUS;
 import entities.SanPham;
 import interface_Method_DAO.SanPham_Method;
 
@@ -24,7 +24,7 @@ public class SanPham_DAO implements SanPham_Method
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
+	private NhaCungCap_BUS sqlNhaCungCap_BUS=new NhaCungCap_BUS();
 	@Override
 	public boolean themSanPham(SanPham s, DefaultTableModel dtm_SP) {
 		try {
@@ -157,7 +157,7 @@ public class SanPham_DAO implements SanPham_Method
 				String nhaCungCap=rs.getNString("maNCC");
 				SanPham s=new SanPham(maSP, tenSP, loaiSP, tacGia, nhaXuatBan, namXuatBan, soLuong, soLuongBan,ngonNgu, giaNhap, giaBan, dataAnh);
 				s.setMaNhaCungCap(nhaCungCap);
-				String[] row = {s.getMaSP(),s.getTenSP(),s.getLoaiSP(),s.getNgonNgu(),s.getMaNhaCungCap(),s.getNhaXuatBan(),Integer.toString(s.getNamXuatBan()),
+				String[] row = {s.getMaSP(),s.getTenSP(),s.getLoaiSP(),s.getNgonNgu(),sqlNhaCungCap_BUS.getTenNhaCungCap(s.getMaNhaCungCap()),s.getNhaXuatBan(),Integer.toString(s.getNamXuatBan()),
 						s.getTacGia(),Integer.toString(s.getSoLuong()),Integer.toString(s.getSoLuongBan()),Double.toString(s.getGiaNhap()),Double.toString(s.getGiaBan())};		
 				dtm_SP.addRow(row);
 			}
@@ -577,7 +577,7 @@ public class SanPham_DAO implements SanPham_Method
 				String nhaCungCap=rs.getNString("maNCC");
 				SanPham s=new SanPham(maSP, tenSP, loaiSP, tacGia, nhaXuatBan, namXuatBan, soLuong, soLuongBan,ngonNgu, giaNhap, giaBan, dataAnh);
 				s.setMaNhaCungCap(nhaCungCap);
-				String[] row = {s.getMaSP(),s.getTenSP(),s.getLoaiSP(),s.getNgonNgu(),s.getMaNhaCungCap(),s.getNhaXuatBan(),Integer.toString(s.getNamXuatBan()),
+				String[] row = {s.getMaSP(),s.getTenSP(),s.getLoaiSP(),s.getNgonNgu(),sqlNhaCungCap_BUS.getTenNhaCungCap(s.getMaNhaCungCap()),s.getNhaXuatBan(),Integer.toString(s.getNamXuatBan()),
 						s.getTacGia(),Integer.toString(s.getSoLuong()),Integer.toString(s.getSoLuongBan()),Double.toString(s.getGiaNhap()),Double.toString(s.getGiaBan())};		
 				dtm_SP.addRow(row);
 			}

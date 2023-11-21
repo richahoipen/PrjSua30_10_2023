@@ -54,8 +54,8 @@ public class Herbinate {
 			CTHoaDon cTHoaDon1=new CTHoaDon(20000,34,20000*34);
 			CTHoaDon cTHoaDon2=new CTHoaDon(20000,35,20000*35);
 			//CTDonDatHang(String maCTDDH, double donGia, int soLuong)
-			CTDonDatHang cTDonDatHang1=new CTDonDatHang(1,30000,23,500000);
-			CTDonDatHang cTDonDatHang2=new CTDonDatHang(2,30000,23,500000);
+			CTDonDatHang cTDonDatHang1=new CTDonDatHang(1,30000,23,500000,"SP1");
+			CTDonDatHang cTDonDatHang2=new CTDonDatHang(2,30000,23,500000,"SP2");
 			
 			//set SanPham và NhaCungCap
 			nhaCungCap1.getListSanPham().add(sanPham1);
@@ -91,8 +91,7 @@ public class Herbinate {
 			cTHoaDon1.setHoaDon(hoaDon1);
 			cTHoaDon1.setHoaDon(hoaDon1);
 			//set CTDonDatHang và SanPham
-			cTDonDatHang1.setSanPham(sanPham1);
-			sanPham1.setcTDonDatHang(cTDonDatHang1);
+			
 			//set CTDonDatHang và DonDatHang
 			donDatHang1.getListCTDonDatHang().add(cTDonDatHang1);
 			donDatHang1.getListCTDonDatHang().add(cTDonDatHang2);

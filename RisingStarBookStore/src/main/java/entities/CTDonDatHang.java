@@ -10,7 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,17 +26,21 @@ public class CTDonDatHang
 	private int soLuong;
 	@Column(name = "thanhTien", length = 100,nullable = true)
 	private double thanhTien;
+	@Column(name = "maSP", length = 100, columnDefinition = "nvarchar(20)",nullable = true)
+	private String maSP;
+	public String getMaSP() {
+		return maSP;
+	}
+	public void setMaSP(String maSP) {
+		this.maSP = maSP;
+	}
 	public double getThanhTien() {
 		return thanhTien;
 	}
 	public void setThanhTien(double thanhTien) {
 		this.thanhTien = thanhTien;
 	}
-	//Nối với SanPham và CTDonDatHang
 	
-	@OneToOne
-    @JoinColumn(name = "maSP")
-	private SanPham sanPham;
 	//Nối SanPham 
 	
 	@ManyToOne
@@ -61,12 +65,7 @@ public class CTDonDatHang
 	public void setSoLuong(int soLuong) {
 		this.soLuong = soLuong;
 	}
-	public SanPham getSanPham() {
-		return sanPham;
-	}
-	public void setSanPham(SanPham sanPham) {
-		this.sanPham = sanPham;
-	}
+	
 	public DonDatHang getDonDatHang() {
 		return donDatHang;
 	}
@@ -78,12 +77,13 @@ public class CTDonDatHang
 		// TODO Auto-generated constructor stub
 	}
 	
-	public CTDonDatHang(int sTT, double donGia, int soLuong, double thanhTien) {
+	public CTDonDatHang(int sTT, double donGia, int soLuong, double thanhTien,String maSP) {
 		super();
 		this.sTT = sTT;
 		this.donGia = donGia;
 		this.soLuong = soLuong;
 		this.thanhTien = thanhTien;
+		this.maSP = maSP;
 	}
 	@Override
 	public int hashCode() {

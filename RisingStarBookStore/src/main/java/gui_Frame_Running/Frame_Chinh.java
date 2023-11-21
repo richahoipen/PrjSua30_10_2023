@@ -247,7 +247,7 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Bill.png",30,30), "Hóa đơn",
 				 "Tìm kiếm hóa đơn", "Thống kê thu - chi - lợi nhuận"));
 		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Preorder.png",30,30), "Đơn đặt",
-				 "Tìm kiếm đơn đặt"));
+				 "Tìm kiếm đơn đặt hàng"));
 		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Customer.png",30,30), "Khách hàng",
 				"Cập nhật", "Tìm kiếm"));
 		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Employee.png",30,30), "Nhân viên",

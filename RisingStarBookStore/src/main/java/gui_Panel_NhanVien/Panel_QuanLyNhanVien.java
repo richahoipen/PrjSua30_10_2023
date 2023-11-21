@@ -646,25 +646,34 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     	int row = tbl_DSNV.getSelectedRow();
     	if(row!=-1)
 		{
-    		String tenNV=txt_HoTen.getText();
-    		String maNV=lbl_txt_MaNV.getText();
-        	String sdt=txt_SoDienThoai.getText();
-        	String gioiTinh=(String) cbo_GioiTinh.getSelectedItem();
-        	String diaChi=txt_DiaChi.getText();
-        	Date ngaySinh=dcr_NgaySinh.getDate();
-        	java.sql.Date sqlDateNgaySinh = new java.sql.Date(ngaySinh.getTime());
-        	String chucVu=(String) cbo_ChucVu.getSelectedItem();
-        	String cMND=txt_CCCD.getText();
-        	String caLam=(String) cbo_CaLam.getSelectedItem();
-        	String matKhau=txt_MatKhau.getText();
-        	NhanVien n=new NhanVien(maNV, tenNV, sdt, gioiTinh, diaChi, sqlDateNgaySinh, chucVu, cMND, caLam);
-        	TaiKhoan t=new TaiKhoan(matKhau);
-        	if(sqlNhanVien_BUS.capNhatNhanVien(n,t))
-        		System.out.println("Thành công cập nhật");
-        	
-			//cập nhật xong thì bỏ chọn
-			tbl_DSNV.clearSelection();
-			resetTable();
+    		try
+    		{
+    			String tenNV=txt_HoTen.getText();
+        		String maNV=lbl_txt_MaNV.getText();
+            	String sdt=txt_SoDienThoai.getText();
+            	String gioiTinh=(String) cbo_GioiTinh.getSelectedItem();
+            	String diaChi=txt_DiaChi.getText();
+            	Date ngaySinh=dcr_NgaySinh.getDate();
+            	java.sql.Date sqlDateNgaySinh = new java.sql.Date(ngaySinh.getTime());
+            	String chucVu=(String) cbo_ChucVu.getSelectedItem();
+            	String cMND=txt_CCCD.getText();
+            	String caLam=(String) cbo_CaLam.getSelectedItem();
+            	String matKhau=txt_MatKhau.getText();
+            	NhanVien n=new NhanVien(maNV, tenNV, sdt, gioiTinh, diaChi, sqlDateNgaySinh, chucVu, cMND, caLam);
+            	TaiKhoan t=new TaiKhoan(matKhau);
+            	if(sqlNhanVien_BUS.capNhatNhanVien(n,t))
+            		System.out.println("Thành công cập nhật");
+            	
+    			//cập nhật xong thì bỏ chọn
+    			tbl_DSNV.clearSelection();
+    			resetTable();
+    		}catch(Exception e)
+    		{
+    			e.printStackTrace();
+    			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+    	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+    	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    		}
 		}
 		else
 		{

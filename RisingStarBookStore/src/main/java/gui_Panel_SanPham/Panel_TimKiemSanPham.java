@@ -237,7 +237,7 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
 		TableColumnModel columnModel = tbl_DSSP.getColumnModel();
 
         // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
-		int[] columnWidths = {100, 175, 130, 85, 100, 220, 60, 130, 60,60,70,70};
+		int[] columnWidths = {100, 175, 130, 85, 150, 150, 60, 130, 60,60,70,70};
         for (int i = 0; i < columnWidths.length; i++) {
             TableColumn column = columnModel.getColumn(i);
             column.setPreferredWidth(columnWidths[i]);
@@ -461,7 +461,7 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     	cbo_NamXuatBan.addItem("Chọn");
     	sqlSanPham_BUS.dayCombobox_namXuatBan(cbo_NamXuatBan);
     	cbo_NhaCungCap.addItem("Chọn");
-    	sqlNhaCungCap_BUS.dayComboBoxMaNCC(cbo_NhaCungCap);
+    	sqlNhaCungCap_BUS.dayComboBoxTenNCC(cbo_NhaCungCap);
     	cbo_NgonNgu.addItem("Chọn");
     	sqlSanPham_BUS.dayCombobox_ngonNgu(cbo_NgonNgu);
     	cbo_GiaNhap.addItem("Chọn");
@@ -578,7 +578,7 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     			int soLuongBan_Int=Integer.parseInt(soLuongBan);
     			double giaNhap_Double=Double.parseDouble(giaNhap);
     			double giaBan_Double=Double.parseDouble(giaNhap);
-    			SanPham s=new SanPham(maSP, tenSP, loaiSP, tacGia, nhaXuatBan, namXuatBan_Int, soLuong_Int, soLuongBan_Int, ngonNgu, giaNhap_Double, giaBan_Double, nhaCungCap);
+    			SanPham s=new SanPham(maSP, tenSP, loaiSP, tacGia, nhaXuatBan, namXuatBan_Int, soLuong_Int, soLuongBan_Int, ngonNgu, giaNhap_Double, giaBan_Double, sqlNhaCungCap_BUS.getMaNhaCungCap(nhaCungCap));
     			dtm_SP.setRowCount(0);
     			sqlSanPham_BUS.timKiem_SanPham(s, dtm_SP);
     			

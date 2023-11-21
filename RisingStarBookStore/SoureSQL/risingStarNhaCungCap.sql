@@ -35,3 +35,9 @@ VALUES (N'45 Tôn Ðản Quận 4', N'mc@gmail.com', @NewMaNCC, N'02838452708', 
 DELETE FROM NhaCungCap;
 --Update
 UPDATE [dbo].[NhaCungCap] SET [tenNCC]= 'Minh' , [sdtNCC]= '098166354' ,[email]= 'mgit@gmail.com' ,[diaChi]= '34 Nguyễn Thông' WHERE [maNCC]= 'NCC1'
+--Lấy mã theo tên
+select TOP 1 maNCC from [dbo].[NhaCungCap]
+where tenNCC=N'Văn Đạt'
+--Lấy tên theo mã
+select tenNCC from [dbo].[NhaCungCap]
+where maNCC=N'NCC4'

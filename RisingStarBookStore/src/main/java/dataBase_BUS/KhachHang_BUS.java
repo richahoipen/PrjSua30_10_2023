@@ -157,5 +157,11 @@ public class KhachHang_BUS implements KhachHang_Method
 		// TODO Auto-generated method stub
 		return dataBase_KhachHang_DAO.timKiemTheo_sdt_diaChi_gioiTinh(k, dtm_KH);
 	}
+
+	@Override
+	public String getTenKhachHang_TheoMa(String maKH) {
+		// TODO Auto-generated method stub
+		return dataBase_KhachHang_DAO.getTenKhachHang_TheoMa(maKH);
+	}
 	
 }

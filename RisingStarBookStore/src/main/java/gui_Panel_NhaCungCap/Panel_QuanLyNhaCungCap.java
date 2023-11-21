@@ -382,17 +382,26 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 		int row = tbl_DSNCC.getSelectedRow();
 		if(row!=-1)
 		{
-			String maNCC=lbl_txt_MaNCC.getText();
-			String tenNCC=txt_HoTen.getText();
-			String sdt=txt_SoDienThoai.getText();
-			String diaChi=txt_DiaChi.getText();
-			String email=txt_Email.getText();
-			NhaCungCap n=new NhaCungCap(maNCC, tenNCC, sdt, email, diaChi);
-			sqlNhaCungCap_BUS.capNhatNhaCungCap(n);
-			dtm_NCC.setRowCount(0);
-			sqlNhaCungCap_BUS.xuatDanhSachNhaCungCap(dtm_NCC);
-			//cập nhật xong thì bỏ chọn
-			tbl_DSNCC.clearSelection();
+			try
+			{
+				String maNCC=lbl_txt_MaNCC.getText();
+				String tenNCC=txt_HoTen.getText();
+				String sdt=txt_SoDienThoai.getText();
+				String diaChi=txt_DiaChi.getText();
+				String email=txt_Email.getText();
+				NhaCungCap n=new NhaCungCap(maNCC, tenNCC, sdt, email, diaChi);
+				sqlNhaCungCap_BUS.capNhatNhaCungCap(n);
+				dtm_NCC.setRowCount(0);
+				sqlNhaCungCap_BUS.xuatDanhSachNhaCungCap(dtm_NCC);
+				//cập nhật xong thì bỏ chọn
+				tbl_DSNCC.clearSelection();
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+				UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		else
 		{

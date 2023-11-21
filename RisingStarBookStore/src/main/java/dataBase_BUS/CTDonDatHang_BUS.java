@@ -55,6 +55,24 @@ public class CTDonDatHang_BUS implements CTDonDatHang_Method {
 		return sqlCTDonDatHang_DAO.tinhTongTien_GioHang() ;
 	}
 
+	@Override
+	public boolean xuat_CTDDH_TheoDonDat(String maDDH, DefaultTableModel dtm_CTDDH) {
+		// TODO Auto-generated method stub
+		return sqlCTDonDatHang_DAO.xuat_CTDDH_TheoDonDat(maDDH, dtm_CTDDH);
+	}
+
+	@Override
+	public boolean themCTDonDatHang_Voi_DonDaDat(SanPham s, CTDonDatHang c,String maDDH) {
+		// TODO Auto-generated method stub
+		return sqlCTDonDatHang_DAO.themCTDonDatHang_Voi_DonDaDat(s, c, maDDH);
+	}
+
+	@Override
+	public boolean xoaCTDonDatHang_Voi_DonDaDat(SanPham s, String maDDH) {
+		// TODO Auto-generated method stub
+		return sqlCTDonDatHang_DAO.xoaCTDonDatHang_Voi_DonDaDat(s,maDDH);
+	}
+
 	
 
 	

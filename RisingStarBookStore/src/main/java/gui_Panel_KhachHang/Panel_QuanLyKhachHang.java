@@ -501,17 +501,26 @@ public class Panel_QuanLyKhachHang extends JPanel implements ActionListener, Mou
 		int row = tbl_DSKH.getSelectedRow();
 		if(row!=-1)
 		{
-			String maKH=lbl_txt_MaKH.getText();
-			String tenKH=txt_HoTen.getText();
-			String diaChi=txt_DiaChi.getText();
-			String sdt=txt_SoDienThoai.getText();
-			String gioiTinh = (String) cbo_GioiTinh.getSelectedItem();
-			KhachHang k=new KhachHang(maKH, tenKH, sdt, gioiTinhBool(gioiTinh), diaChi);
-			sqlKhachHang_BUS.capNhatKhachHang(k);
-			dtm_KH.setRowCount(0);
-			sqlKhachHang_BUS.xuatDanhSachKhachHang(dtm_KH);
-			//cập nhật xong thì bỏ chọn
-			tbl_DSKH.clearSelection();
+			try
+			{
+				String maKH=lbl_txt_MaKH.getText();
+				String tenKH=txt_HoTen.getText();
+				String diaChi=txt_DiaChi.getText();
+				String sdt=txt_SoDienThoai.getText();
+				String gioiTinh = (String) cbo_GioiTinh.getSelectedItem();
+				KhachHang k=new KhachHang(maKH, tenKH, sdt, gioiTinhBool(gioiTinh), diaChi);
+				sqlKhachHang_BUS.capNhatKhachHang(k);
+				dtm_KH.setRowCount(0);
+				sqlKhachHang_BUS.xuatDanhSachKhachHang(dtm_KH);
+				//cập nhật xong thì bỏ chọn
+				tbl_DSKH.clearSelection();
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+				UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		else
 		{

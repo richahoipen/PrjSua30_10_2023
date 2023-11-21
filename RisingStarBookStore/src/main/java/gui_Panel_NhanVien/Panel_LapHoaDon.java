@@ -1,5 +1,6 @@
 package gui_Panel_NhanVien;
 
+import com.lowagie.text.Table;
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.colorpicker.ColorPicker;
 import com.toedter.calendar.JDateChooser;
 
@@ -13,6 +14,8 @@ import dataBase_BUS.CTDonDatHang_BUS;
 import dataBase_BUS.DonDatHang_BUS;
 import dataBase_BUS.KhachHang_BUS;
 import dataBase_BUS.SanPham_BUS;
+import entities.CTDonDatHang;
+import entities.SanPham;
 import gui_Frame_Running.*;
 import gui_Dialog.Message;
 import icon.GoogleMaterialDesignIcons;
@@ -166,7 +169,7 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 		TableColumnModel columnModel = tbl_DSSP.getColumnModel();
 
         // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
-		int[] columnWidths = {50,100,100,80,150,50,100,50};
+		int[] columnWidths = {80,100,100,80,150,50,100,50};
         for (int i = 0; i < columnWidths.length; i++) {
             TableColumn column = columnModel.getColumn(i);
             column.setPreferredWidth(columnWidths[i]);
@@ -455,7 +458,9 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
     	cbo_TraSDT.addActionListener(this);
     	tbl_DSDD.addMouseListener(this);
     	tbl_DSSP.addMouseListener(this);
+    	//tbl_DSCTDD.addMouseListener(this);
     	resetTable_DSSP();
+    	resetTable_DSDD();
     	addCombobox();
     	
     }
@@ -466,7 +471,8 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
     }
     private void resetTable_DSDD()
     {
-    	
+    	dtm_DD.setRowCount(0);
+    	sqlDonDatHang_BUS.xuat_DonDat_ChuaThanhToan(maNV, dtm_DD);
     }
     private void addCombobox()
     {
@@ -503,13 +509,177 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
     		lbl_txt_GioiTinh.setText(gioiTinh_String(sdt));
     	}
     }
+    private void themSP()
+    {
+    	int row=tbl_DSSP.getSelectedRow();
+    	int row_dd=tbl_DSDD.getSelectedRow();
+    	int soLuong=(Integer) spinner.getValue();
+		if(soLuong<=0)
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Vui lòng chọn số lượng phải lớn hơn 0.", "Cảnh báo.", JOptionPane.WARNING_MESSAGE);
+	        
+		}
+		else
+		{
+			
+			if(row!=-1)
+			{
+				if(row_dd!=-1)
+				{
+					//public CTDonDatHang(double donGia, int soLuong, double thanhTien) 
+		    		String maSP=tbl_DSSP.getValueAt(row, 0).toString();
+					String giaBan=tbl_DSSP.getValueAt(row, 7).toString();
+					String maDDH=tbl_DSDD.getValueAt(row_dd, 0).toString();
+					try {
+			            double giaBan_Double=Double.parseDouble(giaBan);
+			            SanPham s=new SanPham();
+			            s.setMaSP(maSP);
+			            CTDonDatHang ct=new CTDonDatHang();
+			            ct.setDonGia(giaBan_Double);
+			            ct.setSoLuong(soLuong);
+			            sqlCTDonDatHang_BUS.themCTDonDatHang_Voi_DonDaDat(s, ct, maDDH);
+			            dtm_CTDD.setRowCount(0);
+			    		sqlCTDonDatHang_BUS.xuat_CTDDH_TheoDonDat(maDDH, dtm_CTDD);	
+			            //resetTable_GioHang();
+			            spinner.setValue(0);
+			            lbl_txt_TongTien.setText(Double.toString(sqlCTDonDatHang_BUS.tinhTongTien_GioHang())); 
+					} catch (NumberFormatException e) {
+						UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+						UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+						JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+					}
+				}	
+			}
+			else
+			{
+				UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		        JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm đề thêm vào giỏ.", "Thông báo.", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+    }
+    private String gioiTinh_String_maDDH(String maDDH)
+    {
+    	if(sqlDonDatHang_BUS.getGioiTinh_KH(maDDH))
+    		return "Nam";
+    	return "Nữ";
+    }
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+		int row=tbl_DSDD.getSelectedRow();
+		String maDDH=tbl_DSDD.getValueAt(row, 0).toString();
+		try
+		{
+			dtm_CTDD.setRowCount(0);
+			sqlCTDonDatHang_BUS.xuat_CTDDH_TheoDonDat(maDDH, dtm_CTDD);	
+			lbl_txt_HoTenKhachHang.setText(sqlDonDatHang_BUS.getTenKH(maDDH));
+			lbl_txt_SoDienThoai.setText(sqlDonDatHang_BUS.getSDT_KH(maDDH));
+			lbl_txt_GioiTinh.setText(gioiTinh_String_maDDH(maDDH));
+			cbo_TraSDT.setSelectedItem(sqlDonDatHang_BUS.getSDT_KH(maDDH));
+			lbl_txt_TongTien.setText(Double.toString(sqlDonDatHang_BUS.getTongTien_DonDatHang(maDDH)));
+		}catch(Exception ex)
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
 		
 	}
-
-
+	private void xoa_SP()
+    {
+    	int row=tbl_DSCTDD.getSelectedRow();
+    	int row_dd=tbl_DSDD.getSelectedRow();
+    	if(row!=-1)
+		{
+    		if(row_dd!=-1)
+    		{
+    			String maSP=tbl_DSCTDD.getValueAt(row, 0).toString();
+				String maDDH=tbl_DSDD.getValueAt(row_dd, 0).toString();
+        		SanPham s=new SanPham();
+        		s.setMaSP(maSP);
+        		sqlCTDonDatHang_BUS.xoaCTDonDatHang_Voi_DonDaDat(s, maDDH);		
+        		dtm_CTDD.setRowCount(0);
+	    		sqlCTDonDatHang_BUS.xuat_CTDDH_TheoDonDat(maDDH, dtm_CTDD);	
+    		}
+		}
+		else
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm loại bỏ.", "Thông báo.", JOptionPane.INFORMATION_MESSAGE);
+		}
+    }
+	private boolean checkText()
+	{
+		String tenKH=lbl_txt_HoTenKhachHang.getText();
+		String tienKhachDua=txt_SoTienKhachTra.getText();
+		if(tenKH.trim().equals(""))
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Thông tin khách hàng không được trống.", "Thông báo.", JOptionPane.WARNING_MESSAGE);
+	        return false;
+		}
+		if(tenKH.trim().equals(""))
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Thông tin khách hàng không được trống.", "Thông báo.", JOptionPane.WARNING_MESSAGE);
+	        return false;
+		}
+		if(tienKhachDua.trim().equals(""))
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Tiền khách đưa không được trống.", "Thông báo.", JOptionPane.WARNING_MESSAGE);
+	        txt_SoTienKhachTra.requestFocus();
+	        return false;
+		}
+		if(!tienKhachDua.matches("^\\d+(\\.\\d+)?$"))
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	        JOptionPane.showMessageDialog(null, "Tiền khách đưa không hợp lệ.", "Thông báo.", JOptionPane.WARNING_MESSAGE);
+	        txt_SoTienKhachTra.requestFocus();
+	        return false;
+		}
+		try {
+	           String tongTien=lbl_txt_TongTien.getText();
+	           double tongTien_Double=Double.parseDouble(tongTien);
+	           double tienKhachDua_Double=Double.parseDouble(tienKhachDua);
+	           if(tienKhachDua_Double<tongTien_Double)
+	           {
+	        	   UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+			   	   UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			   	   JOptionPane.showMessageDialog(null, "Tiền khách đưa nhỏ hơn thành tiền.", "Thông báo.", JOptionPane.WARNING_MESSAGE);
+			   	   txt_SoTienKhachTra.requestFocus();
+			   	   return false;
+	           }
+		} catch(NumberFormatException e) {
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
+		return true;
+	}
+	private void lapHoaDon()
+	{
+		if(checkText())
+		{
+			/*
+			try {
+		           String tongTien=lbl_txt_TongTien.getText();
+		           double tongTien_Double=Double.parseDouble(tongTien);
+		           
+			} catch(NumberFormatException e) {
+				UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+				UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+			}*/
+		}	
+	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -540,9 +710,9 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 		// TODO Auto-generated method stub
 		
 	}
-
-
-
+	private boolean isTableEmpty(CustomTable tbl_DSCTDD) {
+        return tbl_DSCTDD.getModel().getRowCount() == 0;
+    }
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -550,6 +720,27 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 		if(o.equals(btnTraKhachHang))
 		{
 			tim_KhachHang();
+		}
+		if(o.equals(btnThemSP))
+		{
+			if(!isTableEmpty(tbl_DSCTDD))
+			{
+				themSP();
+			}
+			else
+			{
+				UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		        JOptionPane.showMessageDialog(null, "Giỏ hàng không được trống.", "Cảnh báo.", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+		if(o.equals(btnLoaiSP))
+		{
+			xoa_SP();
+		}
+		if(o.equals(btnLapHoaDon))
+		{
+			lapHoaDon();
 		}
 		
 	}

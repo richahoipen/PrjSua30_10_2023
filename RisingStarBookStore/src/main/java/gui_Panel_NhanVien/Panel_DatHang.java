@@ -411,6 +411,13 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
     	sqlCTDonDatHang_BUS.xuat_GioHang(dtm_CTDD);
     	lbl_txt_TongTien.setText(Double.toString(sqlCTDonDatHang_BUS.tinhTongTien_GioHang()));
     }
+    private void resetSearch()
+    {
+    	lbl_txt_GioiTinh.setText("");
+    	lbl_txt_HoTenKhachHang.setText("");
+    	lbl_txt_SoDienThoai.setText("");
+    	cbo_TraKhachHang.setSelectedItem("Chọn");
+    }
     private boolean checkComboboxNULL(String sdt)
     {  	
     	if(sdt!=null)
@@ -449,6 +456,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
 	        JOptionPane.showMessageDialog(null, "Vui lòng chọn số lượng phải lớn hơn 0.", "Cảnh báo.", JOptionPane.WARNING_MESSAGE);
+	        spinner.setValue(0);
 	        
 		}
 		else
@@ -471,7 +479,8 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 		            //System.out.println("Thêm giỏ hàng thành công");
 		            resetTable();
 		            resetTable_GioHang();
-		            lbl_txt_TongTien.setText(Double.toString(sqlCTDonDatHang_BUS.tinhTongTien_GioHang()));            
+		            spinner.setValue(0);
+		            lbl_txt_TongTien.setText(Double.toString(sqlCTDonDatHang_BUS.tinhTongTien_GioHang())); 
 				} catch (NumberFormatException e) {
 					UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 					UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
@@ -521,19 +530,29 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
     	}
     	else
     	{
-    		String sdt=lbl_txt_SoDienThoai.getText();
-    		String gioiTinh=lbl_txt_GioiTinh.getText();
-    		KhachHang k=new KhachHang();
-    		k.setTenKH(tenKH);
-    		k.setGioiTinh(gioiTinh_Boolean(gioiTinh));
-    		k.setSdt(sdt);
-    		Date ngayHienTai=new Date();
-        	java.sql.Date sqlNgayHienTai = new java.sql.Date(ngayHienTai.getTime());
-        	DonDatHang d=new DonDatHang();
-        	d.setNgayDat(sqlNgayHienTai);
-        	//System.out.println(sqlDonDatHang_BUS.getMaKH(k));
-        	sqlDonDatHang_BUS.themDonDatHang(d,sqlDonDatHang_BUS.getMaKH(k),maNV);
-        	resetTable_GioHang();
+    		try
+    		{
+    			String sdt=lbl_txt_SoDienThoai.getText();
+        		String gioiTinh=lbl_txt_GioiTinh.getText();
+        		KhachHang k=new KhachHang();
+        		k.setTenKH(tenKH);
+        		k.setGioiTinh(gioiTinh_Boolean(gioiTinh));
+        		k.setSdt(sdt);
+        		Date ngayHienTai=new Date();
+            	java.sql.Date sqlNgayHienTai = new java.sql.Date(ngayHienTai.getTime());
+            	DonDatHang d=new DonDatHang();
+            	d.setNgayDat(sqlNgayHienTai);
+            	//System.out.println(sqlDonDatHang_BUS.getMaKH(k));
+            	sqlDonDatHang_BUS.themDonDatHang(d,sqlDonDatHang_BUS.getMaKH(k),maNV);
+            	resetTable_GioHang();
+            	resetSearch();
+    		}catch(Exception e)
+    		{
+    			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+    	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+    	        JOptionPane.showMessageDialog(null,e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    		}
+    		
     		
     	}
     }

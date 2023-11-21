@@ -178,6 +178,7 @@ public class NhanVien_DAO implements NhanVien_Method {
 				+ "SET matKhau=?\r\n"
 				+ "WHERE maNV=?";
 		try {
+			/*
 			String checkQuery = "SELECT 1 FROM NhanVien WHERE cMND= ?";
 			PreparedStatement checkStatement = con.con().prepareStatement(checkQuery);
 			checkStatement.setString(1, n.getcMND());
@@ -189,7 +190,7 @@ public class NhanVien_DAO implements NhanVien_Method {
 				JOptionPane.showMessageDialog(null, "Căn cước công dân đã tồn tại trong hệ thống.", "Lỗi",
 									JOptionPane.ERROR_MESSAGE);
 				return false;
-			}
+			}*/
 			
 			PreparedStatement preparedStatement_NhanVien = con.con().prepareStatement(sqlUpdate_NhanVien);		
 			PreparedStatement preparedStatement_TaiKhoan = con.con().prepareStatement(sqlUpdate_TaiKhoan);		

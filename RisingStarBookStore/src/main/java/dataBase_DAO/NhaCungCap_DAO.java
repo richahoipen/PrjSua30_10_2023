@@ -130,6 +130,7 @@ public class NhaCungCap_DAO implements NhaCungCap_Method
 		
 		String sqlUpdate="UPDATE [dbo].[NhaCungCap] SET tenNCC= ? , sdtNCC= ? ,email= ? ,diaChi= ? WHERE maNCC= ? ";
 		try {
+			/*
 			String checkEmailQuery = "SELECT 1 FROM NhaCungCap WHERE email = ?";
 	        PreparedStatement checkEmailStatement = con.con().prepareStatement(checkEmailQuery);
 	        checkEmailStatement.setString(1, n.getEmail());
@@ -141,7 +142,7 @@ public class NhaCungCap_DAO implements NhaCungCap_Method
 	            JOptionPane.showMessageDialog(null, "Email đã tồn tại trong hệ thống.", "Lỗi",
 	                    JOptionPane.ERROR_MESSAGE);
 	            return false;
-	        }
+	        }*/
 			
 			PreparedStatement preparedStatement = con.con().prepareStatement(sqlUpdate);		    
 		    // Gán giá trị cho các tham số
@@ -899,6 +900,58 @@ public class NhaCungCap_DAO implements NhaCungCap_Method
 	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 	        return false;
 	    }
+	}
+	@Override
+	public String getMaNhaCungCap(String tenNCC) 
+	{
+		String sqlSelect="select TOP 1 maNCC from [dbo].[NhaCungCap]\r\n"
+				+ "where tenNCC=?";
+		try {
+			String ma_LayVe="";
+			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);	
+			preparedStatement.setNString(1,tenNCC);
+			ResultSet rs = preparedStatement.executeQuery();					
+			while (rs.next()) 
+			{
+				String maNCC=rs.getNString("maNCC");
+				ma_LayVe+=maNCC;
+			}
+			
+			con.con().close();
+			con.stmt().close();
+			return ma_LayVe;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
+	}
+	@Override
+	public String getTenNhaCungCap(String maNCC) {
+		String sqlSelect="select tenNCC from [dbo].[NhaCungCap]\r\n"
+				+ "where maNCC=?";
+		try {
+			String ten_LayVe="";
+			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);	
+			preparedStatement.setNString(1,maNCC);
+			ResultSet rs = preparedStatement.executeQuery();					
+			while (rs.next()) 
+			{
+				String tenNCC=rs.getNString("tenNCC");
+				ten_LayVe+=tenNCC;
+			}
+			con.con().close();
+			con.stmt().close();
+			return ten_LayVe;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
 	}
 	
 	

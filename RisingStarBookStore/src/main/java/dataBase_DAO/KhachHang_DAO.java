@@ -153,6 +153,7 @@ public class KhachHang_DAO implements KhachHang_Method
 				+ "WHERE [maKH] = '" + k.getMaKH() + "';";*/
 		String sqlUpdate = "UPDATE [dbo].[KhachHang] SET tenKH = ?, sdt = ?, gioiTinh = ?, diaChi = ? WHERE maKH = ?";
 		try {
+			/*
 			String checkSDTQuery = "SELECT 1 FROM [dbo].[KhachHang] WHERE sdt = ?";
 	        PreparedStatement checkSDTStatement = con.con().prepareStatement(checkSDTQuery);
 	        checkSDTStatement.setString(1, k.getSdt());
@@ -164,7 +165,7 @@ public class KhachHang_DAO implements KhachHang_Method
 	            JOptionPane.showMessageDialog(null, "Số điện thoại đã tồn tại trong hệ thống.", "Lỗi",
 	                    JOptionPane.ERROR_MESSAGE);
 	            return false;
-	        }
+	        }*/
 	        
 			PreparedStatement preparedStatement = con.con().prepareStatement(sqlUpdate);
 		    
@@ -857,6 +858,35 @@ public class KhachHang_DAO implements KhachHang_Method
 	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 	        return false;
 	    }
+	}
+
+	@Override
+	public String getTenKhachHang_TheoMa(String maKH) {
+		String sqlSelect="SELECT tenKH\r\n"
+				+ "FROM [dbo].[KhachHang]\r\n"
+				+ "where maKH=?";
+		try {
+			String ten_LayVe="";
+			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);	
+			preparedStatement.setString(1,maKH);
+			ResultSet rs = preparedStatement.executeQuery();
+			// NhanVien(String maNV, String tenNV, String sdt, String gioiTinh, String diaChi, Date ngaySinh, String chucVu,String cMND, String caLam)					
+			while (rs.next()) 
+			{
+				String tenKH=rs.getNString("tenKH");
+				ten_LayVe+=tenKH;
+			}
+			
+			con.con().close();
+			preparedStatement.close();
+			return ten_LayVe;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
 	}
 
 

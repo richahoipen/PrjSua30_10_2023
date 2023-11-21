@@ -165,6 +165,18 @@ public class NhaCungCap_BUS implements NhaCungCap_Method
 		// TODO Auto-generated method stub
 		return dataBase_NhaCungCap_DAO.timKiemTheo_sdtNCC_email_diaChi(ncc, dtm_NCC);
 	}
+
+	@Override
+	public String getMaNhaCungCap(String tenNCC) {
+		// TODO Auto-generated method stub
+		return dataBase_NhaCungCap_DAO.getMaNhaCungCap(tenNCC);
+	}
+
+	@Override
+	public String getTenNhaCungCap(String maNCC) {
+		// TODO Auto-generated method stub
+		return dataBase_NhaCungCap_DAO.getTenNhaCungCap(maNCC);
+	}
 	
 
 
