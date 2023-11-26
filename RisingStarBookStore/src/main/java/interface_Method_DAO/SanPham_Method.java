@@ -29,5 +29,6 @@ public interface SanPham_Method
 	public boolean timKiem_SanPham(SanPham s,DefaultTableModel dtm_SP);
 	//xuất đơn đặt
 	public boolean xuatDanhSachSanPham_DonDat(DefaultTableModel dtm_SP);
+	public boolean xuatDanhSachSanPham_LapHoaDon(DefaultTableModel dtm_SP);
 	
 }

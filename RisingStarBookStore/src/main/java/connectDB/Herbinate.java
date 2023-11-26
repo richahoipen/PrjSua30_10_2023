@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.sql.Time;
 
 import entities.CTDonDatHang;
 import entities.CTHoaDon;
@@ -48,11 +49,12 @@ public class Herbinate {
 			//KhachHang(String maKH, String tenKH, String sdt, boolean gioiTinh, String diaChi)
 			KhachHang khachHang1=new KhachHang("KH1","Bill Joen","7891646635",true,"13 Ohio");
 			//HoaDon(String maHD, Date ngayLap)
-			HoaDon hoaDon1=new HoaDon("HD1",(java.sql.Date) new Date(),2000000,4000000);
-			HoaDon hoaDon2=new HoaDon("HD2",(java.sql.Date) new Date(),2000000,4000000);
+			Date ngayHienTai=new Date();
+			HoaDon hoaDon1=new HoaDon("HD1",(java.sql.Date) new Date(),new Time(ngayHienTai.getTime()),2000000,4000000);
+			HoaDon hoaDon2=new HoaDon("HD2",(java.sql.Date) new Date(),new Time(ngayHienTai.getTime()),2000000,4000000);
 			//CTHoaDon(String maCTHD, double donGia, int soLuong)
-			CTHoaDon cTHoaDon1=new CTHoaDon(20000,34,20000*34);
-			CTHoaDon cTHoaDon2=new CTHoaDon(20000,35,20000*35);
+			CTHoaDon cTHoaDon1=new CTHoaDon(1,"SP1",20000,34,20000*34);
+			CTHoaDon cTHoaDon2=new CTHoaDon(2,"SP2",20000,35,20000*35);
 			//CTDonDatHang(String maCTDDH, double donGia, int soLuong)
 			CTDonDatHang cTDonDatHang1=new CTDonDatHang(1,30000,23,500000,"SP1");
 			CTDonDatHang cTDonDatHang2=new CTDonDatHang(2,30000,23,500000,"SP2");

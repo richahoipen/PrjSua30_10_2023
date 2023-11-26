@@ -116,6 +116,12 @@ public class SanPham_BUS implements SanPham_Method
 		// TODO Auto-generated method stub
 		return sqlSanPham_DAO.xuatDanhSachSanPham_DonDat(dtm_SP);
 	}
+
+	@Override
+	public boolean xuatDanhSachSanPham_LapHoaDon(DefaultTableModel dtm_SP) {
+		// TODO Auto-generated method stub
+		return sqlSanPham_DAO.xuatDanhSachSanPham_LapHoaDon(dtm_SP);
+	}
 	
 
 }

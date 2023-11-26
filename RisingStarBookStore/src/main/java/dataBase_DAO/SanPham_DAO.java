@@ -35,8 +35,8 @@ public class SanPham_DAO implements SanPham_Method
 					+ "SELECT @NextIndex = ISNULL(MAX(CAST(SUBSTRING(maSP, 3, LEN(maSP)) AS INT)), 0) + 1 FROM SanPham;\r\n"
 					+ "DECLARE @NewMaSP VARCHAR(20);\r\n"
 					+ "SET @NewMaSP = 'SP' + CAST(@NextIndex AS VARCHAR);\r\n"
-					+ "INSERT [dbo].[SanPham] ([maSP],[tenSP],[loaiSP],[tacGia],[nhaXuatBan],[namXuatBan],[soLuong],[ngonNgu],[giaNhap],[giaBan],[hinhAnh],[maNCC]) \r\n"
-					+ "VALUES (@NewMaSP,?,?,?,?,?,?,?,?,?,?,?)";
+					+ "INSERT [dbo].[SanPham] ([maSP],[tenSP],[loaiSP],[tacGia],[nhaXuatBan],[namXuatBan],[soLuong],[ngonNgu],[giaNhap],[giaBan],[hinhAnh],[maNCC],[soLuongBan]) \r\n"
+					+ "VALUES (@NewMaSP,?,?,?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement preparedStatement_Insert = con.con().prepareStatement(sqlInsert);
 			preparedStatement_Insert.setNString(1,s.getTenSP());
 			preparedStatement_Insert.setNString(2,s.getLoaiSP());
@@ -49,6 +49,7 @@ public class SanPham_DAO implements SanPham_Method
 			preparedStatement_Insert.setDouble(9,s.getGiaBan());
 			preparedStatement_Insert.setBytes(10, s.getHinhAnh());
 			preparedStatement_Insert.setNString(11, s.getMaNhaCungCap());
+			preparedStatement_Insert.setInt(12,0);
 			preparedStatement_Insert.executeUpdate();
 			
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
@@ -136,7 +137,7 @@ public class SanPham_DAO implements SanPham_Method
 	@Override
 	public boolean xuatDanhSachSanPham(DefaultTableModel dtm_SP) {
 		String sqlSelect ="select*from [dbo].[SanPham]\r\n"
-				+ "ORDER BY CAST(SUBSTRING(maSP, 3, LEN(maSP)) AS INT) ASC;";
+				+ "where soLuong > 0 ORDER BY CAST(SUBSTRING(maSP, 3, LEN(maSP)) AS INT) ASC; ";
 		try {
 			ResultSet rs = con.resultSet(sqlSelect);
 			//SanPham(String maSP, String tenSP, String loaiSP, String tacGia, String nhaXuatBan, int namXuatBan,
@@ -619,7 +620,46 @@ public class SanPham_DAO implements SanPham_Method
 				SanPham s=new SanPham(maSP, tenSP, loaiSP, tacGia, nhaXuatBan, namXuatBan, soLuong, soLuongBan,ngonNgu, giaNhap, giaBan, dataAnh);
 				s.setMaNhaCungCap(nhaCungCap);
 				String[] row = {s.getMaSP(),s.getTenSP(),s.getLoaiSP(),s.getNgonNgu(),s.getNhaXuatBan(),Integer.toString(s.getNamXuatBan()),
-						s.getTacGia(),Double.toString(s.getGiaBan())};		
+						s.getTacGia(),Double.toString(s.getGiaBan()),Integer.toString(soLuong)};		
+				dtm_SP.addRow(row);
+			}
+			con.con().close();
+			con.stmt().close();
+			rs.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	}
+	@Override
+	public boolean xuatDanhSachSanPham_LapHoaDon(DefaultTableModel dtm_SP) {
+		String sqlSelect ="select*from [dbo].[SanPham]\r\n"
+				+ "ORDER BY CAST(SUBSTRING(maSP, 3, LEN(maSP)) AS INT) ASC;";
+		try {
+			ResultSet rs = con.resultSet(sqlSelect);
+			//SanPham(String maSP, String tenSP, String loaiSP, String tacGia, String nhaXuatBan, int namXuatBan,
+			//int soLuong, String ngonNgu, double giaNhap, double giaBan,byte[] hinhAnh)
+			while (rs.next()) {
+				String maSP=rs.getString("maSP");
+				String tenSP=rs.getNString("tenSP");
+				String loaiSP=rs.getNString("loaiSP");
+				String tacGia=rs.getNString("tacGia");
+				String nhaXuatBan=rs.getNString("nhaXuatBan");
+				int namXuatBan=rs.getInt("namXuatBan");
+				int soLuong=rs.getInt("soLuong");
+				int soLuongBan=rs.getInt("soLuongBan");
+				String ngonNgu=rs.getNString("ngonNgu");
+				double giaNhap=rs.getDouble("giaNhap");
+				double giaBan=rs.getDouble("giaBan");
+				byte[] dataAnh=rs.getBytes("hinhAnh");
+				String nhaCungCap=rs.getNString("maNCC");
+				SanPham s=new SanPham(maSP, tenSP, loaiSP, tacGia, nhaXuatBan, namXuatBan, soLuong, soLuongBan,ngonNgu, giaNhap, giaBan, dataAnh);
+				s.setMaNhaCungCap(nhaCungCap);
+				String[] row = {s.getMaSP(),s.getTenSP(),Integer.toString(soLuong),Double.toString(s.getGiaBan())};		
 				dtm_SP.addRow(row);
 			}
 			con.con().close();

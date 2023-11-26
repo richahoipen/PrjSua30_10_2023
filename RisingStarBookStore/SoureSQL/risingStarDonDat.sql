@@ -110,3 +110,46 @@ SELECT KhachHang.tenKH, KhachHang.sdt,KhachHang.gioiTinh
 FROM [dbo].[KhachHang]
 INNER JOIN [dbo].[DonDatHang] ON KhachHang.maKH = DonDatHang.maKH
 where maDDH=N'DDH1'
+--Tính tổng thành tiền đơn đặt hàng
+SELECT SUM(thanhTien) AS Tong
+FROM CTDonDatHang
+where maDDH=N'DDH1' 
+--Xóa đơn đặt hàng hết hạn
+delete from [dbo].[DonDatHang]
+where daLapHoaDon=? and 
+--Xuất nối 3 
+SELECT
+    DDH.maDDH,
+    KH.tenKH,
+    KH.sdt,
+    DDH.ngayDat,
+    NV.tenNV
+FROM
+    DonDatHang DDH
+JOIN
+    KhachHang KH ON DDH.maKH = KH.maKH
+JOIN
+    NhanVien NV ON DDH.maNV = NV.maNV
+ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;
+--lấy ngày đặt
+SELECT
+    DDH.ngayDat
+FROM
+    DonDatHang DDH
+JOIN
+    KhachHang KH ON DDH.maKH = KH.maKH
+JOIN
+    NhanVien NV ON DDH.maNV = NV.maNV
+
+where maDDH='DDH1';
+--Lấy maDDH
+--Xuất nối 3 
+SELECT
+    DDH.maDDH
+FROM
+    DonDatHang DDH
+JOIN
+    KhachHang KH ON DDH.maKH = KH.maKH
+JOIN
+    NhanVien NV ON DDH.maNV = NV.maNV
+ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;

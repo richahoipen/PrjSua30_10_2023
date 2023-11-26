@@ -12,9 +12,12 @@ import customEntities.Custom_ColorPicker;
 import customEntities.Custom_ComboBox;
 import dataBase_BUS.CTDonDatHang_BUS;
 import dataBase_BUS.DonDatHang_BUS;
+import dataBase_BUS.HoaDon_BUS;
 import dataBase_BUS.KhachHang_BUS;
 import dataBase_BUS.SanPham_BUS;
 import entities.CTDonDatHang;
+import entities.HoaDon;
+import entities.KhachHang;
 import entities.SanPham;
 import gui_Frame_Running.*;
 import gui_Dialog.Message;
@@ -57,7 +60,10 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -108,6 +114,7 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 	private SanPham_BUS sqlSanPham_BUS=new SanPham_BUS();
 	private CTDonDatHang_BUS sqlCTDonDatHang_BUS=new CTDonDatHang_BUS();
 	private DonDatHang_BUS sqlDonDatHang_BUS=new DonDatHang_BUS();
+	private HoaDon_BUS sqlHoaDon_BUS=new HoaDon_BUS();
 	private String maNV;
 	//private DD_BUS sqlSanPham_BUS=new SanPham_BUS();
     // End of variables declaration//GEN-END:variables
@@ -151,11 +158,11 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 			string_Nam[i] = String.format("%04d",namHienTai-i);
 		}
 		
-		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà xuất bản","Năm XB","Tác giả","Giá Bán"},0);
+		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","SL còn","Giá bán"},0);
 		
 		dtm_CTDD = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Đơn giá","Số lượng mua","Thành tiền"},0);
 		
-		dtm_DD = new DefaultTableModel(new String[] {"Mã đơn đặt","Tên khách hàng","Ngày đặt"},0);
+		dtm_DD = new DefaultTableModel(new String[] {"Mã đơn đặt","Tên khách hàng","Ngày đặt","Tổng tiền"},0);
 		
 		tbl_DSSP = new CustomTable();
 		tbl_DSSP.setModel(dtm_SP);
@@ -169,7 +176,7 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 		TableColumnModel columnModel = tbl_DSSP.getColumnModel();
 
         // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
-		int[] columnWidths = {80,100,100,80,150,50,100,50};
+		int[] columnWidths = {80,100,80,100};
         for (int i = 0; i < columnWidths.length; i++) {
             TableColumn column = columnModel.getColumn(i);
             column.setPreferredWidth(columnWidths[i]);
@@ -467,16 +474,16 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
     private void resetTable_DSSP()
     {
     	dtm_SP.setRowCount(0);
-    	sqlSanPham_BUS.xuatDanhSachSanPham_DonDat(dtm_SP);
+    	sqlSanPham_BUS.xuatDanhSachSanPham_LapHoaDon(dtm_SP);
     }
     private void resetTable_DSDD()
     {
     	dtm_DD.setRowCount(0);
-    	sqlDonDatHang_BUS.xuat_DonDat_ChuaThanhToan(maNV, dtm_DD);
+    	//sqlDonDatHang_BUS.xuat_DonDat_ChuaThanhToan(maNV, dtm_DD);
     }
     private void addCombobox()
     {
-    	cbo_TraSDT.addItem("Chọn");
+    	cbo_TraSDT.addItem("");
     	sqlKhachHang_BUS.dayComboBoxSDT(cbo_TraSDT);
     	
     }
@@ -496,7 +503,7 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
     private void tim_KhachHang()
     {
     	String sdt=(String) cbo_TraSDT.getSelectedItem();
-    	if((checkComboboxNULL(sdt)==false)|| sdt.equalsIgnoreCase("Chọn"))
+    	if((checkComboboxNULL(sdt)==false)|| sdt.equalsIgnoreCase(""))
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
@@ -507,6 +514,7 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
     		lbl_txt_HoTenKhachHang.setText(sqlCTDonDatHang_BUS.getHoTen_KhachHang(sdt));
     		lbl_txt_SoDienThoai.setText(sqlCTDonDatHang_BUS.getSDT_KhachHang(sdt));
     		lbl_txt_GioiTinh.setText(gioiTinh_String(sdt));
+    		
     	}
     }
     private void themSP()
@@ -530,25 +538,37 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 				{
 					//public CTDonDatHang(double donGia, int soLuong, double thanhTien) 
 		    		String maSP=tbl_DSSP.getValueAt(row, 0).toString();
-					String giaBan=tbl_DSSP.getValueAt(row, 7).toString();
+					String giaBan=tbl_DSSP.getValueAt(row, 3).toString();
 					String maDDH=tbl_DSDD.getValueAt(row_dd, 0).toString();
-					try {
-			            double giaBan_Double=Double.parseDouble(giaBan);
-			            SanPham s=new SanPham();
-			            s.setMaSP(maSP);
-			            CTDonDatHang ct=new CTDonDatHang();
-			            ct.setDonGia(giaBan_Double);
-			            ct.setSoLuong(soLuong);
-			            sqlCTDonDatHang_BUS.themCTDonDatHang_Voi_DonDaDat(s, ct, maDDH);
-			            dtm_CTDD.setRowCount(0);
-			    		sqlCTDonDatHang_BUS.xuat_CTDDH_TheoDonDat(maDDH, dtm_CTDD);	
-			            //resetTable_GioHang();
-			            spinner.setValue(0);
-			            lbl_txt_TongTien.setText(Double.toString(sqlCTDonDatHang_BUS.tinhTongTien_GioHang())); 
-					} catch (NumberFormatException e) {
+					String soLuongCon=tbl_DSSP.getValueAt(row, 2).toString();
+					int soLuongCon_Int=Integer.parseInt(soLuongCon);
+					if(soLuong>soLuongCon_Int)
+					{
 						UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-						UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-						JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+				        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+				        JOptionPane.showMessageDialog(null, "Số lượng đã chọn lớn hơn số lượng còn.", "Cảnh báo.", JOptionPane.WARNING_MESSAGE);
+				        spinner.setValue(0);
+					}
+					else
+					{
+						try {
+				            double giaBan_Double=Double.parseDouble(giaBan);
+				            SanPham s=new SanPham();
+				            s.setMaSP(maSP);
+				            CTDonDatHang ct=new CTDonDatHang();
+				            ct.setDonGia(giaBan_Double);
+				            ct.setSoLuong(soLuong);
+				            sqlCTDonDatHang_BUS.themCTDonDatHang_Voi_DonDaDat(s, ct, maDDH);
+				            dtm_CTDD.setRowCount(0);
+				    		sqlCTDonDatHang_BUS.xuat_CTDDH_TheoDonDat(maDDH, dtm_CTDD);	
+				            //resetTable_GioHang();
+				            spinner.setValue(0);
+				            lbl_txt_TongTien.setText(Double.toString(sqlCTDonDatHang_BUS.tinhTongTien_GioHang())); 
+						} catch (NumberFormatException e) {
+							UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+							UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+							JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				}	
 			}
@@ -649,6 +669,14 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 	           String tongTien=lbl_txt_TongTien.getText();
 	           double tongTien_Double=Double.parseDouble(tongTien);
 	           double tienKhachDua_Double=Double.parseDouble(tienKhachDua);
+	           if(tongTien.trim().equals(""))
+	           {
+	        	   UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		   	       UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		   	       JOptionPane.showMessageDialog(null, "Tổng tiền không được trống.", "Thông báo.", JOptionPane.WARNING_MESSAGE);
+		   	       return false;
+	           }
+	        
 	           if(tienKhachDua_Double<tongTien_Double)
 	           {
 	        	   UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
@@ -664,20 +692,99 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 		}
 		return true;
 	}
+	private boolean gioiTinh_Boolean(String gioiTinh)
+	{
+		if(gioiTinh.equalsIgnoreCase("Nam"))
+			return true;
+		return false;
+	}
+	/*
+	private void resetAll()
+	{
+		cbo_TraSDT.setSelectedItem("");
+		lbl_txt_GioiTinh.setText("");
+		lbl_txt_HoTenKhachHang.setText("");
+		lbl_txt_SoDienThoai.setText("");
+		lbl_txt_TienThoi.setText("");
+		lbl_txt_TongTien.setText("");
+		spinner.setValue(0);
+		resetTable_DSSP();
+		resetTable_DSDD();
+		dtm_CTDD.setRowCount(0);
+	}*/
 	private void lapHoaDon()
 	{
 		if(checkText())
 		{
-			/*
-			try {
-		           String tongTien=lbl_txt_TongTien.getText();
-		           double tongTien_Double=Double.parseDouble(tongTien);
-		           
-			} catch(NumberFormatException e) {
+			int row_dd=tbl_DSDD.getSelectedRow();
+			if(row_dd!=-1)
+			{
+				try {
+					String maDDH=tbl_DSDD.getValueAt(row_dd, 0).toString();
+					//Khai báo thành tiền
+					String tienKhachDua=txt_SoTienKhachTra.getText();
+					String tongTien=lbl_txt_TongTien.getText();
+					double tienKhanhDua_Double=Double.parseDouble(tienKhachDua);
+					double tongTien_Double=Double.parseDouble(tongTien);
+					
+					//Tạo dòng và cột cho giỏ hàng
+					int rowCount = dtm_CTDD.getRowCount();
+					ArrayList<CTDonDatHang> listCTDonDatHang=new ArrayList<>();
+					//public HoaDon(String maHD, Date ngayLap,Time gioLap,double tongTien,double tienKhachDua)
+					HoaDon h=new HoaDon();
+					Date ngayHienTai=new Date();
+					java.sql.Date sqlNgayHienTai = new java.sql.Date(ngayHienTai.getTime());
+					h.setNgayLap(sqlNgayHienTai);
+					h.setGioLap(new Time(ngayHienTai.getTime()));
+					h.setTienKhachDua(tienKhanhDua_Double);
+					h.setTongTien(tongTien_Double);
+		            //Khai báo
+					String tenKH=lbl_txt_HoTenKhachHang.getText();
+					String sdt=lbl_txt_SoDienThoai.getText();
+					String gioiTinh=lbl_txt_GioiTinh.getText();
+					//Khai báo
+			        KhachHang k=new KhachHang();
+			        k.setTenKH(tenKH);
+			        k.setSdt(sdt);
+			        k.setGioiTinh(gioiTinh_Boolean(gioiTinh));
+			        String maKH=sqlDonDatHang_BUS.getMaKH(k);
+			        for (int row = 0; row < rowCount; row++) {
+		                String maSP=dtm_CTDD.getValueAt(row, 0).toString();
+		                String donGia=dtm_CTDD.getValueAt(row, 2).toString();
+		                String soLuongMua=dtm_CTDD.getValueAt(row, 3).toString();
+		                String thanhTien=dtm_CTDD.getValueAt(row, 4).toString();
+		                //CTDonDatHang(double donGia, int soLuong, double thanhTien, String maSP)
+		                CTDonDatHang c=new CTDonDatHang(Double.parseDouble(donGia),Integer.parseInt(soLuongMua),Double.parseDouble(thanhTien),maSP);
+		                listCTDonDatHang.add(c);
+		            }
+			        //tính tiền thống
+			        double tienThoi=tienKhanhDua_Double-tongTien_Double;
+			        sqlHoaDon_BUS.themHoaDon(h, maNV, maKH, listCTDonDatHang);	        
+			        lbl_txt_TienThoi.setText(Double.toString(tienThoi));
+			        sqlHoaDon_BUS.capNhatDonDatHang(maDDH);
+			        for (int row = 0; row < rowCount; row++)
+			        {
+			        	String maSP=dtm_CTDD.getValueAt(row, 0).toString();
+			        	String soLuongMua=dtm_CTDD.getValueAt(row, 3).toString();
+			        	sqlHoaDon_BUS.capNhatSoLuong(maSP, Integer.parseInt(soLuongMua));
+			        }	           
+				} catch(NumberFormatException e) {
+					UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+					UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+				}catch(Exception e)
+				{
+					UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+					UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+				}
+			}else
+			{
 				UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 				UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-				JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-			}*/
+				JOptionPane.showMessageDialog(null, "Đơn đặt chưa được chọn.", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+			}
+			
 		}	
 	}
 
@@ -713,6 +820,18 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 	private boolean isTableEmpty(CustomTable tbl_DSCTDD) {
         return tbl_DSCTDD.getModel().getRowCount() == 0;
     }
+	private void xuat_DanhSach_DonDat()
+	{
+		String tenKH=lbl_txt_HoTenKhachHang.getText();
+		String sdt=lbl_txt_SoDienThoai.getText();
+		String gioiTinh=lbl_txt_GioiTinh.getText();
+		KhachHang k=new KhachHang();
+		k.setTenKH(tenKH);
+		k.setSdt(sdt);
+		k.setGioiTinh(gioiTinh_Boolean(gioiTinh));
+		dtm_DD.setRowCount(0);
+		sqlDonDatHang_BUS.xuat_DonDat_ChuaThanhToan(maNV, dtm_DD, sqlDonDatHang_BUS.getMaKH(k));
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -720,6 +839,8 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 		if(o.equals(btnTraKhachHang))
 		{
 			tim_KhachHang();
+			xuat_DanhSach_DonDat();
+			
 		}
 		if(o.equals(btnThemSP))
 		{
@@ -740,7 +861,17 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 		}
 		if(o.equals(btnLapHoaDon))
 		{
-			lapHoaDon();
+			if(!isTableEmpty(tbl_DSCTDD))
+			{
+				lapHoaDon();
+				sqlHoaDon_BUS.capNhat_CTHoaDon(sqlHoaDon_BUS.getMaHD_MoiNhat());
+			}
+			else
+			{
+				UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		        JOptionPane.showMessageDialog(null, "Giỏ hàng không được trống.", "Cảnh báo.", JOptionPane.WARNING_MESSAGE);
+			}
 		}
 		
 	}

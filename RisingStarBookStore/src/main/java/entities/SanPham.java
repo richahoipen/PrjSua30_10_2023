@@ -1,9 +1,6 @@
 package entities;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,7 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
+
 
 import jakarta.persistence.Table;
 
@@ -75,16 +72,6 @@ public class SanPham
 	public void setNamXuatBan(int namXuatBan) {
 		this.namXuatBan = namXuatBan;
 	}
-	public List<CTHoaDon> getListCTHoaDon() {
-		return listCTHoaDon;
-	}
-	public void setListCTHoaDon(List<CTHoaDon> listCTHoaDon) {
-		this.listCTHoaDon = listCTHoaDon;
-	}
-	
-	//Nối với CTHoaDon
-	@OneToMany(mappedBy = "sanPham", cascade = CascadeType.ALL)
-	List<CTHoaDon> listCTHoaDon=new ArrayList<>();
 	//Nối với CTDonDatHang
 	
 	public String getMaSP() {

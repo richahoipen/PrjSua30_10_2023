@@ -19,4 +19,5 @@ public interface CTDonDatHang_Method {
 	//Các đơn đã đặt
 	public boolean themCTDonDatHang_Voi_DonDaDat(SanPham s,CTDonDatHang c,String maDDH);
 	public boolean xoaCTDonDatHang_Voi_DonDaDat(SanPham s,String maDDH);
+	
 }

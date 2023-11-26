@@ -529,7 +529,7 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     private void addCombobox()
     {
     	//TenSP
-    	cbo_TenSP.addItem("Chọn");
+    	cbo_TenSP.addItem("");
     	cbo_TenSP.addItem("Doraemon tập 1");
     	cbo_TenSP.getMyVector().add("Doraemon tập 1");
     	cbo_TenSP.addItem("Doraemon tập 2");
@@ -547,7 +547,7 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     	cbo_TenSP.addItem("Ba chàng lính ngự lâm");
     	cbo_TenSP.getMyVector().add("Ba chàng lính ngự lâm");
     	//loaiSP
-    	cbo_LoaiSP.addItem("Chọn");
+    	cbo_LoaiSP.addItem("");
     	cbo_LoaiSP.addItem("Sách thiếu nhi");
     	cbo_LoaiSP.getMyVector().add("Sách thiếu nhi");
     	cbo_LoaiSP.addItem("Tiểu thuyết");
@@ -555,10 +555,10 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     	cbo_LoaiSP.addItem("Truyện tranh");
     	cbo_LoaiSP.getMyVector().add("Truyện tranh");
     	//nha cung cap
-    	cbo_NhaCungCap.addItem("Chọn");
+    	cbo_NhaCungCap.addItem("");
     	sqlNhaCungCap_BUS.dayComboBoxTenNCC(cbo_NhaCungCap);
     	//ngon ngu
-    	cbo_NgonNgu.addItem("Chọn");
+    	cbo_NgonNgu.addItem("");
     	cbo_NgonNgu.addItem("Tiếng việt");
     	cbo_NgonNgu.getMyVector().add("Tiếng việt");
     	cbo_NgonNgu.addItem("Tiếng anh");
@@ -583,10 +583,10 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     private void xoaTrang()
     {
     	lbl_txt_MaSP.setText("");
-    	cbo_TenSP.setSelectedItem("Chọn");
-    	cbo_LoaiSP.setSelectedItem("Chọn");
-    	cbo_NgonNgu.setSelectedItem("Chọn");
-    	cbo_NhaCungCap.setSelectedItem("Chọn");
+    	cbo_TenSP.setSelectedItem("");
+    	cbo_LoaiSP.setSelectedItem("");
+    	cbo_NgonNgu.setSelectedItem("");
+    	cbo_NhaCungCap.setSelectedItem("");
     	txt_NhaXuatBan.setText("");
     	txt_GiaBan.setText("");
     	txt_GiaNhap.setText("");
@@ -653,7 +653,7 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     	
     	String nhaCungCap=(String) cbo_NhaCungCap.getSelectedItem();
     	LocalDate ngayHienTai=LocalDate.now();
-    	String chon="Chọn";
+    	String chon="";
     	if(tenSP.equalsIgnoreCase(chon) || loaiSP.equalsIgnoreCase(chon) || tacGia.trim().equals("") ||
     			nhaXuatBan.trim().equals("")|| namXuatBan==0|| soLuong==0||
     				ngonNgu.equalsIgnoreCase(chon)|| giaNhap.trim().equals("")||nhaCungCap.equalsIgnoreCase(chon)||

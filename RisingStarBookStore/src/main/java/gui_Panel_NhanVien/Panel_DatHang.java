@@ -140,7 +140,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 			string_Nam[i] = String.format("%04d",namHienTai-i);
 		}
 		
-		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà xuất bản","Năm xuất bản","Tác giả","Giá Bán"},0);
+		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà xuất bản","Năm xuất bản","Tác giả","Giá Bán","SL còn"},0);
 		
 		dtm_CTDD = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Đơn giá","Số lượng mua","Thành tiền"},0);
 		
@@ -150,7 +150,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 		TableColumnModel columnModel = tbl_DSSP.getColumnModel();
 
         // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
-		int[] columnWidths = {50,100,100,80,150,50,100,50};
+		int[] columnWidths = {50,100,100,80,150,50,100,50,50};
         for (int i = 0; i < columnWidths.length; i++) {
             TableColumn column = columnModel.getColumn(i);
             column.setPreferredWidth(columnWidths[i]);
@@ -397,7 +397,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
     }
     private void addCombobox()
     {
-    	cbo_TraKhachHang.addItem("Chọn");
+    	cbo_TraKhachHang.addItem("");
     	sqlKhachHang_BUS.dayComboBoxSDT(cbo_TraKhachHang);
     }
     private void resetTable()
@@ -416,7 +416,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
     	lbl_txt_GioiTinh.setText("");
     	lbl_txt_HoTenKhachHang.setText("");
     	lbl_txt_SoDienThoai.setText("");
-    	cbo_TraKhachHang.setSelectedItem("Chọn");
+    	cbo_TraKhachHang.setSelectedItem("");
     }
     private boolean checkComboboxNULL(String sdt)
     {  	
@@ -434,7 +434,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
     private void tim_KhachHang()
     {
     	String sdt=(String) cbo_TraKhachHang.getSelectedItem();
-    	if((checkComboboxNULL(sdt)==false)|| sdt.equalsIgnoreCase("Chọn"))
+    	if((checkComboboxNULL(sdt)==false)|| sdt.equalsIgnoreCase(""))
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
@@ -467,24 +467,35 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 				//public CTDonDatHang(double donGia, int soLuong, double thanhTien) 
 	    		String maSP=tbl_DSSP.getValueAt(row, 0).toString();
 				String giaBan=tbl_DSSP.getValueAt(row, 7).toString();
-				
-				try {
-		            double giaBan_Double=Double.parseDouble(giaBan);
-		            SanPham s=new SanPham();
-		            s.setMaSP(maSP);
-		            CTDonDatHang ct=new CTDonDatHang();
-		            ct.setDonGia(giaBan_Double);
-		            ct.setSoLuong(soLuong);
-		            sqlCTDonDatHang_BUS.themCTDonDatHang(s, ct);
-		            //System.out.println("Thêm giỏ hàng thành công");
-		            resetTable();
-		            resetTable_GioHang();
-		            spinner.setValue(0);
-		            lbl_txt_TongTien.setText(Double.toString(sqlCTDonDatHang_BUS.tinhTongTien_GioHang())); 
-				} catch (NumberFormatException e) {
+				String soLuongCon=tbl_DSSP.getValueAt(row, 8).toString();
+				int soLuongCon_Int=Integer.parseInt(soLuongCon);
+				if(soLuong>soLuongCon_Int)
+				{
 					UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-					UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-					JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+			        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			        JOptionPane.showMessageDialog(null, "Số lượng đã chọn lớn hơn số lượng còn.", "Cảnh báo.", JOptionPane.WARNING_MESSAGE);
+			        spinner.setValue(0);
+				}
+				else
+				{
+					try {
+			            double giaBan_Double=Double.parseDouble(giaBan);
+			            SanPham s=new SanPham();
+			            s.setMaSP(maSP);
+			            CTDonDatHang ct=new CTDonDatHang();
+			            ct.setDonGia(giaBan_Double);
+			            ct.setSoLuong(soLuong);
+			            sqlCTDonDatHang_BUS.themCTDonDatHang(s, ct);
+			            //System.out.println("Thêm giỏ hàng thành công");
+			            resetTable();
+			            resetTable_GioHang();
+			            spinner.setValue(0);
+			            lbl_txt_TongTien.setText(Double.toString(sqlCTDonDatHang_BUS.tinhTongTien_GioHang())); 
+					} catch (NumberFormatException e) {
+						UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+						UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+						JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 			else

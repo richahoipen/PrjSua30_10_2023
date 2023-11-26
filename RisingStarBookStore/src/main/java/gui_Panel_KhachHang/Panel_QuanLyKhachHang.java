@@ -331,7 +331,7 @@ public class Panel_QuanLyKhachHang extends JPanel implements ActionListener, Mou
 		btn_CapNhat.addActionListener(this);
 		btn_XoaTrang.addActionListener(this);
 		//btn_Home.addActionListener(this);
-		cbo_GioiTinh.addItem("Chọn");
+		cbo_GioiTinh.addItem("");
 		cbo_GioiTinh.addItem("Nam");
 		cbo_GioiTinh.addItem("Nữ");
 		cbo_GioiTinh.getMyVector().add("Nam");
@@ -369,7 +369,7 @@ public class Panel_QuanLyKhachHang extends JPanel implements ActionListener, Mou
 		txt_HoTen.setText("");
 		txt_SoDienThoai.setText("");
 		txt_DiaChi.setText("");
-		cbo_GioiTinh.setSelectedItem("Chọn");
+		cbo_GioiTinh.setSelectedItem("");
 		dtm_KH.setRowCount(0);
 		sqlKhachHang_BUS.xuatDanhSachKhachHang(dtm_KH);
 	}
@@ -419,7 +419,7 @@ public class Panel_QuanLyKhachHang extends JPanel implements ActionListener, Mou
 		}
 		if(checkComboboxNULL()==false)
 			return false;
-		if(gioiTinh.equalsIgnoreCase("Chọn"))
+		if(gioiTinh.equalsIgnoreCase(""))
 		{
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));

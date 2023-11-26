@@ -1,10 +1,11 @@
 package entities;
 
+import java.sql.Time;
 import java.time.LocalDate;
-import java.time.ZoneId;
+
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,6 +44,14 @@ public class HoaDon
 	}
 	@Column(name = "ngayLap", length = 100,nullable = true)
 	private Date ngayLap;
+	@Column(name = "gioLap", length = 100,nullable = true)
+	private Time gioLap;
+	public Time getGioLap() {
+		return gioLap;
+	}
+	public void setGioLap(Time gioLap) {
+		this.gioLap = gioLap;
+	}
 	@Column(name = "tongTien", length = 100,nullable = true)
 	private double tongTien;
 	@Column(name = "tienKhachDua", length = 100,nullable = true)
@@ -79,7 +88,7 @@ public class HoaDon
 	//Ham Date
 	public LocalDate getNgayLapLocalDate()
 	{
-		return ngayLap.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		return ngayLap.toLocalDate();
 	}
 	public String getNgayLapToString()
 	{
@@ -114,10 +123,11 @@ public class HoaDon
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public HoaDon(String maHD, Date ngayLap,double tongTien,double tienKhachDua) {
+	public HoaDon(String maHD, Date ngayLap,Time gioLap,double tongTien,double tienKhachDua) {
 		super();
 		this.maHD = maHD;
 		this.ngayLap = ngayLap;
+		this.gioLap=gioLap;
 		this.tongTien=tongTien;
 		this.tienKhachDua = tienKhachDua;
 	}

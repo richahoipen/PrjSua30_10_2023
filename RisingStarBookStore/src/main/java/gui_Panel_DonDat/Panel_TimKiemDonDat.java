@@ -9,6 +9,10 @@ import customEntities.CustomIcon;
 import customEntities.Custom_Button;
 import customEntities.Custom_ColorPicker;
 import customEntities.Custom_ComboBox;
+import dataBase_BUS.CTDonDatHang_BUS;
+import dataBase_BUS.DonDatHang_BUS;
+import entities.DonDatHang;
+import entities.NhanVien;
 import customEntities.CustomTable;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
@@ -23,23 +27,32 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
 import java.awt.GridLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -47,7 +60,8 @@ import java.awt.Dimension;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 
-public class Panel_TimKiemDonDat extends JPanel {
+public class Panel_TimKiemDonDat extends JPanel implements ActionListener, MouseListener
+{
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private JPanel pn_TK_HD,pn_Table_DSNV;
 	private JLabel lbl_Title_TK_DD,lbl_Title_DSDD;
@@ -57,9 +71,10 @@ public class Panel_TimKiemDonDat extends JPanel {
 	private JFormattedTextField ftf_NgaySinh;
 	private BufferedImage bfi_ChonNgay;
 	private Custom_Button btn_TimKiem,btn_XoaTrang;
-	private CustomTable tbl_DSHD,tbl_DSCTHD;
-	private DefaultTableModel dtm_SP;
-	private JScrollPane scr_DSCTHD,scr_DSHD;
+	private CustomTable tbl_DSDD,tbl_DSCTDD;
+	private DefaultTableModel dtm_CTDD,dtm_DD;
+	private DonDatHang_BUS sqlDonDatHang_BUS=new DonDatHang_BUS();
+	private CTDonDatHang_BUS sqlCTDonDatHang_BUS=new CTDonDatHang_BUS();
     // End of variables declaration//GEN-END:variables
     public Panel_TimKiemDonDat() {
         initComponents();
@@ -192,22 +207,21 @@ public class Panel_TimKiemDonDat extends JPanel {
 		lbl_Title_DSDD.setForeground(Color.BLUE);
 		lbl_Title_DSDD.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
-		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà cung cấp","Nhà xuất bản","Năm xuất bản","Tác giả","Số lượng còn","Số lượng bán","Giá Nhập","Giá Bán"},0);
-		for (int i = 0; i < 1000; i++) {
-			dtm_SP.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
-		}
+		dtm_CTDD = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Đơn giá","Số lượng mua","Thành tiền"},0);
 		
-		tbl_DSHD = new CustomTable();
-		tbl_DSHD.setModel(dtm_SP);
-		//tbl_DSHD.setFont(new Font("Times New Roman", Font.PLAIN, 5));
+		dtm_DD = new DefaultTableModel(new String[] {"Mã đơn đặt","Tên khách hàng","SĐT khách hàng","Ngày đặt","Tên nhân viên","Tổng tiền"},0);
 		
-		tbl_DSCTHD = new CustomTable();
-		tbl_DSCTHD.setModel(dtm_SP);
-
-		//tbl_DSCTHD.setFont(new Font("Times New Roman", Font.PLAIN, 5));
-		JScrollPane scr_DSHD = new JScrollPane(tbl_DSHD);
+			
+		tbl_DSDD = new CustomTable();
+		tbl_DSDD.setModel(dtm_DD);
 		
-		JScrollPane scr_DSCTHD = new JScrollPane(tbl_DSCTHD);
+		tbl_DSCTDD = new CustomTable();
+		tbl_DSCTDD.setModel(dtm_CTDD);
+		
+		
+		JScrollPane scr_DSDD = new JScrollPane(tbl_DSDD);
+		
+		JScrollPane scr_DSCTDD = new JScrollPane(tbl_DSCTDD);
 		
 		btn_TimKiem = new Custom_Button();
 		btn_TimKiem.addActionListener(new ActionListener() {
@@ -249,13 +263,13 @@ public class Panel_TimKiemDonDat extends JPanel {
 			layout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(layout.createSequentialGroup()
 					.addGroup(layout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scr_DSCTHD, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 995, Short.MAX_VALUE)
+						.addComponent(scr_DSDD, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 995, Short.MAX_VALUE)
 						.addGroup(Alignment.LEADING, layout.createSequentialGroup()
 							.addGap(1)
 							.addGroup(layout.createParallelGroup(Alignment.LEADING)
 								.addGroup(layout.createParallelGroup(Alignment.LEADING)
 									.addComponent(lbl_Title_DSDD)
-									.addComponent(scr_DSHD, GroupLayout.DEFAULT_SIZE, 878, Short.MAX_VALUE)
+									.addComponent(scr_DSCTDD, GroupLayout.DEFAULT_SIZE, 878, Short.MAX_VALUE)
 									.addComponent(lbl_Title_DSCDD, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE))
 								.addComponent(pn_TK_HD, GroupLayout.PREFERRED_SIZE, 994, Short.MAX_VALUE)
 								.addGroup(layout.createSequentialGroup()
@@ -272,11 +286,11 @@ public class Panel_TimKiemDonDat extends JPanel {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lbl_Title_DSDD)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scr_DSHD, GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+					.addComponent(scr_DSDD, GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
 					.addGap(11)
 					.addComponent(lbl_Title_DSCDD, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scr_DSCTHD, GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+					.addComponent(scr_DSCTDD, GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
 					.addContainerGap())
 		);
         this.setLayout(layout);
@@ -363,5 +377,124 @@ public class Panel_TimKiemDonDat extends JPanel {
         gl_pn_TK_HD.linkSize(SwingConstants.VERTICAL, new Component[] {btn_TimKiem, btn_XoaTrang});
         gl_pn_TK_HD.linkSize(SwingConstants.HORIZONTAL, new Component[] {btn_TimKiem, btn_XoaTrang});
         pn_TK_HD.setLayout(gl_pn_TK_HD);
+        addAction();
+        
     }// </editor-fold>//GEN-END:initComponents
+    private void addAction()
+    {
+    	btn_TimKiem.addActionListener(this);
+    	btn_XoaTrang.addActionListener(this);
+    	tbl_DSDD.addMouseListener(this);
+    	addComboBox();
+    	resetTable_DD();
+    }
+    private void addComboBox()
+    {
+    	cbo_HoTenKhachHang.addItem("");
+    	sqlDonDatHang_BUS.dayComboBox_HoTenKhachHang(cbo_HoTenKhachHang);
+    	cbo_MaDD.addItem("");
+    	sqlDonDatHang_BUS.dayComboBox_MaDD(cbo_MaDD);
+    	cbo_HoTenNhanVien.addItem("");
+    	sqlDonDatHang_BUS.dayComboBox_HoTenNhanVien(cbo_HoTenNhanVien);
+    	cbo_SoDienThoai.addItem("");
+    	sqlDonDatHang_BUS.dayComboBox_SoDienThoai(cbo_SoDienThoai);
+    	cbo_TongTien.addItem("");
+    	sqlDonDatHang_BUS.dayComboBox_TongTien(cbo_TongTien);
+    }
+    private void resetTable_DD()
+    {
+    	dtm_DD.setRowCount(0);
+    	sqlDonDatHang_BUS.xuat_DonDatHang_TimKiem(dtm_DD);
+    }
+    private void xoaTrang()
+    {	
+    	cbo_HoTenKhachHang.setSelectedItem("");
+    	cbo_MaDD.setSelectedItem("");
+    	cbo_HoTenNhanVien.setSelectedItem("");
+    	cbo_SoDienThoai.setSelectedItem("");
+    	cbo_TongTien.setSelectedItem("");
+    	cbo_Ngay.setSelectedItem(null);
+    	cbo_Thang.setSelectedItem(null);
+    	cbo_Nam.setSelectedItem(null);
+    	dtm_CTDD.setRowCount(0);
+    }
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		int row=tbl_DSDD.getSelectedRow();
+		String maDDH=tbl_DSDD.getValueAt(row, 0).toString();
+		String tenKH=tbl_DSDD.getValueAt(row, 1).toString();
+		String sdt=tbl_DSDD.getValueAt(row, 2).toString();
+		//
+		String tenNV=tbl_DSDD.getValueAt(row, 4).toString();
+		String tongTien=tbl_DSDD.getValueAt(row, 5).toString();
+		try
+		{
+			cbo_MaDD.setSelectedItem(maDDH);
+			cbo_HoTenKhachHang.setSelectedItem(tenKH);
+			cbo_SoDienThoai.setSelectedItem(sdt);
+			cbo_HoTenNhanVien.setSelectedItem(tenNV);
+			cbo_TongTien.setSelectedItem(tongTien);
+			Date ngayDat=sqlDonDatHang_BUS.getNgayDat(maDDH);
+			java.sql.Date sqlDateNgayDat = new java.sql.Date(ngayDat.getTime());
+			DonDatHang d=new DonDatHang();
+			d.setNgayDat(sqlDateNgayDat);
+			LocalDate ngayDat_LocalDate=d.getNgayDatLocalDate();
+			cbo_Ngay.setSelectedItem(ngayDat_LocalDate.getDayOfMonth());
+			cbo_Thang.setSelectedItem(ngayDat_LocalDate.getMonthValue());
+			cbo_Nam.setSelectedItem(ngayDat_LocalDate.getYear());
+			dtm_CTDD.setRowCount(0);
+			sqlCTDonDatHang_BUS.xuat_CTDDH_TheoDonDat(maDDH, dtm_CTDD);	
+			
+		}catch(DateTimeException dx)
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, dx.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
+		
+	}
+
+
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object o=e.getSource();
+		if(o.equals(btn_XoaTrang))
+		{
+			xoaTrang();
+		}
+	}
 }

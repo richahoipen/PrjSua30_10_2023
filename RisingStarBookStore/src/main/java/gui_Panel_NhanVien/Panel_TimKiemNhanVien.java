@@ -44,6 +44,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.awt.event.ActionEvent;
@@ -168,7 +169,7 @@ public class Panel_TimKiemNhanVien extends JPanel implements ActionListener, Mou
 		//}
 		
 		cbo_Ngay = new Custom_ComboBox();
-		cbo_Ngay.addItem("Chọn");
+		cbo_Ngay.addItem("");
 		for (int i = 0; i < 31; i++) 
 		{
 			cbo_Ngay.addItem(Integer.toString(i+1));
@@ -188,7 +189,7 @@ public class Panel_TimKiemNhanVien extends JPanel implements ActionListener, Mou
 			string_ThangTrongNam[i] = String.format("%d",i+1);
 		}*/
 		cbo_Thang = new Custom_ComboBox();
-		cbo_Thang.addItem("Chọn");
+		cbo_Thang.addItem("");
 		for (int i = 0; i < 12; i++) 
 		{
 			cbo_Thang.addItem(Integer.toString(i+1));
@@ -212,7 +213,7 @@ public class Panel_TimKiemNhanVien extends JPanel implements ActionListener, Mou
 		LocalDate ngayHienTai = LocalDate.now(); 
 		int namHienTai = ngayHienTai.getYear();
 		cbo_Nam = new Custom_ComboBox();
-		cbo_Nam.addItem("Chọn");
+		cbo_Nam.addItem("");
 		for (int i = 0; i <1500; i++) 
 		{
 			cbo_Nam.addItem(Integer.toString(namHienTai-i));
@@ -480,35 +481,35 @@ public class Panel_TimKiemNhanVien extends JPanel implements ActionListener, Mou
     }
     private void addCombobox()
     {
-    	cbo_MaNV.addItem("Chọn");
+    	cbo_MaNV.addItem("");
     	sqlNhanVien_BUS.dayComboBoxMaNV(cbo_MaNV);
-    	cbo_HoTen.addItem("Chọn");
+    	cbo_HoTen.addItem("");
     	sqlNhanVien_BUS.dayComboBoxTenNV(cbo_HoTen);
-    	cbo_CCCD.addItem("Chọn");
+    	cbo_CCCD.addItem("");
     	sqlNhanVien_BUS.dayComboBoxCCCD(cbo_CCCD);
-    	cbo_SoDienThoai.addItem("Chọn");
+    	cbo_SoDienThoai.addItem("");
     	sqlNhanVien_BUS.dayComboBoxSDT(cbo_SoDienThoai);
-    	cbo_DiaChi.addItem("Chọn");
+    	cbo_DiaChi.addItem("");
     	sqlNhanVien_BUS.dayComboBoxDiaChi(cbo_DiaChi);
-    	cbo_GioiTinh.addItem("Chọn");
+    	cbo_GioiTinh.addItem("");
     	sqlNhanVien_BUS.dayComboBoxGioiTinh(cbo_GioiTinh);
     	//LocalDate ngayHienTai=LocalDate.now();   	
-    	cbo_Ngay.setSelectedItem("Chọn");
-    	cbo_Thang.setSelectedItem("Chọn");
-    	cbo_Nam.setSelectedItem("Chọn");
-    	cbo_CaLam.addItem("Chọn");
+    	cbo_Ngay.setSelectedItem("");
+    	cbo_Thang.setSelectedItem("");
+    	cbo_Nam.setSelectedItem("");
+    	cbo_CaLam.addItem("");
     	sqlNhanVien_BUS.dayComboBoxCaLam(cbo_CaLam);
-    	cbo_ChucVu.addItem("Chọn");
+    	cbo_ChucVu.addItem("");
     	sqlNhanVien_BUS.dayComboChucVu(cbo_ChucVu);
     	
     }
     private void xoaTrang()
     {
     	
-    	cbo_Ngay.setSelectedItem("Chọn");
-    	cbo_Thang.setSelectedItem("Chọn");
-    	cbo_Nam.setSelectedItem("Chọn");
-    	String chon="Chọn";
+    	cbo_Ngay.setSelectedItem("");
+    	cbo_Thang.setSelectedItem("");
+    	cbo_Nam.setSelectedItem("");
+    	String chon="";
     	cbo_MaNV.setSelectedItem(chon);
     	cbo_HoTen.setSelectedItem(chon);
     	cbo_CCCD.setSelectedItem(chon);
@@ -523,33 +524,41 @@ public class Panel_TimKiemNhanVien extends JPanel implements ActionListener, Mou
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		int row=tbl_DSNV.getSelectedRow();
-		String maNV=tbl_DSNV.getValueAt(row, 0).toString();
-		String tenNV=tbl_DSNV.getValueAt(row, 1).toString();
-		String sdt=tbl_DSNV.getValueAt(row, 2).toString();
-		String gioiTinh=tbl_DSNV.getValueAt(row, 3).toString();
-		String diaChi=tbl_DSNV.getValueAt(row, 4).toString();
-		String chucVu=tbl_DSNV.getValueAt(row, 6).toString();
-		String cCCD=tbl_DSNV.getValueAt(row, 7).toString();
-		String caLam=tbl_DSNV.getValueAt(row, 8).toString();
-		cbo_MaNV.setSelectedItem(maNV);
-		cbo_HoTen.setSelectedItem(tenNV);
-		cbo_SoDienThoai.setSelectedItem(sdt);
-		cbo_GioiTinh.setSelectedItem(gioiTinh);
-		cbo_DiaChi.setSelectedItem(diaChi);
-		cbo_ChucVu.setSelectedItem(chucVu);
-		cbo_CCCD.setSelectedItem(cCCD);
-		cbo_CaLam.setSelectedItem(caLam);
-		String matKhau=sqlNhanVien_BUS.getMatKhau(maNV);
-		lbl_txt_MatKhau.setText(matKhau);
-		Date ngaySinh=sqlNhanVien_BUS.getNgaySinh(maNV);
-		java.sql.Date sqlDateNgaySinh = new java.sql.Date(ngaySinh.getTime());
-		NhanVien n=new NhanVien();
-		n.setNgaySinh(sqlDateNgaySinh);
-		LocalDate ngaySinh_LocalDate=n.getNgaySinhLocalDate();
-		cbo_Ngay.setSelectedItem(ngaySinh_LocalDate.getDayOfMonth());
-		cbo_Thang.setSelectedItem(ngaySinh_LocalDate.getMonthValue());
-		cbo_Nam.setSelectedItem(ngaySinh_LocalDate.getYear());
+		try
+		{
+			int row=tbl_DSNV.getSelectedRow();
+			String maNV=tbl_DSNV.getValueAt(row, 0).toString();
+			String tenNV=tbl_DSNV.getValueAt(row, 1).toString();
+			String sdt=tbl_DSNV.getValueAt(row, 2).toString();
+			String gioiTinh=tbl_DSNV.getValueAt(row, 3).toString();
+			String diaChi=tbl_DSNV.getValueAt(row, 4).toString();
+			String chucVu=tbl_DSNV.getValueAt(row, 6).toString();
+			String cCCD=tbl_DSNV.getValueAt(row, 7).toString();
+			String caLam=tbl_DSNV.getValueAt(row, 8).toString();
+			cbo_MaNV.setSelectedItem(maNV);
+			cbo_HoTen.setSelectedItem(tenNV);
+			cbo_SoDienThoai.setSelectedItem(sdt);
+			cbo_GioiTinh.setSelectedItem(gioiTinh);
+			cbo_DiaChi.setSelectedItem(diaChi);
+			cbo_ChucVu.setSelectedItem(chucVu);
+			cbo_CCCD.setSelectedItem(cCCD);
+			cbo_CaLam.setSelectedItem(caLam);
+			String matKhau=sqlNhanVien_BUS.getMatKhau(maNV);
+			lbl_txt_MatKhau.setText(matKhau);
+			Date ngaySinh=sqlNhanVien_BUS.getNgaySinh(maNV);
+			java.sql.Date sqlDateNgaySinh = new java.sql.Date(ngaySinh.getTime());
+			NhanVien n=new NhanVien();
+			n.setNgaySinh(sqlDateNgaySinh);
+			LocalDate ngaySinh_LocalDate=n.getNgaySinhLocalDate();
+			cbo_Ngay.setSelectedItem(ngaySinh_LocalDate.getDayOfMonth());
+			cbo_Thang.setSelectedItem(ngaySinh_LocalDate.getMonthValue());
+			cbo_Nam.setSelectedItem(ngaySinh_LocalDate.getYear());
+		}catch(DateTimeException d)
+		{
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+            JOptionPane.showMessageDialog(null, d.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	private boolean checkComboboxNULL()
 	{
@@ -590,7 +599,7 @@ public class Panel_TimKiemNhanVien extends JPanel implements ActionListener, Mou
 		String chucVu=(String) cbo_ChucVu.getSelectedItem();
 		String cCCCD=(String) cbo_CCCD.getSelectedItem();
 		String caLam=(String) cbo_CaLam.getSelectedItem();
-		String chon="Chọn";
+		String chon="";
 		if(maNV.equalsIgnoreCase(chon) && tenNV.equalsIgnoreCase(chon) && sdt.equalsIgnoreCase(chon) && gioiTinh.equalsIgnoreCase(chon) &&
 				diaChi.equalsIgnoreCase(chon)  && chucVu.equalsIgnoreCase(chon) && cCCCD.equalsIgnoreCase(chon) && caLam.equalsIgnoreCase(chon)&&
 				ngay.equalsIgnoreCase(chon)&&thang.equalsIgnoreCase(chon) && nam.equalsIgnoreCase(chon))
@@ -686,7 +695,7 @@ public class Panel_TimKiemNhanVien extends JPanel implements ActionListener, Mou
 		String[] stringsToCheck = {maNV, tenNV, sdt, gioiTinh, diaChi, ngay, thang, nam, chucVu, cCCCD, caLam};
 
 		for (String str : stringsToCheck) {
-		    if (!str.equals("Chọn")) {
+		    if (!str.equals("")) {
 		        nonChonCount++;
 		        if (nonChonCount >= 2) {
 		            hasTwoNonChonStrings = true;

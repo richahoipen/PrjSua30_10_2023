@@ -317,19 +317,19 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 	private void addDataComboBox()
 	{
 		//maKH
-		cbo_MaKH.addItem("Chọn");
+		cbo_MaKH.addItem("");
 		sqlKhachHang_BUS.dayComboBoxMaKH(cbo_MaKH);
 		//gioiTinh
-		cbo_GioiTinh.addItem("Chọn");
+		cbo_GioiTinh.addItem("");
 		cbo_GioiTinh.addItem("Nam");
 		cbo_GioiTinh.addItem("Nữ");
 		//hoTen
-		cbo_HoTen.addItem("Chọn");
+		cbo_HoTen.addItem("");
 		sqlKhachHang_BUS.dayComboBoxTenKH(cbo_HoTen);
 		//sdt cbo_SoDienThoai
-		cbo_SoDienThoai.addItem("Chọn");
+		cbo_SoDienThoai.addItem("");
 		sqlKhachHang_BUS.dayComboBoxSDT(cbo_SoDienThoai);
-		cbo_DiaChi.addItem("Chọn");
+		cbo_DiaChi.addItem("");
 		sqlKhachHang_BUS.dayComboBoxDiaChi(cbo_DiaChi);
 		
 	}
@@ -352,11 +352,11 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 	}
 	private void resetComboBox()
 	{
-		cbo_MaKH.setSelectedItem("Chọn");
-		cbo_HoTen.setSelectedItem("Chọn");
-		cbo_SoDienThoai.setSelectedItem("Chọn");
-		cbo_GioiTinh.setSelectedItem("Chọn");
-		cbo_DiaChi.setSelectedItem("Chọn");
+		cbo_MaKH.setSelectedItem("");
+		cbo_HoTen.setSelectedItem("");
+		cbo_SoDienThoai.setSelectedItem("");
+		cbo_GioiTinh.setSelectedItem("");
+		cbo_DiaChi.setSelectedItem("");
 		dtm_KH.setRowCount(0);
 		sqlKhachHang_BUS.xuatDanhSachKhachHang(dtm_KH);
 	}
@@ -374,17 +374,17 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 		String gioiTinh=(String) cbo_GioiTinh.getSelectedItem();
 		String diaChi=(String) cbo_DiaChi.getSelectedItem();
 		String sdt=(String) cbo_SoDienThoai.getSelectedItem();
-		if(maKH.equalsIgnoreCase("Chọn")&&
-				tenKH.equalsIgnoreCase("Chọn")&&
-				gioiTinh.equalsIgnoreCase("Chọn")&&
-				sdt.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("")&&
+				tenKH.equalsIgnoreCase("")&&
+				gioiTinh.equalsIgnoreCase("")&&
+				sdt.equalsIgnoreCase("")&&diaChi.equalsIgnoreCase(""))
 		{
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
 			JOptionPane.showMessageDialog(null, "Vui lòng chọn thông tin để tìm kiếm.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 		}
 		//Tìm theo MaKH
-		if(!maKH.equalsIgnoreCase("Chọn"))
+		if(!maKH.equalsIgnoreCase(""))
 		{
 			dtm_KH.setRowCount(0);
 			sqlKhachHang_BUS.timKiemTheoMaKH(maKH, dtm_KH);
@@ -393,42 +393,42 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			JOptionPane.showMessageDialog(null, "Tìm kiếm thông qua mã khách hàng.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 		}
 		//Tìm theo tên
-		if(maKH.equalsIgnoreCase("Chọn")&&!tenKH.equalsIgnoreCase("Chọn")&&
-						gioiTinh.equalsIgnoreCase("Chọn")&&
-						sdt.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("")&&!tenKH.equalsIgnoreCase("")&&
+						gioiTinh.equalsIgnoreCase("")&&
+						sdt.equalsIgnoreCase("")&&diaChi.equalsIgnoreCase(""))
 		{
 			dtm_KH.setRowCount(0);
 			sqlKhachHang_BUS.timKiemTheoTen(tenKH, dtm_KH);
 		}
 		//Tìm theo gioiTinh
-		if(maKH.equalsIgnoreCase("Chọn")&&tenKH.equalsIgnoreCase("Chọn")&&
-				!gioiTinh.equalsIgnoreCase("Chọn")&&
-				sdt.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("")&&tenKH.equalsIgnoreCase("")&&
+				!gioiTinh.equalsIgnoreCase("")&&
+				sdt.equalsIgnoreCase("")&&diaChi.equalsIgnoreCase(""))
 		{
 			dtm_KH.setRowCount(0);
 			sqlKhachHang_BUS.timKiemTheoGioiTinh(gioiTinh, dtm_KH);
 		}
 		//Tìm theo diaChi
-		if(maKH.equalsIgnoreCase("Chọn")&&tenKH.equalsIgnoreCase("Chọn")&&
-				gioiTinh.equalsIgnoreCase("Chọn")&&
-				sdt.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("")&&tenKH.equalsIgnoreCase("")&&
+				gioiTinh.equalsIgnoreCase("")&&
+				sdt.equalsIgnoreCase("")&&!diaChi.equalsIgnoreCase(""))
 		{
 			dtm_KH.setRowCount(0);
 			sqlKhachHang_BUS.timKiemTheoDiaChi(diaChi, dtm_KH);
 		}
 		
 		
-		if(maKH.equalsIgnoreCase("Chọn")&&tenKH.equalsIgnoreCase("Chọn")&&
-				gioiTinh.equalsIgnoreCase("Chọn")&&
-				!sdt.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("")&&tenKH.equalsIgnoreCase("")&&
+				gioiTinh.equalsIgnoreCase("")&&
+				!sdt.equalsIgnoreCase("")&&diaChi.equalsIgnoreCase(""))
 		{
 			dtm_KH.setRowCount(0);
 			sqlKhachHang_BUS.timKiemTheoSDT(sdt, dtm_KH);
 		}	
 		//Tìm theo tenKH và địa chỉ
-		if(maKH.equalsIgnoreCase("Chọn")&&!tenKH.equalsIgnoreCase("Chọn")&&
-				gioiTinh.equalsIgnoreCase("Chọn")&&
-				sdt.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("")&&!tenKH.equalsIgnoreCase("")&&
+				gioiTinh.equalsIgnoreCase("")&&
+				sdt.equalsIgnoreCase("")&&!diaChi.equalsIgnoreCase(""))
 		{
 			
 			dtm_KH.setRowCount(0);
@@ -439,9 +439,9 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang_BUS.timKiemTheo_tenKH_diaChi(k, dtm_KH);
 		}
 		//Tìm theo tenKH và gioiTinh
-		if(maKH.equalsIgnoreCase("Chọn")&&!tenKH.equalsIgnoreCase("Chọn")&&
-				!gioiTinh.equalsIgnoreCase("Chọn")&&
-				sdt.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("")&&!tenKH.equalsIgnoreCase("")&&
+				!gioiTinh.equalsIgnoreCase("")&&
+				sdt.equalsIgnoreCase("")&&diaChi.equalsIgnoreCase(""))
 		{
 			dtm_KH.setRowCount(0);
 			KhachHang k=new KhachHang();
@@ -450,9 +450,9 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang_BUS.timKiemTheo_tenKH_gioiTinh(k, dtm_KH);
 		}
 		//tìm theo tenKH và sdt
-		if(maKH.equalsIgnoreCase("Chọn")&&!tenKH.equalsIgnoreCase("Chọn")&&
-				gioiTinh.equalsIgnoreCase("Chọn")&&
-				!sdt.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("")&&!tenKH.equalsIgnoreCase("")&&
+				gioiTinh.equalsIgnoreCase("")&&
+				!sdt.equalsIgnoreCase("")&&diaChi.equalsIgnoreCase(""))
 		{
 			dtm_KH.setRowCount(0);
 			KhachHang k=new KhachHang();
@@ -461,9 +461,9 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang_BUS.timKiemTheo_tenKH_sdt(k, dtm_KH);
 		}
 		//timKiemTheo_sdt_diaChi(KhachHang k, DefaultTableModel dtm_KH) 
-		if(maKH.equalsIgnoreCase("Chọn")&&tenKH.equalsIgnoreCase("Chọn")&&
-				gioiTinh.equalsIgnoreCase("Chọn")&&
-				!sdt.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("")&&tenKH.equalsIgnoreCase("")&&
+				gioiTinh.equalsIgnoreCase("")&&
+				!sdt.equalsIgnoreCase("")&&!diaChi.equalsIgnoreCase(""))
 		{
 			dtm_KH.setRowCount(0);
 			KhachHang k=new KhachHang();			
@@ -472,9 +472,9 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang_BUS.timKiemTheo_sdt_diaChi(k, dtm_KH);
 		}
 		//public void timKiemTheo_sdt_gioiTinh(KhachHang k, DefaultTableModel dtm_KH)
-		if(maKH.equalsIgnoreCase("Chọn")&&tenKH.equalsIgnoreCase("Chọn")&&
-				!gioiTinh.equalsIgnoreCase("Chọn")&&
-				!sdt.equalsIgnoreCase("Chọn")&&diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("")&&tenKH.equalsIgnoreCase("")&&
+				!gioiTinh.equalsIgnoreCase("")&&
+				!sdt.equalsIgnoreCase("")&&diaChi.equalsIgnoreCase(""))
 		{
 			
 			dtm_KH.setRowCount(0);
@@ -484,9 +484,9 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang_BUS.timKiemTheo_sdt_gioiTinh(k, dtm_KH);
 		}
 		//public void timKiemTheo_diaChi_gioiTinh(KhachHang k, DefaultTableModel dtm_KH)
-		if(maKH.equalsIgnoreCase("Chọn")&&tenKH.equalsIgnoreCase("Chọn")&&
-				!gioiTinh.equalsIgnoreCase("Chọn")&&
-				sdt.equalsIgnoreCase("Chọn")&&!diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("")&&tenKH.equalsIgnoreCase("")&&
+				!gioiTinh.equalsIgnoreCase("")&&
+				sdt.equalsIgnoreCase("")&&!diaChi.equalsIgnoreCase(""))
 		{
 			
 			dtm_KH.setRowCount(0);
@@ -496,9 +496,9 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang_BUS.timKiemTheo_diaChi_gioiTinh(k, dtm_KH);
 		}
 		//3 tiêu chí
-		if(maKH.equalsIgnoreCase("Chọn") &&!tenKH.equalsIgnoreCase("Chọn")&&
-				gioiTinh.equalsIgnoreCase("Chọn")&&
-				!sdt.equalsIgnoreCase("Chọn") && !diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("") &&!tenKH.equalsIgnoreCase("")&&
+				gioiTinh.equalsIgnoreCase("")&&
+				!sdt.equalsIgnoreCase("") && !diaChi.equalsIgnoreCase(""))
 		{
 			
 			dtm_KH.setRowCount(0);
@@ -509,9 +509,9 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang_BUS.timKiemTheo_tenKH_sdt_diaChi(k, dtm_KH);
 		}
 		//timKiemTheo_tenKH_sdt_gioiTinh(KhachHang k, DefaultTableModel dtm_KH) 
-		if(maKH.equalsIgnoreCase("Chọn") &&!tenKH.equalsIgnoreCase("Chọn")&&
-				!gioiTinh.equalsIgnoreCase("Chọn")&&
-				!sdt.equalsIgnoreCase("Chọn") && diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("") &&!tenKH.equalsIgnoreCase("")&&
+				!gioiTinh.equalsIgnoreCase("")&&
+				!sdt.equalsIgnoreCase("") && diaChi.equalsIgnoreCase(""))
 		{
 			
 			dtm_KH.setRowCount(0);
@@ -522,9 +522,9 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang_BUS.timKiemTheo_tenKH_sdt_gioiTinh(k, dtm_KH);
 		}
 		//timKiemTheo_sdt_diaChi_gioiTinh(KhachHang k, DefaultTableModel dtm_KH)
-		if(maKH.equalsIgnoreCase("Chọn") &&tenKH.equalsIgnoreCase("Chọn")&&
-				!gioiTinh.equalsIgnoreCase("Chọn")&&
-				!sdt.equalsIgnoreCase("Chọn") &&! diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("") &&tenKH.equalsIgnoreCase("")&&
+				!gioiTinh.equalsIgnoreCase("")&&
+				!sdt.equalsIgnoreCase("") &&! diaChi.equalsIgnoreCase(""))
 		{
 			
 			dtm_KH.setRowCount(0);
@@ -535,9 +535,9 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang_BUS.timKiemTheo_sdt_diaChi_gioiTinh(k, dtm_KH);
 		}
 		//Tìm kiếm theo tenKH, diaChi, gioiTinh
-		if(maKH.equalsIgnoreCase("Chọn") &&!tenKH.equalsIgnoreCase("Chọn")&&
-				!gioiTinh.equalsIgnoreCase("Chọn")&&
-				sdt.equalsIgnoreCase("Chọn") &&! diaChi.equalsIgnoreCase("Chọn"))
+		if(maKH.equalsIgnoreCase("") &&!tenKH.equalsIgnoreCase("")&&
+				!gioiTinh.equalsIgnoreCase("")&&
+				sdt.equalsIgnoreCase("") &&! diaChi.equalsIgnoreCase(""))
 		{
 			
 			dtm_KH.setRowCount(0);
@@ -548,9 +548,9 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang_BUS.timKiemTheo_tenKH_diaChi_gioiTinh(k, dtm_KH);
 		}
 		//Tìm kiếm theo tất cả điều kiện trừ maKH
-		if(maKH.equalsIgnoreCase("Chọn") &&!tenKH.equalsIgnoreCase("Chọn")&&
-				!gioiTinh.equalsIgnoreCase("Chọn")&&
-				!sdt.equalsIgnoreCase("Chọn") && !diaChi.equalsIgnoreCase("Chọn"))		
+		if(maKH.equalsIgnoreCase("") &&!tenKH.equalsIgnoreCase("")&&
+				!gioiTinh.equalsIgnoreCase("")&&
+				!sdt.equalsIgnoreCase("") && !diaChi.equalsIgnoreCase(""))		
 		{
 			dtm_KH.setRowCount(0);
 			KhachHang k=new KhachHang();
@@ -560,9 +560,9 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			k.setGioiTinh(gioiTinhBool(gioiTinh));
 			sqlKhachHang_BUS.timKiemTheoTieuChiKhacMaKH(k, dtm_KH);
 		}
-		if(!maKH.equalsIgnoreCase("Chọn") &&!tenKH.equalsIgnoreCase("Chọn")&&
-				!gioiTinh.equalsIgnoreCase("Chọn")&&
-				!sdt.equalsIgnoreCase("Chọn") && !diaChi.equalsIgnoreCase("Chọn"))	
+		if(!maKH.equalsIgnoreCase("") &&!tenKH.equalsIgnoreCase("")&&
+				!gioiTinh.equalsIgnoreCase("")&&
+				!sdt.equalsIgnoreCase("") && !diaChi.equalsIgnoreCase(""))	
 		{
 			
 			dtm_KH.setRowCount(0);

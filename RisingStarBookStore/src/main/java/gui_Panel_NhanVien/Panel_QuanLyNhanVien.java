@@ -458,7 +458,7 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
 		btn_XoaTrang.addActionListener(this);	
 		tbl_DSNV.addMouseListener(this);
 		//Add dữ liệu cho combobox
-		cbo_CaLam.addItem("Chọn");
+		cbo_CaLam.addItem("");
 		cbo_CaLam.addItem("Sáng");
 		cbo_CaLam.addItem("Chiều");
 		cbo_CaLam.addItem("Tối");
@@ -466,13 +466,13 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
 		cbo_CaLam.getMyVector().add("Chiều");
 		cbo_CaLam.getMyVector().add("Tối");
 		//
-		cbo_GioiTinh.addItem("Chọn");
+		cbo_GioiTinh.addItem("");
 		cbo_GioiTinh.addItem("Nam");
 		cbo_GioiTinh.addItem("Nữ");
 		cbo_GioiTinh.getMyVector().add("Nam");
 		cbo_GioiTinh.getMyVector().add("Nữ");
 		//
-		cbo_ChucVu.addItem("Chọn");
+		cbo_ChucVu.addItem("");
 		cbo_ChucVu.addItem("Nhân viên");
 		cbo_ChucVu.addItem("Nhân viên quản lí");
 		cbo_ChucVu.getMyVector().add("Nhân viên");
@@ -480,9 +480,9 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     }
     private void xoaTrang()
     {
-    	cbo_CaLam.setSelectedItem("Chọn");
-    	cbo_GioiTinh.setSelectedItem("Chọn");
-    	cbo_ChucVu.setSelectedItem("Chọn");
+    	cbo_CaLam.setSelectedItem("");
+    	cbo_GioiTinh.setSelectedItem("");
+    	cbo_ChucVu.setSelectedItem("");
     	//set Text
     	lbl_txt_MaNV.setText("");
     	txt_HoTen.setText("");
@@ -530,7 +530,7 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     	String cMND=txt_CCCD.getText();
     	String caLam=(String) cbo_CaLam.getSelectedItem();
     	String ngaySinhString=ftf_NgaySinh.getText();
-    	String chon="Chọn";
+    	String chon="";
     	
     	if(tenNV.trim().equals("") || sdt.trim().equals("") || gioiTinh.equalsIgnoreCase(chon) ||
         			diaChi.trim().equals("")||ngaySinhString.trim().equals("")  || chucVu.equalsIgnoreCase(chon) ||

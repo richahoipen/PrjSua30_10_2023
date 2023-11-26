@@ -448,29 +448,29 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     }
     private void addCombobox()
     {
-    	cbo_MaSP.addItem("Chọn");
+    	cbo_MaSP.addItem("");
     	sqlSanPham_BUS.dayCombobox_maSP(cbo_MaSP);
-    	cbo_TenSP.addItem("Chọn");
+    	cbo_TenSP.addItem("");
     	sqlSanPham_BUS.dayCombobox_tenSP(cbo_TenSP);
-    	cbo_LoaiSP.addItem("Chọn");
+    	cbo_LoaiSP.addItem("");
     	sqlSanPham_BUS.dayCombobox_loaiSP(cbo_LoaiSP);
-    	cbo_TacGia.addItem("Chọn");
+    	cbo_TacGia.addItem("");
     	sqlSanPham_BUS.dayCombobox_tacGia(cbo_TacGia);
-    	cbo_NhaXuatBan.addItem("Chọn");
+    	cbo_NhaXuatBan.addItem("");
     	sqlSanPham_BUS.dayCombobox_nhaXuatBan(cbo_NhaXuatBan);
-    	cbo_NamXuatBan.addItem("Chọn");
+    	cbo_NamXuatBan.addItem("");
     	sqlSanPham_BUS.dayCombobox_namXuatBan(cbo_NamXuatBan);
-    	cbo_NhaCungCap.addItem("Chọn");
+    	cbo_NhaCungCap.addItem("");
     	sqlNhaCungCap_BUS.dayComboBoxTenNCC(cbo_NhaCungCap);
-    	cbo_NgonNgu.addItem("Chọn");
+    	cbo_NgonNgu.addItem("");
     	sqlSanPham_BUS.dayCombobox_ngonNgu(cbo_NgonNgu);
-    	cbo_GiaNhap.addItem("Chọn");
+    	cbo_GiaNhap.addItem("");
     	sqlSanPham_BUS.dayCombobox_giaBan(cbo_GiaNhap);
-    	cbo_GiaBan.addItem("Chọn");
+    	cbo_GiaBan.addItem("");
     	sqlSanPham_BUS.dayCombobox_giaBan(cbo_GiaBan);
-    	cbo_SoLuongCon.addItem("Chọn");
+    	cbo_SoLuongCon.addItem("");
     	sqlSanPham_BUS.dayCombobox_soLuong(cbo_SoLuongCon);
-    	cbo_SoLuongBan.addItem("Chọn");
+    	cbo_SoLuongBan.addItem("");
     	sqlSanPham_BUS.dayCombobox_soLuongBan(cbo_SoLuongBan);
     }
     private void resetTable()
@@ -507,7 +507,7 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     }
     private void xoaTrang()
     {
-    	String chon="Chọn";
+    	String chon="";
     	cbo_MaSP.setSelectedItem(chon);
 		cbo_TenSP.setSelectedItem(chon);
 		cbo_LoaiSP.setSelectedItem(chon);
@@ -539,7 +539,7 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     	String soLuongBan=(String) cbo_SoLuongBan.getSelectedItem();
     	String giaNhap=(String) cbo_GiaNhap.getSelectedItem();
     	String giaBan=(String) cbo_GiaBan.getSelectedItem();
-    	String chon="Chọn";
+    	String chon="";
     	if(maSP.equalsIgnoreCase(chon)&& tenSP.equalsIgnoreCase(chon)&&loaiSP.equalsIgnoreCase(chon)&&ngonNgu.equalsIgnoreCase(chon)&&
     			nhaCungCap.equalsIgnoreCase(chon)&&nhaXuatBan.equalsIgnoreCase(chon)&&namXuatBan.equalsIgnoreCase(chon)&&
     			tacGia.equalsIgnoreCase(chon)&&soLuong.equalsIgnoreCase(chon)&&

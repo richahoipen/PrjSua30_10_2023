@@ -10,12 +10,14 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 import connectDB.Connect;
+import customEntities.Custom_ComboBox;
 import dataBase_BUS.KhachHang_BUS;
 import entities.DonDatHang;
 import entities.KhachHang;
 import interface_Method_DAO.DonDatHang_Method;
+import interface_Method_DAO.ICombobox_TimKiem_DonDat;
 
-public class DonDatHang_DAO implements DonDatHang_Method
+public class DonDatHang_DAO implements DonDatHang_Method, ICombobox_TimKiem_DonDat
 {
 	private Connect con = new Connect();
 	private KhachHang_BUS sqlKhachHang_BUS=new KhachHang_BUS();
@@ -91,21 +93,23 @@ public class DonDatHang_DAO implements DonDatHang_Method
 	    }
 	}
 	@Override
-	public boolean xuat_DonDat_ChuaThanhToan(String maNV, DefaultTableModel dtm_DD) {
-		String sqlSelect = "SELECT * FROM [dbo].[DonDatHang] WHERE maNV = ? AND daLapHoaDon = ?";
+	public boolean xuat_DonDat_ChuaThanhToan(String maNV, DefaultTableModel dtm_DD,String maKH) {
+		String sqlSelect = "SELECT * FROM [dbo].[DonDatHang] WHERE maNV = ? AND daLapHoaDon = ? AND maKH= ? "
+				+ "ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maKH)) AS INT) ASC;";
 		try {
 			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);
 	        preparedStatement.setNString(1, maNV);
 	        preparedStatement.setBoolean(2, false);
+	        preparedStatement.setNString(3,maKH);
 			ResultSet rs = preparedStatement.executeQuery();
 			while(rs.next())
 			{
 				String maDDH=rs.getString("maDDH");
 				Date ngayDat=rs.getDate("ngayDat");
-				String maKH=rs.getNString("maKH");
+				String maKHang=rs.getNString("maKH");
 				DonDatHang d=new DonDatHang();
 				d.setNgayDat(ngayDat);
-				String[] row= {maDDH,sqlKhachHang_BUS.getTenKhachHang_TheoMa(maKH),d.getNgayDatToString()};
+				String[] row= {maDDH,sqlKhachHang_BUS.getTenKhachHang_TheoMa(maKHang),d.getNgayDatToString(),Double.toString(getTongTien_DonDatHang(maDDH))};
 				dtm_DD.addRow(row);
 			}	
 			con.con().close();
@@ -229,6 +233,274 @@ public class DonDatHang_DAO implements DonDatHang_Method
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			return 0;
 
+		}
+	}
+	/*
+	 * String sqlSelect="select soLuong from [dbo].[SanPham]\r\n"
+				+ "ORDER BY CAST(SUBSTRING(maSP, 3, LEN(maSP)) AS INT) ASC;";
+		try {
+			ResultSet rs = con.resultSet(sqlSelect);
+			// KhachHang(String maKH, String tenKH, String sdt, boolean gioiTinh, String
+			// diaChi)
+			// ArrayList<String> stringList = new ArrayList<>();
+			while (rs.next()) {
+				int soLuong = rs.getInt("soLuong");
+				cbo_soLuong.addItem(Integer.toString(soLuong));
+				// stringList.add(maKH);
+				cbo_soLuong.getMyVector().add(Integer.toString(soLuong));
+			}
+			// String[] maKHArray = stringList.toArray(new String[0]);
+			// cbMaKH.setMyVector(maKHArray);
+			con.con().close();
+			con.stmt().close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	 */
+	@Override
+	public boolean dayComboBox_MaDD(Custom_ComboBox cbo_MaDD) {
+		String sqlSelect="SELECT\r\n"
+				+ "    DDH.maDDH\r\n"
+				+ "FROM\r\n"
+				+ "    DonDatHang DDH\r\n"
+				+ "JOIN\r\n"
+				+ "    KhachHang KH ON DDH.maKH = KH.maKH\r\n"
+				+ "JOIN\r\n"
+				+ "    NhanVien NV ON DDH.maNV = NV.maNV\r\n"
+				+ "ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;";
+		try {
+			ResultSet rs = con.resultSet(sqlSelect);
+			while (rs.next()) {
+				String maDDH=rs.getString("maDDH");
+				cbo_MaDD.addItem(maDDH);
+				// stringList.add(maKH);
+				cbo_MaDD.getMyVector().add(maDDH);
+			}
+			// String[] maKHArray = stringList.toArray(new String[0]);
+			// cbMaKH.setMyVector(maKHArray);
+			con.con().close();
+			con.stmt().close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	}
+	@Override
+	public boolean dayComboBox_HoTenKhachHang(Custom_ComboBox cbo_HoTenKhachHang) {
+		String sqlSelect="SELECT\r\n"
+				+ "    KH.tenKH\r\n"
+				+ "FROM\r\n"
+				+ "    DonDatHang DDH\r\n"
+				+ "JOIN\r\n"
+				+ "    KhachHang KH ON DDH.maKH = KH.maKH\r\n"
+				+ "JOIN\r\n"
+				+ "    NhanVien NV ON DDH.maNV = NV.maNV\r\n"
+				+ "ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;";
+		try {
+			ResultSet rs = con.resultSet(sqlSelect);
+			while (rs.next()) {
+				String tenKH=rs.getString("tenKH");
+				cbo_HoTenKhachHang.addItem(tenKH);
+				// stringList.add(maKH);
+				cbo_HoTenKhachHang.getMyVector().add(tenKH);
+			}
+			// String[] maKHArray = stringList.toArray(new String[0]);
+			// cbMaKH.setMyVector(maKHArray);
+			con.con().close();
+			con.stmt().close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	}
+	@Override
+	public boolean dayComboBox_SoDienThoai(Custom_ComboBox cbo_SoDienThoai) {
+		String sqlSelect="SELECT\r\n"
+				+ "    KH.sdt\r\n"
+				+ "FROM\r\n"
+				+ "    DonDatHang DDH\r\n"
+				+ "JOIN\r\n"
+				+ "    KhachHang KH ON DDH.maKH = KH.maKH\r\n"
+				+ "JOIN\r\n"
+				+ "    NhanVien NV ON DDH.maNV = NV.maNV\r\n"
+				+ "ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;";
+		try {
+			ResultSet rs = con.resultSet(sqlSelect);
+			while (rs.next()) {
+				String sdt=rs.getString("sdt");
+				cbo_SoDienThoai.addItem(sdt);
+				// stringList.add(maKH);
+				cbo_SoDienThoai.getMyVector().add(sdt);
+			}
+			// String[] maKHArray = stringList.toArray(new String[0]);
+			// cbMaKH.setMyVector(maKHArray);
+			con.con().close();
+			con.stmt().close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	}
+	@Override
+	public boolean dayComboBox_HoTenNhanVien(Custom_ComboBox cbo_HoTenNhanVien) {
+		String sqlSelect="SELECT\r\n"
+				+ "    NV.tenNV\r\n"
+				+ "FROM\r\n"
+				+ "    DonDatHang DDH\r\n"
+				+ "JOIN\r\n"
+				+ "    KhachHang KH ON DDH.maKH = KH.maKH\r\n"
+				+ "JOIN\r\n"
+				+ "    NhanVien NV ON DDH.maNV = NV.maNV\r\n"
+				+ "ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;";
+		try {
+			ResultSet rs = con.resultSet(sqlSelect);
+			while (rs.next()) {
+				String tenNV=rs.getString("tenNV");
+				cbo_HoTenNhanVien.addItem(tenNV);
+				// stringList.add(maKH);
+				cbo_HoTenNhanVien.getMyVector().add(tenNV);
+			}
+			// String[] maKHArray = stringList.toArray(new String[0]);
+			// cbMaKH.setMyVector(maKHArray);
+			con.con().close();
+			con.stmt().close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	}
+	/*
+	 * SELECT SUM(thanhTien) AS tongTien
+		FROM CTDonDatHang
+		GROUP BY maDDH;
+	 */
+	@Override
+	public boolean dayComboBox_TongTien(Custom_ComboBox cbo_TongTien) {
+		String sqlSelect="SELECT SUM(thanhTien) AS tongTien\r\n"
+				+ "		FROM CTDonDatHang\r\n"
+				+ "		GROUP BY maDDH "
+				+ "ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;";
+		try {
+			ResultSet rs = con.resultSet(sqlSelect);
+			while (rs.next()) {
+				double tongTien=rs.getDouble("tongTien");
+				cbo_TongTien.addItem(Double.toString(tongTien));
+				// stringList.add(maKH);
+				cbo_TongTien.getMyVector().add(Double.toString(tongTien));
+			}
+			// String[] maKHArray = stringList.toArray(new String[0]);
+			// cbMaKH.setMyVector(maKHArray);
+			con.con().close();
+			con.stmt().close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	}
+	@Override
+	public boolean xuat_DonDatHang_TimKiem(DefaultTableModel dtm_DD) {
+		String sqlSelect = "SELECT\r\n"
+				+ "    DDH.maDDH,\r\n"
+				+ "    KH.tenKH,\r\n"
+				+ "    KH.sdt,\r\n"
+				+ "    DDH.ngayDat,\r\n"
+				+ "    NV.tenNV\r\n"
+				+ "FROM\r\n"
+				+ "    DonDatHang DDH\r\n"
+				+ "JOIN\r\n"
+				+ "    KhachHang KH ON DDH.maKH = KH.maKH\r\n"
+				+ "JOIN\r\n"
+				+ "    NhanVien NV ON DDH.maNV = NV.maNV "
+				+ "ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;";
+		try {
+			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);
+	        //preparedStatement.setNString(1, maNV);
+	        
+			ResultSet rs = preparedStatement.executeQuery();
+			while(rs.next())
+			{
+				String maDDH=rs.getString("maDDH");
+				String tenKH=rs.getNString("tenKH");
+				String sdt=rs.getNString("sdt");
+				Date ngayDat=rs.getDate("ngayDat");
+				String tenNV=rs.getNString("tenNV");
+				DonDatHang d=new DonDatHang();
+				d.setNgayDat(ngayDat);
+				String[] row= {maDDH,tenKH,sdt,d.getNgayDatToString(),tenNV,Double.toString(getTongTien_DonDatHang(maDDH))};
+				dtm_DD.addRow(row);
+			}	
+			con.con().close();
+			con.stmt().close();
+			rs.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+	}
+	@Override
+	public Date getNgayDat(String maDDH) {
+		String sqlSelect = "SELECT\r\n"
+				+ "    DDH.ngayDat\r\n"
+				+ "FROM\r\n"
+				+ "    DonDatHang DDH\r\n"
+				+ "JOIN\r\n"
+				+ "    KhachHang KH ON DDH.maKH = KH.maKH\r\n"
+				+ "JOIN\r\n"
+				+ "    NhanVien NV ON DDH.maNV = NV.maNV\r\n"
+				+ "\r\n"
+				+ "where maDDH='"+maDDH+"';";
+		Date ngayDat_Return=null;
+		try {
+			ResultSet rs = con.resultSet(sqlSelect);
+			// NhanVien(String maNV, String tenNV, String sdt, String gioiTinh, String
+			// diaChi, Date ngaySinh, String chucVu,
+			// String cMND, String caLam)
+			
+			while (rs.next()) {			
+				Date ngayDat=rs.getDate("ngayDat");
+				ngayDat_Return=ngayDat;
+			}
+			
+			con.con().close();
+			con.stmt().close();
+			rs.close();
+			return ngayDat_Return;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return null;
+			
 		}
 	}
 	

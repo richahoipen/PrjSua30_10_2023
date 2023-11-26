@@ -26,7 +26,7 @@ public class CTDonDatHang
 	private int soLuong;
 	@Column(name = "thanhTien", length = 100,nullable = true)
 	private double thanhTien;
-	@Column(name = "maSP", length = 100, columnDefinition = "nvarchar(20)",nullable = true)
+	@Column(name = "maSP", length = 100, columnDefinition = "nvarchar(50)",nullable = true)
 	private String maSP;
 	public String getMaSP() {
 		return maSP;
@@ -99,6 +99,13 @@ public class CTDonDatHang
 			return false;
 		CTDonDatHang other = (CTDonDatHang) obj;
 		return sTT == other.sTT;
+	}
+	public CTDonDatHang(double donGia, int soLuong, double thanhTien, String maSP) {
+		super();
+		this.donGia = donGia;
+		this.soLuong = soLuong;
+		this.thanhTien = thanhTien;
+		this.maSP = maSP;
 	}
 	
 	
