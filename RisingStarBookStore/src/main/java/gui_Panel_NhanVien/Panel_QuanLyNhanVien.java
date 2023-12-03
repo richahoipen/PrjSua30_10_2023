@@ -1,5 +1,6 @@
 package gui_Panel_NhanVien;
 
+import com.raven.model.SettingModel;
 import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 import com.toedter.calendar.JDateChooser;
@@ -80,6 +81,7 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
 	private CustomTable tbl_DSNV;
 	private DefaultTableModel dtm_NV;
 	private NhanVien_BUS sqlNhanVien_BUS=new NhanVien_BUS();
+	private SettingModel settingModel;
     // End of variables declaration//GEN-END:variables
     public Panel_QuanLyNhanVien() {
         initComponents();
@@ -442,6 +444,7 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
         gl_pn_QL_NV.linkSize(SwingConstants.HORIZONTAL, new Component[] {lbl_GioiTinh, lbl_DiaChi, lbl_CaLam, lbl_CCCD, lbl_SoDienThoai});
         pn_QL_NV.setLayout(gl_pn_QL_NV);
         addAction();
+        setting();
     }// </editor-fold>//GEN-END:initComponents
     private void addAction()
     {
@@ -459,24 +462,11 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
 		tbl_DSNV.addMouseListener(this);
 		//Add dữ liệu cho combobox
 		cbo_CaLam.addItem("");
-		cbo_CaLam.addItem("Sáng");
-		cbo_CaLam.addItem("Chiều");
-		cbo_CaLam.addItem("Tối");
-		cbo_CaLam.getMyVector().add("Sáng");
-		cbo_CaLam.getMyVector().add("Chiều");
-		cbo_CaLam.getMyVector().add("Tối");
 		//
 		cbo_GioiTinh.addItem("");
-		cbo_GioiTinh.addItem("Nam");
-		cbo_GioiTinh.addItem("Nữ");
-		cbo_GioiTinh.getMyVector().add("Nam");
-		cbo_GioiTinh.getMyVector().add("Nữ");
 		//
 		cbo_ChucVu.addItem("");
-		cbo_ChucVu.addItem("Nhân viên");
-		cbo_ChucVu.addItem("Nhân viên quản lí");
-		cbo_ChucVu.getMyVector().add("Nhân viên");
-		cbo_ChucVu.getMyVector().add("Nhân viên quản lí");
+		
     }
     private void xoaTrang()
     {
@@ -491,7 +481,6 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     	txt_DiaChi.setText("");
     	txt_SoDienThoai.setText("");
     	ftf_NgaySinh.setText("");
-    	
     	resetTable();
     }
     private void resetTable()
@@ -510,7 +499,16 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
             UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-            JOptionPane.showMessageDialog(null, "Dữ liệu giới tính không được rỗng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Dữ liệu giới tính không được rỗng.";
+    			loaiCanhBao = "Lỗi";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Gender field cannot be empty.";
+    			loaiCanhBao = "Error";
+    		}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
             return false;
     	}
     }
@@ -530,7 +528,7 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     	String cMND=txt_CCCD.getText();
     	String caLam=(String) cbo_CaLam.getSelectedItem();
     	String ngaySinhString=ftf_NgaySinh.getText();
-    	String chon="";
+    	String chon="Chọn";
     	
     	if(tenNV.trim().equals("") || sdt.trim().equals("") || gioiTinh.equalsIgnoreCase(chon) ||
         			diaChi.trim().equals("")||ngaySinhString.trim().equals("")  || chucVu.equalsIgnoreCase(chon) ||
@@ -538,7 +536,16 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
         {
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-			JOptionPane.showMessageDialog(null, "Vui lòng nhập hết dữ liệu.", "Warning", JOptionPane.WARNING_MESSAGE);
+			String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Vui lòng nhập hết dữ liệu.";
+    			loaiCanhBao = "Lỗi";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Please enter all field.";
+    			loaiCanhBao = "Error";
+    		}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 			txt_HoTen.requestFocus();
 			return false;
         }
@@ -548,7 +555,16 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Họ và tên không hợp lệ.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Họ và tên không hợp lệ.";
+    			loaiCanhBao = "Lỗi";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Invalid name.";
+    			loaiCanhBao = "Error";
+    		}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 	        txt_HoTen.requestFocus();
 	        return false;
     	}
@@ -556,7 +572,16 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
 		{
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Số điện thoại không hợp lệ.";
+    			loaiCanhBao = "Lỗi";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Invalid phone number.";
+    			loaiCanhBao = "Error";
+    		}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 	        txt_SoDienThoai.requestFocus();
 	        return false;
 		}
@@ -564,7 +589,16 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
 		{
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Địa chỉ không hợp lệ.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Địa chỉ không hợp lệ.";
+    			loaiCanhBao = "Lỗi";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Invalid address.";
+    			loaiCanhBao = "Error";
+    		}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 	        txt_DiaChi.requestFocus();
 	        return false;
 		}
@@ -572,7 +606,16 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Căn cước công dân không hợp lệ, phải là 12 số.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Căn cước công dân phải là 12 số.";
+    			loaiCanhBao = "Lỗi";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Citizen identification must be 12 numbers.";
+    			loaiCanhBao = "Error";
+    		}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 	        txt_CCCD.requestFocus();
 	        return false;
     	}
@@ -581,7 +624,16 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Ngày sinh không được trước ngày hôm nay";
+    			loaiCanhBao = "Lỗi";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Date of birth cannot be before today";
+    			loaiCanhBao = "Error";
+    		}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 	        ftf_NgaySinh.requestFocus();
 	        return false;
     	}
@@ -590,7 +642,16 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Chưa đủ tuổi để đi làm nhân viên.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Chưa đủ tuổi để đi làm nhân viên.";
+    			loaiCanhBao = "Lỗi";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Not old enough to work as an employee.";
+    			loaiCanhBao = "Error";
+    		}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 	        ftf_NgaySinh.requestFocus();
 	        return false;
     	}
@@ -598,7 +659,16 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Đã quá tuổi để đi làm nhân viên.", "Warning", JOptionPane.WARNING_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Đã quá tuổi để đi làm nhân viên.";
+    			loaiCanhBao = "Lỗi";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Too old to work as an employee.";
+    			loaiCanhBao = "Error";
+    		}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 	        ftf_NgaySinh.requestFocus();
 	        return false;
     	}
@@ -610,13 +680,39 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     			
     	String tenNV=txt_HoTen.getText();
     	String sdt=txt_SoDienThoai.getText();
-    	String gioiTinh=(String) cbo_GioiTinh.getSelectedItem();
+    	String gioiTinh = null, chucVu = null, caLam = null;
+		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+			gioiTinh = (String) cbo_GioiTinh.getSelectedItem();
+			chucVu=(String) cbo_ChucVu.getSelectedItem();
+			caLam=(String) cbo_CaLam.getSelectedItem();
+		}
+		if (settingModel.getNgonNgu().equals("English")) {
+			if(cbo_GioiTinh.getSelectedItem().toString().equals("Female")) {
+				gioiTinh = "Nữ";
+			}
+			if(cbo_GioiTinh.getSelectedItem().toString().equals("Male")) {
+				gioiTinh = "Nam";
+			}
+			if(cbo_ChucVu.getSelectedItem().toString().equals("Sale employee")) {
+				chucVu = "Nhân viên";
+			}
+			if(cbo_ChucVu.getSelectedItem().toString().equals("Manager")) {
+				chucVu = "Nhân viên quản lí";
+			}
+			if(cbo_CaLam.getSelectedItem().toString().equals("Morning")) {
+				caLam = "Sáng";
+			}
+			if(cbo_CaLam.getSelectedItem().toString().equals("Afternoon")) {
+				caLam = "Chiều";
+			}
+			if(cbo_CaLam.getSelectedItem().toString().equals("Night")) {
+				caLam = "Tối";
+			}
+		}
     	String diaChi=txt_DiaChi.getText();
     	Date ngaySinh=dcr_NgaySinh.getDate();
     	java.sql.Date sqlDateNgaySinh = new java.sql.Date(ngaySinh.getTime());
-    	String chucVu=(String) cbo_ChucVu.getSelectedItem();
     	String cMND=txt_CCCD.getText();
-    	String caLam=(String) cbo_CaLam.getSelectedItem();
     	String matKhau=txt_MatKhau.getText();
     	try
     	{
@@ -631,8 +727,10 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
         	n.setcMND(cMND);
         	n.setCaLam(caLam);
         	t.setMatKhau(matKhau);
+        	System.out.println(n+""+t);
         	sqlNhanVien_BUS.themNhanVien(n,t);
         	xoaTrang();
+        	settingTable();
     	}catch(Exception e)
 		{
 			e.printStackTrace();
@@ -651,22 +749,48 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
     			String tenNV=txt_HoTen.getText();
         		String maNV=lbl_txt_MaNV.getText();
             	String sdt=txt_SoDienThoai.getText();
-            	String gioiTinh=(String) cbo_GioiTinh.getSelectedItem();
+            	String gioiTinh = null, chucVu = null, caLam = null;
+        		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+        			gioiTinh = (String) cbo_GioiTinh.getSelectedItem();
+        			chucVu=(String) cbo_ChucVu.getSelectedItem();
+        			caLam=(String) cbo_CaLam.getSelectedItem();
+        		}
+        		if (settingModel.getNgonNgu().equals("English")) {
+        			if(cbo_GioiTinh.getSelectedItem().toString().equals("Female")) {
+        				gioiTinh = "Nữ";
+        			}
+        			if(cbo_GioiTinh.getSelectedItem().toString().equals("Male")) {
+        				gioiTinh = "Nam";
+        			}
+        			if(cbo_ChucVu.getSelectedItem().toString().equals("Sale employee")) {
+        				chucVu = "Nhân viên";
+        			}
+        			if(cbo_ChucVu.getSelectedItem().toString().equals("Manager")) {
+        				chucVu = "Nhân viên quản lí";
+        			}
+        			if(cbo_CaLam.getSelectedItem().toString().equals("Morning")) {
+        				caLam = "Sáng";
+        			}
+        			if(cbo_CaLam.getSelectedItem().toString().equals("Afternoon")) {
+        				caLam = "Chiều";
+        			}
+        			if(cbo_CaLam.getSelectedItem().toString().equals("Night")) {
+        				caLam = "Tối";
+        			}
+        		}
             	String diaChi=txt_DiaChi.getText();
             	Date ngaySinh=dcr_NgaySinh.getDate();
             	java.sql.Date sqlDateNgaySinh = new java.sql.Date(ngaySinh.getTime());
-            	String chucVu=(String) cbo_ChucVu.getSelectedItem();
             	String cMND=txt_CCCD.getText();
-            	String caLam=(String) cbo_CaLam.getSelectedItem();
             	String matKhau=txt_MatKhau.getText();
             	NhanVien n=new NhanVien(maNV, tenNV, sdt, gioiTinh, diaChi, sqlDateNgaySinh, chucVu, cMND, caLam);
             	TaiKhoan t=new TaiKhoan(matKhau);
             	if(sqlNhanVien_BUS.capNhatNhanVien(n,t))
             		System.out.println("Thành công cập nhật");
-            	
     			//cập nhật xong thì bỏ chọn
     			tbl_DSNV.clearSelection();
     			resetTable();
+    			settingTable();
     		}catch(Exception e)
     		{
     			e.printStackTrace();
@@ -679,7 +803,16 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
 		{
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Vui lòng chọn dữ liệu để cập nhật.", "Thông báo.", JOptionPane.INFORMATION_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Vui lòng chọn dữ liệu để cập nhật.";
+    			loaiCanhBao = "Lỗi";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Please select data to update.";
+    			loaiCanhBao = "Error";
+    		}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 		}
     }
 	@Override
@@ -749,6 +882,7 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
 		if(o.equals(btn_XoaTrang))
 		{
 			xoaTrang();
+			settingTable();
 		}
 		Date ngaySinh=dcr_NgaySinh.getDate();
 		if(o.equals(btn_Them))
@@ -764,7 +898,16 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
 			{
 				UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 				UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-				JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ hoặc rỗng.", "Warning", JOptionPane.WARNING_MESSAGE);
+				String canhBao = null,loaiCanhBao = null;
+	    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+	    			canhBao = "Ngày sinh không hợp lệ hoặc rỗng.";
+	    			loaiCanhBao = "Lỗi";
+	    		}
+	    		if (settingModel.getNgonNgu().equals("English")) {
+	    			canhBao = "Date of birth is invalid or empty.";
+	    			loaiCanhBao = "Error";
+	    		}
+				JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 				ftf_NgaySinh.requestFocus();
 			}	
 				
@@ -782,9 +925,142 @@ public class Panel_QuanLyNhanVien extends JPanel implements ActionListener, Mous
 			{
 				UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 				UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-				JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ hoặc rỗng.", "Warning", JOptionPane.WARNING_MESSAGE);
+				String canhBao = null,loaiCanhBao = null;
+	    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+	    			canhBao = "Ngày sinh không hợp lệ hoặc rỗng.";
+	    			loaiCanhBao = "Lỗi";
+	    		}
+	    		if (settingModel.getNgonNgu().equals("English")) {
+	    			canhBao = "Date of birth is invalid or empty.";
+	    			loaiCanhBao = "Error";
+	    		}
+				JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 				ftf_NgaySinh.requestFocus();
 			}	
 		}
+	}
+
+	private void settingLanguage() {
+	// TODO Auto-generated method stub
+		if(settingModel.getNgonNgu().equals("Vietnamese")) {
+			lbl_Title_QL_NV.setText("Quản lý nhân viên");
+			lbl_MaNV.setText("Mã nhân viên");
+			lbl_HoTen.setText("Họ tên");
+			lbl_MatKhau.setText("Mật khẩu");
+			lbl_ChucVu.setText("Chức vụ");
+			lbl_NgaySinh.setText("Ngày sinh");
+			lbl_DiaChi.setText("Địa chỉ");
+			lbl_ChucVu.setText("Chức vụ");
+			lbl_CaLam.setText("Ca làm");
+			lbl_CCCD.setText("CCCD");
+			lbl_SoDienThoai.setText("Số điện thoại");
+			btn_XoaTrang.setText("Xóa trắng");
+			btn_CapNhat.setText("Cập nhật");
+			btn_Them.setText("Thêm");
+			lbl_Title_DSNV.setText("Danh sách nhân viên");
+			
+			tbl_DSNV.getColumnModel().getColumn(0).setHeaderValue("Mã nhân viên");
+			tbl_DSNV.getColumnModel().getColumn(1).setHeaderValue("Tên nhân viên");
+			tbl_DSNV.getColumnModel().getColumn(2).setHeaderValue("Số điện thoại");
+			tbl_DSNV.getColumnModel().getColumn(3).setHeaderValue("Giới tính");
+			tbl_DSNV.getColumnModel().getColumn(4).setHeaderValue("Địa chỉ");
+			tbl_DSNV.getColumnModel().getColumn(5).setHeaderValue("Ngày sinh");
+			tbl_DSNV.getColumnModel().getColumn(6).setHeaderValue("Chức vụ");
+			tbl_DSNV.getColumnModel().getColumn(7).setHeaderValue("CCCD");
+			tbl_DSNV.getColumnModel().getColumn(8).setHeaderValue("Ca làm");
+		}
+		if(settingModel.getNgonNgu().equals("English")) {
+			lbl_Title_QL_NV.setText("Employee updating");
+			lbl_MaNV.setText("Employee number");
+			lbl_HoTen.setText("Full name");
+			lbl_MatKhau.setText("Password");
+			lbl_ChucVu.setText("Position");
+			lbl_NgaySinh.setText("Birthday");
+			lbl_DiaChi.setText("Address");
+			lbl_GioiTinh.setText("Sex");
+			lbl_CaLam.setText("Shift");
+			lbl_CCCD.setText("C.I.");
+			lbl_SoDienThoai.setText("Phone number");
+			btn_XoaTrang.setText("Refresh");
+			btn_CapNhat.setText("Update");
+			btn_Them.setText("Add");
+			lbl_Title_DSNV.setText("Employee list");
+			
+			tbl_DSNV.getColumnModel().getColumn(0).setHeaderValue("Employee number");
+			tbl_DSNV.getColumnModel().getColumn(1).setHeaderValue("Full name");
+			tbl_DSNV.getColumnModel().getColumn(2).setHeaderValue("Phone number");
+			tbl_DSNV.getColumnModel().getColumn(3).setHeaderValue("Sex");
+			tbl_DSNV.getColumnModel().getColumn(4).setHeaderValue("Address");
+			tbl_DSNV.getColumnModel().getColumn(5).setHeaderValue("Birthday");
+			tbl_DSNV.getColumnModel().getColumn(6).setHeaderValue("Position");
+			tbl_DSNV.getColumnModel().getColumn(7).setHeaderValue("C.I.");
+			tbl_DSNV.getColumnModel().getColumn(8).setHeaderValue("Shift");
+		}	
+	}
+	private void setting() {
+    	settingModel = new SettingModel();
+    	try {
+			settingModel.readFrom();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	//settingButton();
+    	settingLanguage();
+    	settingCombobox();
+    	settingTable();
+    }
+	private void settingCombobox() {
+    	if(settingModel.getNgonNgu().equals("Vietnamese")) {
+			cbo_GioiTinh.addItem("Nam");
+			cbo_GioiTinh.addItem("Nữ");
+			cbo_GioiTinh.getMyVector().add("Nam");
+			cbo_GioiTinh.getMyVector().add("Nữ");
+			cbo_CaLam.addItem("Sáng");
+			cbo_CaLam.addItem("Chiều");
+			cbo_CaLam.addItem("Tối");
+			cbo_CaLam.getMyVector().add("Sáng");
+			cbo_CaLam.getMyVector().add("Chiều");
+			cbo_CaLam.getMyVector().add("Tối");
+			cbo_ChucVu.addItem("Nhân viên");
+			cbo_ChucVu.addItem("Nhân viên quản lí");
+			cbo_ChucVu.getMyVector().add("Nhân viên");
+			cbo_ChucVu.getMyVector().add("Nhân viên quản lí");
+		}
+    	if(settingModel.getNgonNgu().equals("English")) {
+    		cbo_GioiTinh.addItem("Male");
+    		cbo_GioiTinh.addItem("Female");
+    		cbo_GioiTinh.getMyVector().add("Male");
+    		cbo_GioiTinh.getMyVector().add("Female");
+    		cbo_CaLam.addItem("Morning");
+			cbo_CaLam.addItem("Afternoon");
+			cbo_CaLam.addItem("Night");
+			cbo_CaLam.getMyVector().add("Morning");
+			cbo_CaLam.getMyVector().add("Afternoon");
+			cbo_CaLam.getMyVector().add("Night");
+			cbo_ChucVu.addItem("Sale employee");
+			cbo_ChucVu.addItem("Manager");
+			cbo_ChucVu.getMyVector().add("Sale employee");
+			cbo_ChucVu.getMyVector().add("Manager");
+    	}
+	}
+	private void settingTable() {
+		if(settingModel.getNgonNgu().equals("English"))
+			for (int i = 0; i < tbl_DSNV.getRowCount(); i++) {
+				if(tbl_DSNV.getModel().getValueAt(i, 3).toString().equals("Nam"))
+					tbl_DSNV.getModel().setValueAt("Male",i, 3);
+				if(tbl_DSNV.getModel().getValueAt(i, 3).toString().equals("Nữ"))
+					tbl_DSNV.getModel().setValueAt("Female",i, 3);
+				if(tbl_DSNV.getModel().getValueAt(i, 6).toString().equals("Nhân viên"))
+					tbl_DSNV.getModel().setValueAt("Sale employee",i, 6);
+				if(tbl_DSNV.getModel().getValueAt(i, 6).toString().equals("Nhân viên quản lí"))
+					tbl_DSNV.getModel().setValueAt("Manager",i, 6);
+				if(tbl_DSNV.getModel().getValueAt(i, 8).toString().equals("Sáng"))
+					tbl_DSNV.getModel().setValueAt("Morning",i, 8);
+				if(tbl_DSNV.getModel().getValueAt(i, 8).toString().equals("Chiều"))
+					tbl_DSNV.getModel().setValueAt("Afternoon",i, 8);
+				if(tbl_DSNV.getModel().getValueAt(i, 8).toString().equals("Tối"))
+					tbl_DSNV.getModel().setValueAt("Night",i, 8);
+			}
 	}
 }

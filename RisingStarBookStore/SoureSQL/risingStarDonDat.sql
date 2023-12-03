@@ -153,3 +153,7 @@ JOIN
 JOIN
     NhanVien NV ON DDH.maNV = NV.maNV
 ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;
+
+SELECT SUM(thanhTien) AS tongTien
+FROM CTDonDatHang
+GROUP BY maDDH;

@@ -11,4 +11,5 @@ public interface HoaDon_Method {
 	public boolean capNhat_CTHoaDon(String maHD);
 	public boolean capNhatSoLuong(String maSP,int soLuong);
 	public boolean capNhatDonDatHang(String maDDH);
+	public HoaDon get_HoaDon(String maHD);
 }

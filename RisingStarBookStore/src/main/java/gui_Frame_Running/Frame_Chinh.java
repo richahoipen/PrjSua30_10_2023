@@ -35,6 +35,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 import org.jdesktop.animation.timing.Animator;
@@ -46,10 +47,12 @@ import com.jidesoft.swing.AutoCompletionComboBox;
 import com.raven.event.EventMenuSelected;
 import com.raven.event.EventShowPopupMenu;
 import com.raven.model.ModelMenu;
+import com.raven.model.SettingModel;
 import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 
 import customEntities.CustomIcon;
+import customEntities.Custom_ColorPicker;
 import gui_Dialog.Message;
 import gui_Panel_Setting.*;
 import gui_Panel_DonDat.Panel_TimKiemDonDat;
@@ -79,14 +82,24 @@ import swing.PopupMenu;
 public class Frame_Chinh extends JFrame implements ActionListener, WindowListener
 {
 	private MigLayout layout;
-	private PanelTransparent bg;
+	private JPanel bg;
 	private Menu menu;
 	private EmployeeCard employeeCard;
 	private MainForm main;
 	private Animator animator;
 	private String timeLabel, dateLabel;
 	private Message m;
-	
+	private Frame_Chinh frame_Chinh = this;
+	private SettingModel settingModel;
+	public SettingModel getSettingModel() {
+		return settingModel;
+	}
+	public void setSettingModel(SettingModel settingModel) {
+		this.settingModel = settingModel;
+	}
+	public Menu getMenu() {
+		return menu;
+	}
 	public String getTimeLabel() {
 		return timeLabel;
 	}
@@ -129,17 +142,25 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 	            public void run() {
 	                //SwingAcrylic.prepareSwing();
 	                Frame_Chinh frame = new Frame_Chinh("NV1");
-	                frame.setTitle("Rising Star: Quản lý mua bán sách tại hiệu sách tư nhân. ");
 	                frame.setIconImage(new CustomIcon("src/main/images/view_image/Logo.png").getImage());
-	              
 	                frame.setVisible(true);
 	                //SwingAcrylic.processFrame(frame);
 	            }
 	        });
 	}
+	
+	private String maNV;
+	public String getMaNV() {
+		return maNV;
+	}
+	public void setMaNV(String maNV) {
+		this.maNV = maNV;
+	}
 	public Frame_Chinh(String maNV) {
+		setMaNV(maNV);
 		initBackground();
 		initComponents(maNV);
+		setting();
 	}
 	
 	private void initComponents(String maNV) {
@@ -226,7 +247,7 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 						main.showForm(new Panel_TimKiemNhaCungCap());
 				}
 				if (menuIndex == 7) {
-					main.showForm(new Panel_Setting());
+					main.showForm(new Panel_Setting(frame_Chinh));
 				}
 			}
 		});
@@ -243,20 +264,7 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 			}
 		});
 		
-		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Home.png",30,30), "Trang chủ"));
-		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Bill.png",30,30), "Hóa đơn",
-				 "Tìm kiếm hóa đơn", "Thống kê thu - chi - lợi nhuận"));
-		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Preorder.png",30,30), "Đơn đặt",
-				 "Tìm kiếm đơn đặt hàng"));
-		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Customer.png",30,30), "Khách hàng",
-				"Cập nhật", "Tìm kiếm"));
-		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Employee.png",30,30), "Nhân viên",
-				"Lập hóa đơn","Đặt hàng","Cập nhật", "Tìm kiếm"));
-		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Product.png",30,30), "Sản phẩm",
-				"Cập nhật", "Tìm kiếm", "Thống kê danh sách sản phẩm bán chạy"));
-		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Supplier.png",30,30), "Nhà cung cấp",
-				"Cập nhật", "Tìm kiếm"));
-		menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Setting.png",30,30), "Cài đặt chung"));
+		
 		/*
 		Timer timer =new Timer (1000,e -> {
 			SimpleDateFormat timeFormat=new SimpleDateFormat("HH:mm:ss");
@@ -271,6 +279,73 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 		});
 		timer.start();*/
 		
+	}
+	private void setting() {
+		settingModel = new SettingModel();
+		try {
+			settingModel.readFrom();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		settingLanguage();
+		settingStyle();
+	}
+	private void settingStyle() {
+		String phongCach = settingModel.getPhongCach();
+		if(phongCach.equals("Whitebright"))
+		{
+			bg.setBackground(new Custom_ColorPicker("F7F7F7").toColor());
+			menu.setBackground(new Custom_ColorPicker("FFFFFF").toColor());
+			menu.getSp().getViewport().setBackground(new Custom_ColorPicker("FFFFFF").toColor());
+
+		}
+		if(phongCach.equals("Darkmode"))
+		{
+			bg.setBackground(new Custom_ColorPicker("000000").toColor());
+			menu.setBackground(new Custom_ColorPicker("F5F5F5").toColor());
+			menu.getSp().getViewport().setBackground(new Custom_ColorPicker("F5F5F5").toColor());
+			menu.setForeground(new Custom_ColorPicker("F7F7F7").toColor());
+		}
+	}
+	
+	private void settingLanguage() {
+		
+		if(settingModel.getNgonNgu().equals("Vietnamese")) {
+			setTitle("Rising Star: Quản lý mua bán sách tại hiệu sách tư nhân. ");
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Home.png",30,30), "Trang chủ"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Bill.png",30,30), "Hóa đơn",
+					 "Tìm kiếm hóa đơn", "Thống kê thu - chi - lợi nhuận"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Preorder.png",30,30), "Đơn đặt",
+					 "Tìm kiếm đơn đặt hàng"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Customer.png",30,30), "Khách hàng",
+					"Cập nhật", "Tìm kiếm"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Employee.png",30,30), "Nhân viên",
+					"Lập hóa đơn","Đặt hàng","Cập nhật", "Tìm kiếm"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Product.png",30,30), "Sản phẩm",
+					"Cập nhật", "Tìm kiếm", "Thống kê danh sách sản phẩm bán chạy"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Supplier.png",30,30), "Nhà cung cấp",
+					"Cập nhật", "Tìm kiếm"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Setting.png",30,30), "Cài đặt ứng dụng"));
+		}
+		if(settingModel.getNgonNgu().equals("English")) {
+			setTitle("Rising Star: Software for managing the purchase and sale of books at a private bookstore.");
+			menu.removeAll();
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Home.png",30,30), "Home page"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Bill.png",30,30), "Bills",
+					 "Bill Searching", "Revenue - expenditure - profit statistics"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Preorder.png",30,30), "Orders",
+					 "Order Searching"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Customer.png",30,30), "Customers",
+					"Customers Updating", "Customers Searching"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Employee.png",30,30), "Employees",
+					"Make Bills","Make Orders","Employees Updating", "Employees Searching"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Product.png",30,30), "Products",
+					"Product Updating", "Product Searching", "Statistics of best-selling products"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Supplier.png",30,30), "Suppilers",
+					"Suppilers Updating", "Suppilers Searching"));
+			menu.addMenu(new ModelMenu(new CustomIcon("src/main/images/view_image/Setting.png",30,30), "Application Setting"));
+		}
 	}
 	private void initAnimator() {
         animator.setResolution(0);
@@ -293,7 +368,7 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 	}
 	private void initBackground() {
 
-        bg = new swing.PanelTransparent();
+        bg = new JPanel();
         
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(false);
@@ -323,7 +398,7 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
         pack();
         setLocationRelativeTo(null);
 	}// </editor-fold>//GEN-END:initComponents
-
+	
 	private void addAction()
 	{
 		addWindowListener(this);
@@ -336,6 +411,7 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 	}
 	@Override
 	public void windowClosing(WindowEvent e) {
+		/*
 		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
         UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
         
@@ -347,7 +423,8 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 			JOptionPane.showMessageDialog(null, "Đã lưu", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
         }
-		
+		*/
+		System.exit(0);
 	}
 	@Override
 	public void windowClosed(WindowEvent e) {

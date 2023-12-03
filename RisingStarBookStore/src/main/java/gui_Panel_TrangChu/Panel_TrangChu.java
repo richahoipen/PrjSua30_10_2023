@@ -4,6 +4,7 @@ import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -16,6 +17,7 @@ import javax.swing.LayoutStyle;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import com.raven.model.SettingModel;
 import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 
@@ -30,6 +32,7 @@ public class Panel_TrangChu extends javax.swing.JPanel {
     private JLabel jLabel2;
     private JLabel jLabel3;
     private JLabel jLabel4;
+    private SettingModel settingModel;
     // End of variables declaration//GEN-END:variables
     public Panel_TrangChu() {
         initComponents();
@@ -75,7 +78,13 @@ public class Panel_TrangChu extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
+    	settingModel = new SettingModel();
+    	try {
+			settingModel.readFrom();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         jLabel1 = new JLabel();
         jLabel2 = new JLabel();
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -86,14 +95,18 @@ public class Panel_TrangChu extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(4, 72, 210));
-        jLabel1.setText("Trang chủ");
         Timer timer =new Timer (1000,e -> {
 			SimpleDateFormat timeFormat=new SimpleDateFormat("HH:mm:ss");
 			SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy");
 			Date now=new Date();
 			String time=timeFormat.format(now);
 			String date=dateFormat.format(now);
-			jLabel1.setText("Trang chủ. Ngày: "+date+", thời gian: "+time);
+			if(settingModel.getNgonNgu().equals("Vietnamese")) {
+				jLabel1.setText("Trang chủ. Ngày: "+date+", thời gian: "+time);
+	    	}	
+			if(settingModel.getNgonNgu().equals("English")) {
+				jLabel1.setText("Home page. Date: "+date+", Time: "+time);
+	    	}
 			
 		});
 		

@@ -61,6 +61,12 @@ public class DonDatHang
 		DateTimeFormatter df=DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		return df.format(getNgayDatLocalDate());
 	}
+	
+	public String getNgayHetHanToString()
+	{
+		DateTimeFormatter df=DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		return df.format(getNgayDatLocalDate().plusDays(15));
+	}
 	@Override
 	public int hashCode() {
 		return Objects.hash(maDDH);

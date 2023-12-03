@@ -1,5 +1,6 @@
 package gui_Panel_DonDat;
 
+import com.raven.model.SettingModel;
 import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 import com.toedter.calendar.JDateChooser;
@@ -64,7 +65,7 @@ public class Panel_TimKiemDonDat extends JPanel implements ActionListener, Mouse
 {
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private JPanel pn_TK_HD,pn_Table_DSNV;
-	private JLabel lbl_Title_TK_DD,lbl_Title_DSDD;
+	private JLabel lbl_Title_TK_DD,lbl_Title_DSDD,lbl_Title_DSCTDD=new JLabel();;
 	private JLabel lbl_MaDD,lbl_HoTenNhanVien,lbl_TongTien,lbl_NgayDat,lbl_HoTenKhachHang,lbl_SoDienThoaiKhach;
 	private Custom_ComboBox cbo_MaDD,cbo_TongTien;
 	private Custom_ComboBox cbo_HoTenNhanVien,cbo_HoTenKhachHang,cbo_Ngay,cbo_Thang,cbo_Nam,cbo_SoDienThoai;
@@ -75,6 +76,7 @@ public class Panel_TimKiemDonDat extends JPanel implements ActionListener, Mouse
 	private DefaultTableModel dtm_CTDD,dtm_DD;
 	private DonDatHang_BUS sqlDonDatHang_BUS=new DonDatHang_BUS();
 	private CTDonDatHang_BUS sqlCTDonDatHang_BUS=new CTDonDatHang_BUS();
+	private SettingModel settingModel;
     // End of variables declaration//GEN-END:variables
     public Panel_TimKiemDonDat() {
         initComponents();
@@ -378,6 +380,7 @@ public class Panel_TimKiemDonDat extends JPanel implements ActionListener, Mouse
         gl_pn_TK_HD.linkSize(SwingConstants.HORIZONTAL, new Component[] {btn_TimKiem, btn_XoaTrang});
         pn_TK_HD.setLayout(gl_pn_TK_HD);
         addAction();
+        setting();
         
     }// </editor-fold>//GEN-END:initComponents
     private void addAction()
@@ -497,4 +500,68 @@ public class Panel_TimKiemDonDat extends JPanel implements ActionListener, Mouse
 			xoaTrang();
 		}
 	}
+	private void setting() {
+    	settingModel = new SettingModel();
+    	try {
+			settingModel.readFrom();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	//settingButton();
+    	settingLanguage();
+    }
+	private void settingLanguage() {
+		// TODO Auto-generated method stub
+    	if(settingModel.getNgonNgu().equals("Vietnamese")) {
+    		
+    		lbl_Title_TK_DD.setText("Tìm kiếm đơn đặt");
+    		lbl_MaDD.setText("Mã đơn đặt");
+    		lbl_HoTenNhanVien.setText("Họ tên nhân viên");
+    		lbl_HoTenKhachHang.setText("Họ tên khách hàng");
+    		lbl_NgayDat.setText("Ngày lập");
+    		lbl_TongTien.setText("Tổng tiền");
+    		lbl_SoDienThoaiKhach.setText("SĐT khách");
+    		btn_XoaTrang.setText("Xóa trắng");
+    		btn_TimKiem.setText("Tìm kiếm");
+    		lbl_Title_DSDD.setText("Danh sách đơn đặt");
+    		tbl_DSDD.getColumnModel().getColumn(0).setHeaderValue("Mã đơn đặt");
+    		tbl_DSDD.getColumnModel().getColumn(1).setHeaderValue("Họ tên nhân viên");
+    		tbl_DSDD.getColumnModel().getColumn(2).setHeaderValue("Họ tên khách hàng");
+    		tbl_DSDD.getColumnModel().getColumn(3).setHeaderValue("SĐT khách");
+    		tbl_DSDD.getColumnModel().getColumn(4).setHeaderValue("Ngày lập");
+    		tbl_DSDD.getColumnModel().getColumn(4).setHeaderValue("Tổng tiền");
+    		lbl_Title_DSCTDD.setText("Danh sách chi tiết đơn đặt");
+    		tbl_DSCTDD.getColumnModel().getColumn(0).setHeaderValue("Mã sản phẩm");
+    		tbl_DSCTDD.getColumnModel().getColumn(1).setHeaderValue("Tên sản phẩm");
+    		tbl_DSCTDD.getColumnModel().getColumn(2).setHeaderValue("Đơn giá");
+    		tbl_DSCTDD.getColumnModel().getColumn(3).setHeaderValue("Số lượng mua");
+    		tbl_DSCTDD.getColumnModel().getColumn(4).setHeaderValue("Thành tiền");
+    	}
+    	if(settingModel.getNgonNgu().equals("English")) {
+    		lbl_Title_TK_DD.setText("Orders searching");
+    		lbl_MaDD.setText("Order number");
+    		lbl_HoTenNhanVien.setText("Employee full name");
+    		lbl_HoTenKhachHang.setText("Custome full name");
+    		lbl_NgayDat.setText("Order date");
+    		lbl_TongTien.setText("Total due");
+    		lbl_SoDienThoaiKhach.setText("Customer phone");
+    		btn_XoaTrang.setText("Refresh");
+    		btn_TimKiem.setText("Search");
+    		lbl_Title_DSDD.setText("Order list");
+    		tbl_DSDD.getColumnModel().getColumn(0).setHeaderValue("Order number");
+    		tbl_DSDD.getColumnModel().getColumn(1).setHeaderValue("Employee full name");
+    		tbl_DSDD.getColumnModel().getColumn(2).setHeaderValue("Customer full name");
+    		tbl_DSDD.getColumnModel().getColumn(3).setHeaderValue("Customer phone");
+    		tbl_DSDD.getColumnModel().getColumn(4).setHeaderValue("Order date");
+    		tbl_DSDD.getColumnModel().getColumn(4).setHeaderValue("Total due");
+    		lbl_Title_DSCTDD.setText("Bills detail list");
+    		tbl_DSCTDD.getColumnModel().getColumn(0).setHeaderValue("Product number");
+    		tbl_DSCTDD.getColumnModel().getColumn(1).setHeaderValue("Product name");
+    		tbl_DSCTDD.getColumnModel().getColumn(2).setHeaderValue("Price");
+    		tbl_DSCTDD.getColumnModel().getColumn(3).setHeaderValue("Quantity");
+    		tbl_DSCTDD.getColumnModel().getColumn(4).setHeaderValue("Amount");
+    		
+    	}	
+    }
 }

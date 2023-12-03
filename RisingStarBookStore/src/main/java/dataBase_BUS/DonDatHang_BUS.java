@@ -89,6 +89,12 @@ public class DonDatHang_BUS implements DonDatHang_Method, ICombobox_TimKiem_DonD
 		// TODO Auto-generated method stub
 		return sqlDonDatHang_DAO.getNgayDat(maDDH);
 	}
+	@Override
+	public boolean tim_DonDatHang(DonDatHang d, String tenNV, KhachHang k, int ngay, int thang, int nam,
+			DefaultTableModel dtm_DD) {
+		// TODO Auto-generated method stub
+		return sqlDonDatHang_DAO.tim_DonDatHang(d, tenNV, k, ngay, thang, nam, dtm_DD);
+	}
 	
 	
 }

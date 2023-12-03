@@ -1,5 +1,6 @@
 package gui_Panel_KhachHang;
 
+import com.raven.model.SettingModel;
 import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 import com.toedter.calendar.JDateChooser;
@@ -51,6 +52,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -72,6 +74,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 	private JScrollPane scr_DSKH;
 	private CustomTable tbl_DSKH;
 	private DefaultTableModel dtm_KH;
+	private SettingModel settingModel;
     // End of variables declaration//GEN-END:variables
 	//private DataBase_KhachHang_DAO sqlKhachHang_DAO=new DataBase_KhachHang_DAO();
 	private KhachHang_BUS sqlKhachHang_BUS=new KhachHang_BUS();
@@ -294,12 +297,11 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
         pn_QL_KH.setLayout(gl_pn_QL_KH);
         addDataComboBox();
 		addAction();
+		setting();
     }// </editor-fold>//GEN-END:initComponents
 
     private void addAction()
 	{
-    	cbo_GioiTinh.getMyVector().add("Nam");
-		cbo_GioiTinh.getMyVector().add("Nữ");
     	sqlKhachHang_BUS.xuatDanhSachKhachHang(dtm_KH);
 		//sqlKhachHang_BUS.dayComboBoxMaKH(cbo_MaKH);
 		//btn_Close.addActionListener(this);
@@ -312,8 +314,30 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 		cbo_SoDienThoai.addActionListener(this);
 		cbo_GioiTinh.addActionListener(this);
 		tbl_DSKH.addMouseListener(this);
+		
 		//
 	}
+    private void checkTable()
+    {
+    	if(isTableEmpty(tbl_DSKH))
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+            String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Không thể tìm thấy.";
+    			loaiCanhBao = "Cảnh báo";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Can't find.";
+    			loaiCanhBao = "Warning";
+    		}
+            JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.WARNING_MESSAGE);
+    	}
+    }
+    private boolean isTableEmpty(CustomTable tbl_DSKH) {
+        return tbl_DSKH.getModel().getRowCount() == 0;
+    }
 	private void addDataComboBox()
 	{
 		//maKH
@@ -321,8 +345,6 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 		sqlKhachHang_BUS.dayComboBoxMaKH(cbo_MaKH);
 		//gioiTinh
 		cbo_GioiTinh.addItem("");
-		cbo_GioiTinh.addItem("Nam");
-		cbo_GioiTinh.addItem("Nữ");
 		//hoTen
 		cbo_HoTen.addItem("");
 		sqlKhachHang_BUS.dayComboBoxTenKH(cbo_HoTen);
@@ -333,6 +355,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 		sqlKhachHang_BUS.dayComboBoxDiaChi(cbo_DiaChi);
 		
 	}
+	/*
 	private boolean checkComboboxNULL()
 	{
 		String maKH=(String) cbo_MaKH.getSelectedItem();
@@ -346,10 +369,19 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 		}	
 		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
         UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-        JOptionPane.showMessageDialog(null, "Dữ liệu tìm kiếm không được rỗng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        String canhBao = null,loaiCanhBao = null;
+		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+			canhBao = "Dữ liệu tìm kiếm không được rỗng.";
+			loaiCanhBao = "Lỗi";
+		}
+		if (settingModel.getNgonNgu().equals("English")) {
+			canhBao = "Search data cannot be empty.";
+			loaiCanhBao = "Error";
+		}
+        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 		return false;
 			
-	}
+	}*/
 	private void resetComboBox()
 	{
 		cbo_MaKH.setSelectedItem("");
@@ -366,14 +398,49 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			return true;
 		return false;
 	}
+	private void changeNULL(String maKH, String tenKH, String gioiTinh,String diaChi,String sdt)
+	{
+		if(Objects.isNull(maKH))
+		{
+			maKH="";
+		}
+		if(Objects.isNull(tenKH))
+		{
+			tenKH="";
+		}
+		if(Objects.isNull(gioiTinh))
+		{
+			gioiTinh="";
+		}
+		if(Objects.isNull(diaChi))
+		{
+			diaChi="";
+		}
+		if(Objects.isNull(sdt))
+		{
+			sdt="";
+		}
+	}
 	private void timKiem()
 	{
 		//String gioiTinh = (String) cbo_GioiTinh.getSelectedItem();
 		String maKH=(String) cbo_MaKH.getSelectedItem();
 		String tenKH=(String) cbo_HoTen.getSelectedItem();
-		String gioiTinh=(String) cbo_GioiTinh.getSelectedItem();
+		String gioiTinh = null;
+		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+			gioiTinh = (String) cbo_GioiTinh.getSelectedItem();
+		}
+		if (settingModel.getNgonNgu().equals("English")) {
+			if(cbo_GioiTinh.getSelectedItem().toString().equals("Female")) {
+				gioiTinh = "Nữ";
+			}
+			if(cbo_GioiTinh.getSelectedItem().toString().equals("Male")) {
+				gioiTinh = "Nam";
+			}
+		}
 		String diaChi=(String) cbo_DiaChi.getSelectedItem();
 		String sdt=(String) cbo_SoDienThoai.getSelectedItem();
+		changeNULL(maKH, tenKH, gioiTinh, diaChi, sdt);
 		if(maKH.equalsIgnoreCase("")&&
 				tenKH.equalsIgnoreCase("")&&
 				gioiTinh.equalsIgnoreCase("")&&
@@ -381,7 +448,16 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 		{
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-			JOptionPane.showMessageDialog(null, "Vui lòng chọn thông tin để tìm kiếm.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+			if (settingModel.getNgonNgu().equals("Vietnamese")) {
+				canhBao = "Vui lòng điền thông tin để tìm kiếm.";
+				loaiCanhBao = "Lỗi";
+			}
+			if (settingModel.getNgonNgu().equals("English")) {
+				canhBao = "Please fill in information to search.";
+				loaiCanhBao = "Error";
+			}
+			JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 		}
 		//Tìm theo MaKH
 		if(!maKH.equalsIgnoreCase(""))
@@ -390,7 +466,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang_BUS.timKiemTheoMaKH(maKH, dtm_KH);
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-			JOptionPane.showMessageDialog(null, "Tìm kiếm thông qua mã khách hàng.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+			//JOptionPane.showMessageDialog(null, "Tìm kiếm thông qua mã khách hàng.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 		}
 		//Tìm theo tên
 		if(maKH.equalsIgnoreCase("")&&!tenKH.equalsIgnoreCase("")&&
@@ -569,11 +645,18 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			sqlKhachHang_BUS.timKiemTheoMaKH(maKH, dtm_KH);
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-			JOptionPane.showMessageDialog(null, "Chỉ được tìm kiếm thông qua mã khách hàng.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+			if (settingModel.getNgonNgu().equals("Vietnamese")) {
+				canhBao = "Chỉ được tìm kiếm thông qua mã khách hàng hoặc chỉ các thông tin khác.";
+				loaiCanhBao = "Lỗi";
+			}
+			if (settingModel.getNgonNgu().equals("English")) {
+				canhBao = "Can only be searched via customer number or other information only";
+				loaiCanhBao = "Error";
+			}
+			JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.INFORMATION_MESSAGE);
 		}
-		
-		
-		
+		settingTable();
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -586,7 +669,7 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 			int exit = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn thoát không ?", "Thông báo.", JOptionPane.YES_NO_OPTION);
 
 	        if (exit == JOptionPane.YES_OPTION) {
-	            // Xử lý khi người dùng chọn "Yes"
+	            // Xử lý khi người dùng  "Yes"
 	        	System.exit(0);
 	        } 	
 		}*/
@@ -596,11 +679,8 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 		}
 		if(o.equals(btn_TimKiem))
 		{		
-			if(checkComboboxNULL())
-			{
-				timKiem();
-			}	
-				
+			timKiem();	
+			checkTable();
 		}
 	}
 	
@@ -651,5 +731,76 @@ public class Panel_TimKiemKhachHang extends JPanel implements ActionListener, Mo
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	private void setting() {
+    	settingModel = new SettingModel();
+    	try {
+			settingModel.readFrom();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	//settingButton();
+    	settingLanguage();
+    	settingCombobox();
+    	settingTable();
+    }
+	private void settingCombobox() {
+    	if(settingModel.getNgonNgu().equals("Vietnamese")) {
+			cbo_GioiTinh.addItem("Nam");
+			cbo_GioiTinh.addItem("Nữ");
+			cbo_GioiTinh.getMyVector().add("Nam");
+			cbo_GioiTinh.getMyVector().add("Nữ");
+		}
+    	if(settingModel.getNgonNgu().equals("English")) {
+    		cbo_GioiTinh.addItem("Male");
+    		cbo_GioiTinh.addItem("Female");
+    		cbo_GioiTinh.getMyVector().add("Male");
+    		cbo_GioiTinh.getMyVector().add("Female");
+    	}
+	}
+	private void settingTable() {
+		if(settingModel.getNgonNgu().equals("English"))
+			for (int i = 0; i < tbl_DSKH.getRowCount(); i++) {
+				if(tbl_DSKH.getModel().getValueAt(i, 3).toString().equals("Nam"))
+					tbl_DSKH.getModel().setValueAt("Male",i, 3);
+				if(tbl_DSKH.getModel().getValueAt(i, 3).toString().equals("Nữ"))
+					tbl_DSKH.getModel().setValueAt("Female",i, 3);
+			}
+	}
+	private void settingLanguage() {
+		// TODO Auto-generated method stub
+    	if(settingModel.getNgonNgu().equals("Vietnamese")) {
+    		lbl_Title_TK_KH.setText("Quản lý khách hàng");
+    		lbl_MaKH.setText("Mã khách hàng");
+    		lbl_HoTen.setText("Họ tên");
+    		lbl_GioiTinh.setText("Giới tính");
+    		lbl_DiaChi.setText("Địa chỉ");
+    		lbl_SoDienThoai.setText("SĐT");
+    		btn_XoaTrang.setText("Xóa trắng");
+    		btn_TimKiem.setText("Tìm kiếm");
+    		lbl_Title_DSKH.setText("Danh sách khách hàng");
+    		tbl_DSKH.getColumnModel().getColumn(0).setHeaderValue("Mã khách hàng");
+    		tbl_DSKH.getColumnModel().getColumn(1).setHeaderValue("Họ tên");
+    		tbl_DSKH.getColumnModel().getColumn(2).setHeaderValue("SĐT");
+    		tbl_DSKH.getColumnModel().getColumn(3).setHeaderValue("Giới tính");
+    		tbl_DSKH.getColumnModel().getColumn(4).setHeaderValue("Địa chỉ");
+    	}
+    	if(settingModel.getNgonNgu().equals("English")) {
+    		lbl_Title_TK_KH.setText("Customer Searching");
+    		lbl_MaKH.setText("Customer number");
+    		lbl_HoTen.setText("Full name");
+    		lbl_GioiTinh.setText("Sex");
+    		lbl_DiaChi.setText("Address");
+    		lbl_SoDienThoai.setText("Phone number");
+    		btn_XoaTrang.setText("Refresh");
+    		btn_TimKiem.setText("Search");
+    		lbl_Title_DSKH.setText("Customers list");
+    		tbl_DSKH.getColumnModel().getColumn(0).setHeaderValue("Customer number");
+    		tbl_DSKH.getColumnModel().getColumn(1).setHeaderValue("Full name");
+    		tbl_DSKH.getColumnModel().getColumn(2).setHeaderValue("Phone number");
+    		tbl_DSKH.getColumnModel().getColumn(3).setHeaderValue("Sex");
+    		tbl_DSKH.getColumnModel().getColumn(4).setHeaderValue("Address");
+    	}	
 	}
 }

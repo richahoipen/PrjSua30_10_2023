@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "CTDonDatHang")
-public class CTDonDatHang 
+public class CTDonDatHang
 {
 	@Id
 	@Column(name = "sTT", length = 100,nullable = false)

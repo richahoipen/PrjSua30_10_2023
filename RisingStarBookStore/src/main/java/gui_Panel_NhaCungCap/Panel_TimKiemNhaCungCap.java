@@ -1,5 +1,7 @@
 package gui_Panel_NhaCungCap;
 
+import com.raven.model.ModelMenu;
+import com.raven.model.SettingModel;
 import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 import com.toedter.calendar.JDateChooser;
@@ -10,6 +12,7 @@ import customEntities.Custom_ComboBox;
 import customEntities.Custom_Function;
 import customEntities.Custom_ImageIcon;
 import customEntities.Custom_JLabel;
+import customEntities.CustomIcon;
 import customEntities.CustomTable;
 import dataBase_BUS.NhaCungCap_BUS;
 import dataBase_DAO.NhaCungCap_DAO;
@@ -50,6 +53,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -64,13 +68,14 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 	private Custom_JLabel picture_Logo;
 	private JLabel lbl_Title_TK_NCC,lbl_Title_DSNCC;
 	private JLabel lbl_MaNCC,lbl_TenNCC,lbl_Email,lbl_DiaChi,lbl_SoDienThoai;
-	private Custom_ComboBox cbo_MaNCC,cbo_HoTen,cbo_DiaChi,cbo_Email,cbo_SoDienThoai;
+	private Custom_ComboBox cbo_MaNCC,cbo_TenNCC,cbo_DiaChi,cbo_Email,cbo_SoDienThoai;
 	private JFormattedTextField ftf_NgaySinh;
 	private BufferedImage bfi_ChonNgay;
 	private Custom_Button btn_TimKiem,btn_XoaTrang;
 	private JScrollPane scr_DSNCC;
 	private CustomTable tbl_DSNCC;
 	private DefaultTableModel dtm_NCC;
+	private SettingModel settingModel;
 	//private DataBase_NhaCungCap_DAO sqlNhaCungCap_BUS=new DataBase_NhaCungCap_DAO();
 	private NhaCungCap_BUS sqlNhaCungCap_BUS=new NhaCungCap_BUS();
     // End of variables declaration//GEN-END:variables
@@ -126,9 +131,9 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 		cbo_MaNCC.setOpaque(true);
 		cbo_MaNCC.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		
-		cbo_HoTen = new Custom_ComboBox();
-		cbo_HoTen.setForeground(Color.black);
-		cbo_HoTen.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		cbo_TenNCC = new Custom_ComboBox();
+		cbo_TenNCC.setForeground(Color.black);
+		cbo_TenNCC.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		
 		cbo_Email = new Custom_ComboBox();
 		cbo_Email.setForeground(Color.black);
@@ -195,15 +200,18 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 			layout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(layout.createSequentialGroup()
 					.addGroup(layout.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(scr_DSNCC, GroupLayout.DEFAULT_SIZE, 883, Short.MAX_VALUE))
 						.addGroup(layout.createSequentialGroup()
-							.addGap(1)
-							.addGroup(layout.createParallelGroup(Alignment.LEADING)
-								.addComponent(pn_TK_NCC, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addGroup(layout.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(lbl_Title_TK_NCC))
-								.addComponent(scr_DSNCC, GroupLayout.DEFAULT_SIZE, 806, Short.MAX_VALUE)))
-						.addComponent(lbl_Title_DSNCC))
+							.addContainerGap()
+							.addComponent(pn_TK_NCC, GroupLayout.PREFERRED_SIZE, 854, Short.MAX_VALUE))
+						.addGroup(layout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(lbl_Title_TK_NCC))
+						.addGroup(layout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(lbl_Title_DSNCC)))
 					.addContainerGap())
 		);
 		layout.setVerticalGroup(
@@ -215,44 +223,44 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lbl_Title_DSNCC)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(scr_DSNCC, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
-					.addGap(0))
+					.addComponent(scr_DSNCC, GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
+					.addContainerGap())
 		);
         this.setLayout(layout);
         
         GroupLayout gl_pn_TK_NCC = new GroupLayout(pn_TK_NCC);
         gl_pn_TK_NCC.setHorizontalGroup(
         	gl_pn_TK_NCC.createParallelGroup(Alignment.LEADING)
-        		.addGroup(gl_pn_TK_NCC.createSequentialGroup()
-        			.addGap(59)
-        			.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.LEADING)
-        				.addComponent(lbl_MaNCC)
-        				.addComponent(lbl_TenNCC, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE))
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.LEADING)
-        				.addComponent(cbo_MaNCC, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        				.addComponent(cbo_HoTen, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE))
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.LEADING, false)
-        				.addComponent(lbl_Email)
-        				.addComponent(lbl_DiaChi))
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.LEADING)
+        		.addGroup(Alignment.TRAILING, gl_pn_TK_NCC.createSequentialGroup()
+        			.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.TRAILING)
         				.addGroup(gl_pn_TK_NCC.createSequentialGroup()
-        					.addComponent(cbo_Email, GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
-        					.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.TRAILING)
+        					.addContainerGap()
+        					.addComponent(btn_XoaTrang, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addComponent(btn_TimKiem, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE))
+        				.addGroup(gl_pn_TK_NCC.createSequentialGroup()
+        					.addGap(26)
+        					.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.LEADING)
+        						.addComponent(lbl_MaNCC)
+        						.addComponent(lbl_TenNCC, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE))
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.LEADING, false)
+        						.addComponent(cbo_MaNCC, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(cbo_TenNCC, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.LEADING, false)
+        						.addComponent(lbl_Email)
+        						.addComponent(lbl_DiaChi))
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.LEADING)
         						.addGroup(gl_pn_TK_NCC.createSequentialGroup()
+        							.addComponent(cbo_Email, GroupLayout.PREFERRED_SIZE, 116, Short.MAX_VALUE)
         							.addGap(11)
-        							.addComponent(lbl_SoDienThoai, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
-        							.addPreferredGap(ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+        							.addComponent(lbl_SoDienThoai)
+        							.addPreferredGap(ComponentPlacement.UNRELATED)
         							.addComponent(cbo_SoDienThoai, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        						.addGroup(gl_pn_TK_NCC.createSequentialGroup()
-        							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(btn_XoaTrang, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(btn_TimKiem, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE))))
-        				.addComponent(cbo_DiaChi, GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE))
-        			.addGap(62))
+        						.addComponent(cbo_DiaChi, GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE))))
+        			.addGap(66))
         );
         gl_pn_TK_NCC.setVerticalGroup(
         	gl_pn_TK_NCC.createParallelGroup(Alignment.LEADING)
@@ -261,14 +269,15 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
         			.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.LEADING)
         				.addComponent(cbo_MaNCC, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
         				.addComponent(lbl_MaNCC)
-        				.addComponent(cbo_SoDienThoai, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(lbl_SoDienThoai, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
         				.addComponent(cbo_Email, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(lbl_Email, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+        				.addComponent(lbl_Email, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+        				.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.BASELINE)
+        					.addComponent(cbo_SoDienThoai, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+        					.addComponent(lbl_SoDienThoai, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
         			.addGap(7)
         			.addGroup(gl_pn_TK_NCC.createParallelGroup(Alignment.LEADING)
         				.addComponent(lbl_TenNCC)
-        				.addComponent(cbo_HoTen, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(cbo_TenNCC, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
         				.addComponent(lbl_DiaChi)
         				.addComponent(cbo_DiaChi, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
         			.addPreferredGap(ComponentPlacement.RELATED)
@@ -277,15 +286,15 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
         				.addComponent(btn_XoaTrang, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
         			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        gl_pn_TK_NCC.linkSize(SwingConstants.VERTICAL, new Component[] {cbo_MaNCC, cbo_HoTen, cbo_Email, cbo_SoDienThoai, cbo_DiaChi});
+        gl_pn_TK_NCC.linkSize(SwingConstants.VERTICAL, new Component[] {cbo_MaNCC, cbo_TenNCC, cbo_Email, cbo_SoDienThoai, cbo_DiaChi});
         gl_pn_TK_NCC.linkSize(SwingConstants.VERTICAL, new Component[] {lbl_Email, lbl_DiaChi, lbl_SoDienThoai});
         gl_pn_TK_NCC.linkSize(SwingConstants.VERTICAL, new Component[] {btn_TimKiem, btn_XoaTrang});
-        gl_pn_TK_NCC.linkSize(SwingConstants.HORIZONTAL, new Component[] {lbl_Email, lbl_DiaChi, lbl_SoDienThoai});
+        gl_pn_TK_NCC.linkSize(SwingConstants.HORIZONTAL, new Component[] {lbl_Email, lbl_DiaChi});
         gl_pn_TK_NCC.linkSize(SwingConstants.HORIZONTAL, new Component[] {btn_TimKiem, btn_XoaTrang});
         pn_TK_NCC.setLayout(gl_pn_TK_NCC);
         addAction();
         addDataComboBox();
-       
+        setting();
     }
     private void addAction()
     {
@@ -294,7 +303,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
     	sqlNhaCungCap_BUS.xuatDanhSachNhaCungCap(dtm_NCC);
     	//đẩy lên combobox
     	cbo_MaNCC.addActionListener(this);
-    	cbo_HoTen.addActionListener(this);
+    	cbo_TenNCC.addActionListener(this);
     	cbo_DiaChi.addActionListener(this);
     	cbo_Email.addActionListener(this);
     	cbo_SoDienThoai.addActionListener(this);
@@ -307,8 +316,8 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
     	sqlNhaCungCap_BUS.dayComboBoxMaNCC(cbo_MaNCC);
     	cbo_DiaChi.addItem("");
     	sqlNhaCungCap_BUS.dayComboBoxDiaChi(cbo_DiaChi);
-    	cbo_HoTen.addItem("");
-    	sqlNhaCungCap_BUS.dayComboBoxTenNCC(cbo_HoTen);
+    	cbo_TenNCC.addItem("");
+    	sqlNhaCungCap_BUS.dayComboBoxTenNCC(cbo_TenNCC);
     	cbo_SoDienThoai.addItem("");
     	sqlNhaCungCap_BUS.dayComboBoxSoDienThoai(cbo_SoDienThoai);
     	cbo_Email.addItem("");
@@ -338,15 +347,16 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 		String email=tbl_DSNCC.getValueAt(row, 3).toString();
 		String diaChi=tbl_DSNCC.getValueAt(row, 4).toString();
 		cbo_MaNCC.setSelectedItem(maNCC);
-		cbo_HoTen.setSelectedItem(tenNCC);
+		cbo_TenNCC.setSelectedItem(tenNCC);
 		cbo_SoDienThoai.setSelectedItem(soDienThoai);
 		cbo_DiaChi.setSelectedItem(diaChi);
 		cbo_Email.setSelectedItem(email);
 	}
+	/*
 	private boolean checkComboboxNULL()
 	{
 		String maNCC=(String) cbo_MaNCC.getSelectedItem();
-		String tenNCC=(String) cbo_HoTen.getSelectedItem();
+		String tenNCC=(String) cbo_TenNCC.getSelectedItem();
 		String soDienThoai=(String) cbo_SoDienThoai.getSelectedItem();
 		String email=(String) cbo_Email.getSelectedItem();
 		String diaChi=(String) cbo_DiaChi.getSelectedItem();
@@ -356,35 +366,124 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 		{
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
             UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-            JOptionPane.showMessageDialog(null, "Dữ liệu tìm kiếm không được rỗng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            String message = null, title = null;
+            if (settingModel.getNgonNgu().equals("Vietnamese")) {
+		        message = "Dữ liệu tìm kiếm không được rỗng.";
+		        title = "Lỗi";
+		    }
+		    if (settingModel.getNgonNgu().equals("English")) {
+		        message = "Search data cannot be empty.";
+		        title = "Error";
+		    }
+            JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
             return false;
+		}
+	}*/
+	private boolean isTableEmpty(CustomTable tbl_DSNCC) {
+        return tbl_DSNCC.getModel().getRowCount() == 0;
+    }
+	private void checkTable()
+	    {
+	    	if(isTableEmpty(tbl_DSNCC))
+	    	{
+	    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	            String canhBao = null,loaiCanhBao = null;
+	    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+	    			canhBao = "Không thể tìm thấy.";
+	    			loaiCanhBao = "Cảnh báo";
+	    		}
+	    		if (settingModel.getNgonNgu().equals("English")) {
+	    			canhBao = "Can't find.";
+	    			loaiCanhBao = "Warning";
+	    		}
+	            JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.WARNING_MESSAGE);
+	    	}
+	    }
+	private void changeNULL(String maNCC,String tenNCC,String soDienThoai,String email,String diaChi)
+	{
+		if(Objects.isNull(maNCC))
+		{
+			maNCC="";
+		}
+		if(Objects.isNull(tenNCC))
+		{
+			tenNCC="";
+		}
+		if(Objects.isNull(soDienThoai))
+		{
+			soDienThoai="";
+		}
+		if(Objects.isNull(email))
+		{
+			email="";
+		}
+		if(Objects.isNull(diaChi))
+		{
+			diaChi="";
 		}
 	}
 	private void timKiem()
 	{
 		String maNCC=(String) cbo_MaNCC.getSelectedItem();
-		String tenNCC=(String) cbo_HoTen.getSelectedItem();
+		String tenNCC=(String) cbo_TenNCC.getSelectedItem();
 		String soDienThoai=(String) cbo_SoDienThoai.getSelectedItem();
 		String email=(String) cbo_Email.getSelectedItem();
 		String diaChi=(String) cbo_DiaChi.getSelectedItem();
-		if(maNCC.equalsIgnoreCase("")&&
-				tenNCC.equalsIgnoreCase("")&&
-				soDienThoai.equalsIgnoreCase("")&&
-				email.equalsIgnoreCase("")&&diaChi.equalsIgnoreCase(""))
-					
+		changeNULL(maNCC, tenNCC, soDienThoai, email, diaChi);
+		String message = null, title = null;
+		if(!maNCC.equalsIgnoreCase("")&&
+		    !tenNCC.equalsIgnoreCase("")&&
+		    !soDienThoai.equalsIgnoreCase("")&&
+		    !email.equalsIgnoreCase("")&&!diaChi.equalsIgnoreCase(""))
 		{
-			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-			JOptionPane.showMessageDialog(null, "Vui lòng chọn thông tin để tìm kiếm.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		    UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		    UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		    if (settingModel.getNgonNgu().equals("Vietnamese")) {
+		        message = "Chỉ được tìm kiếm thông qua mã nhà cung cấp.";
+		        title = "Lỗi";
+		    }
+		    if (settingModel.getNgonNgu().equals("English")) {
+		        message = "Only allowed to search by supplier code.";
+		        title = "Error";
+		    }
+		    JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+		    return;
+		}
+		if(maNCC.equalsIgnoreCase("")&&
+		    tenNCC.equalsIgnoreCase("")&&
+		    soDienThoai.equalsIgnoreCase("")&&
+		    email.equalsIgnoreCase("")&&diaChi.equalsIgnoreCase(""))
+		{
+		    UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		    UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		    if (settingModel.getNgonNgu().equals("Vietnamese")) {
+		        message = "Vui lòng chọn thông tin để tìm kiếm.";
+		        title = "Lỗi";
+		    }
+		    if (settingModel.getNgonNgu().equals("English")) {
+		        message = "Please select information to search.";
+		        title = "Error";
+		    }
+		    JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
 		}
 		if(!maNCC.equalsIgnoreCase(""))
 		{
-			dtm_NCC.setRowCount(0);
-			sqlNhaCungCap_BUS.timKiemTheoMaNCC(maNCC, dtm_NCC);
-			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-			JOptionPane.showMessageDialog(null, "Tìm kiếm thông qua mã nhà cung cấp.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+		    dtm_NCC.setRowCount(0);
+		    sqlNhaCungCap_BUS.timKiemTheoMaNCC(maNCC, dtm_NCC);
+		    UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		    UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		    if (settingModel.getNgonNgu().equals("Vietnamese")) {
+		        message = "Tìm kiếm thông qua mã nhà cung cấp.";
+		        title = "Thông báo";
+		    }
+		    if (settingModel.getNgonNgu().equals("English")) {
+		        message = "Searching by supplier code.";
+		        title = "Notification";
+		    }
+		    JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
 		}
+
 		if(maNCC.equalsIgnoreCase("")&&
 				!tenNCC.equalsIgnoreCase("")&&
 				soDienThoai.equalsIgnoreCase("")&&
@@ -546,17 +645,6 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 			n.setDiaChi(diaChi);
 			sqlNhaCungCap_BUS.timKiemTheo_sdtNCC_email_diaChi(n, dtm_NCC);
 		}
-		if(!maNCC.equalsIgnoreCase("")&&
-				!tenNCC.equalsIgnoreCase("")&&
-				!soDienThoai.equalsIgnoreCase("")&&
-				!email.equalsIgnoreCase("")&&!diaChi.equalsIgnoreCase(""))
-		{
-			dtm_NCC.setRowCount(0);
-			sqlNhaCungCap_BUS.timKiemTheoMaNCC(maNCC, dtm_NCC);
-			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-			JOptionPane.showMessageDialog(null, "Chỉ được tìm kiếm thông qua mã nhà cung cấp.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-		}
 	}
 
 
@@ -601,7 +689,7 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 	private void resetComboBox()
 	{
 		cbo_MaNCC.setSelectedItem("");
-		cbo_HoTen.setSelectedItem("");
+		cbo_TenNCC.setSelectedItem("");
 		cbo_SoDienThoai.setSelectedItem("");
 		cbo_DiaChi.setSelectedItem("");
 		cbo_Email.setSelectedItem("");
@@ -619,10 +707,55 @@ public class Panel_TimKiemNhaCungCap extends JPanel implements ActionListener, M
 		}
 		if(o.equals(btn_TimKiem))
 		{
-			if(checkComboboxNULL())
-				timKiem();
+			timKiem();
+			checkTable();
 		}
 		
 	}
-    
+	private void setting() {
+    	settingModel = new SettingModel();
+    	try {
+			settingModel.readFrom();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	//settingButton();
+    	settingLanguage();
+    }
+	private void settingLanguage() {
+		// TODO Auto-generated method stub
+    	if(settingModel.getNgonNgu().equals("Vietnamese")) {
+    		lbl_Title_TK_NCC.setText("Tìm kiếm nhà cung cấp");
+    		lbl_MaNCC.setText("Mã nhà cung cấp");
+    		lbl_TenNCC.setText("Tên nhà cung cấp");
+    		lbl_Email.setText("Email:");
+    		lbl_DiaChi.setText("Địa chỉ");
+    		lbl_SoDienThoai.setText("Số điện thoại");
+    		btn_XoaTrang.setText("Xóa trắng");
+    		btn_TimKiem.setText("Tìm kiếm");
+    		lbl_Title_DSNCC.setText("Danh sách nhà cung cấp");
+    		tbl_DSNCC.getColumnModel().getColumn(0).setHeaderValue("Mã nhà cung cấp");
+    		tbl_DSNCC.getColumnModel().getColumn(1).setHeaderValue("Tên nhà cung cấp");
+    		tbl_DSNCC.getColumnModel().getColumn(2).setHeaderValue("Số điện thoại");
+    		tbl_DSNCC.getColumnModel().getColumn(3).setHeaderValue("Email");
+    		tbl_DSNCC.getColumnModel().getColumn(4).setHeaderValue("Địa chỉ");
+    	}
+    	if(settingModel.getNgonNgu().equals("English")) {
+    		lbl_Title_TK_NCC.setText("Suppliers searching");
+    		lbl_MaNCC.setText("Supplier number");
+    		lbl_TenNCC.setText("Supplier name");
+    		lbl_Email.setText("Email:");
+    		lbl_DiaChi.setText("Address");
+    		lbl_SoDienThoai.setText("Contact phone");
+    		btn_XoaTrang.setText("Refresh");
+    		btn_TimKiem.setText("Search");
+    		lbl_Title_DSNCC.setText("Suppiler list");
+    		tbl_DSNCC.getColumnModel().getColumn(0).setHeaderValue("Supplier number");
+    		tbl_DSNCC.getColumnModel().getColumn(1).setHeaderValue("Supplier name");
+    		tbl_DSNCC.getColumnModel().getColumn(2).setHeaderValue("Contact phone");
+    		tbl_DSNCC.getColumnModel().getColumn(3).setHeaderValue("Email");
+    		tbl_DSNCC.getColumnModel().getColumn(4).setHeaderValue("Address");
+    	}	
+    }
 }

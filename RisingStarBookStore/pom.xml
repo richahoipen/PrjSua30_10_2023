@@ -5,11 +5,11 @@
 	<groupId>teo.com</groupId>
 	<artifactId>KTTK</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-    </properties>
-    <dependencies>
+	<properties>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+	</properties>
+	<dependencies>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -17,17 +17,18 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-			<version>12.2.0.jre11</version>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongodb-driver-sync</artifactId>
 			<version>4.9.1</version>
 		</dependency>
-
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.23</version> <!-- Thay thế phiên bản này bằng phiên bản
+			mới nhất của MySQL Connector -->
+		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>

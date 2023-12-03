@@ -597,6 +597,8 @@ public class SanPham_DAO implements SanPham_Method
 
 	@Override
 	public boolean xuatDanhSachSanPham_DonDat(DefaultTableModel dtm_SP) {
+		//KHÔNG DÙNG HÀM NÀY
+		/*
 		String sqlSelect ="select*from [dbo].[SanPham]\r\n"
 				+ "ORDER BY CAST(SUBSTRING(maSP, 3, LEN(maSP)) AS INT) ASC;";
 		try {
@@ -633,7 +635,9 @@ public class SanPham_DAO implements SanPham_Method
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			return false;
-		}
+		}*/
+		return false;
+		
 	}
 	@Override
 	public boolean xuatDanhSachSanPham_LapHoaDon(DefaultTableModel dtm_SP) {

@@ -1,9 +1,11 @@
 package dataBase_DAO;
 
 import java.awt.Font;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -12,6 +14,7 @@ import javax.swing.UIManager;
 import connectDB.Connect;
 import entities.CTDonDatHang;
 import entities.HoaDon;
+
 import interface_Method_DAO.HoaDon_Method;
 
 public class HoaDon_DAO implements HoaDon_Method
@@ -22,7 +25,7 @@ public class HoaDon_DAO implements HoaDon_Method
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
+	//SỬA LẠI GẤP
 	@Override
 	public boolean themHoaDon(HoaDon h, String maNV, String maKH,ArrayList<CTDonDatHang> listCTDonDatHang) {
 		String sqlInsert_HoaDon = "DECLARE @NextIndex INT;\r\n"
@@ -36,6 +39,8 @@ public class HoaDon_DAO implements HoaDon_Method
 				+ "insert into [dbo].[CTHoaDon]([sTT],[maSP],[donGia],[soLuong],[thanhTien])\r\n"
 				+ "values (@NewSTT,?,?,?,?)";
 		try {
+			PreparedStatement preparedStatement_Insert_CTHoaDon = con.con().prepareStatement(sqlInsert_CTHoaDon);
+			
 			PreparedStatement preparedStatement_Insert_HoaDon = con.con().prepareStatement(sqlInsert_HoaDon);
 			preparedStatement_Insert_HoaDon.setDate(1, h.getNgayLap());
 			preparedStatement_Insert_HoaDon.setTime(2, h.getGioLap());
@@ -50,13 +55,15 @@ public class HoaDon_DAO implements HoaDon_Method
 			
 			for(CTDonDatHang c: listCTDonDatHang)
 			{
-				PreparedStatement preparedStatement_Insert_CTHoaDon = con.con().prepareStatement(sqlInsert_CTHoaDon);
+				
 				preparedStatement_Insert_CTHoaDon.setNString(1, c.getMaSP());
 				preparedStatement_Insert_CTHoaDon.setDouble(2, c.getDonGia());
 				preparedStatement_Insert_CTHoaDon.setInt(3, c.getSoLuong());
 				preparedStatement_Insert_CTHoaDon.setDouble(4, c.getThanhTien());
 				preparedStatement_Insert_CTHoaDon.executeUpdate();
+				System.out.println("Lập CTHD");
 			}
+			System.out.println("Lập hóa đơn thành công");
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null,"Lập hóa đơn thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
@@ -185,6 +192,37 @@ public class HoaDon_DAO implements HoaDon_Method
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			return false;
+		}
+	}
+
+	@Override
+	public HoaDon get_HoaDon(String maHD_canTim) {
+		String sqlSelect = "select * from [dbo].[HoaDon]\r\n"
+				+ "where maHD=N'"+maHD_canTim+"';";
+		HoaDon h=null;
+		try {
+			ResultSet rs = con.resultSet(sqlSelect);
+			//public HoaDon(String maHD, Date ngayLap,Time gioLap,double tongTien,double tienKhachDua)
+			while (rs.next()) {			
+				String maHD=rs.getNString("maHD");
+				Date ngayLap=rs.getDate("ngayLap");
+				Time gioLap=rs.getTime("gioLap");
+				double tongTien=rs.getDouble("tongTien");
+				double tienKhachDua=rs.getDouble("tienKhachDua");
+				HoaDon h1=new HoaDon(maHD, ngayLap, gioLap, tongTien, tienKhachDua);
+				h=h1;
+			}
+			con.con().close();
+			con.stmt().close();
+			rs.close();
+			return h;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return null;
+			
 		}
 	}
 	

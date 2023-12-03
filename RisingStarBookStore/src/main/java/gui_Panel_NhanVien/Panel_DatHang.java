@@ -1,6 +1,7 @@
 package gui_Panel_NhanVien;
 
 import com.oracle.javafx.scenebuilder.kit.util.control.paintpicker.colorpicker.ColorPicker;
+import com.raven.model.SettingModel;
 import com.toedter.calendar.JDateChooser;
 
 import customEntities.CustomFunction;
@@ -84,7 +85,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 	private JScrollPane scr_DSSP,scr_DSDD;
 	private JLabel lbl_Title_CTDD;
 	private JLabel lbl_Title_DatHang;
-	private Custom_Button btnTimKhachHang,btnDatHang,btnLoaiSP,btnThemSP;
+	private Custom_Button btnTimKhachHang,btnDatHang,btnLoaiSP,btnThemSP,btnXoaTrang;
 	private Custom_ComboBox cbo_TraKhachHang;
 	private JPanel pnLapDatHang;
 	private JLabel lbl_TraSDT;
@@ -92,10 +93,11 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 	private JLabel lbl_GioiTinh;
 	private JLabel lbl_SoDienThoai;
 	private JLabel lbl_TongTien;
-	private JLabel lbl_txt_HoTenKhachHang;
-	private JLabel lbl_txt_GioiTinh;
-	private JLabel lbl_txt_SoDienThoai;
-	private JLabel lbl_txt_TongTien;
+	private JTextField lbl_txt_HoTenKhachHang;
+	private JTextField lbl_txt_GioiTinh;
+	private JTextField lbl_txt_SoDienThoai;
+	private JTextField lbl_txt_TongTien;
+	private JLabel lbl_SoLuong;
 	private JScrollPane scr_DSCTDD;
 	private CustomTable tbl_DSSP;
 	private JPanel pnControl;
@@ -104,6 +106,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 	private SanPham_BUS sqlSanPham_BUS=new SanPham_BUS();
 	private CTDonDatHang_BUS sqlCTDonDatHang_BUS=new CTDonDatHang_BUS();
 	private DonDatHang_BUS sqlDonDatHang_BUS=new DonDatHang_BUS();
+	private SettingModel settingModel;
     // End of variables declaration//GEN-END:variables
 	private String maNV;
     public Panel_DatHang(String maNV) {
@@ -140,8 +143,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 			string_Nam[i] = String.format("%04d",namHienTai-i);
 		}
 		
-		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà xuất bản","Năm xuất bản","Tác giả","Giá Bán","SL còn"},0);
-		
+		dtm_SP = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Số lượng còn","Giá Bán"},0);
 		dtm_CTDD = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Đơn giá","Số lượng mua","Thành tiền"},0);
 		
 		tbl_DSSP = new CustomTable();
@@ -150,7 +152,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 		TableColumnModel columnModel = tbl_DSSP.getColumnModel();
 
         // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
-		int[] columnWidths = {50,100,100,80,150,50,100,50,50};
+		int[] columnWidths = {50,100,100,80};
         for (int i = 0; i < columnWidths.length; i++) {
             TableColumn column = columnModel.getColumn(i);
             column.setPreferredWidth(columnWidths[i]);
@@ -158,7 +160,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 		
 		scr_DSSP = new JScrollPane(tbl_DSSP);
 		
-		lbl_Title_DSSP = new JLabel("Chọn sản phẩm");
+		lbl_Title_DSSP = new JLabel(" sản phẩm");
 		lbl_Title_DSSP.setForeground(Custom_ColorPicker.darkblue_4F709C);
 		lbl_Title_DSSP.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
@@ -181,7 +183,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 		TableColumnModel columnModel2 = tbl_DSCTDD.getColumnModel();
 
         // Thiết lập chiều rộng cột cụ thể (ví dụ: cột 1 có chiều rộng 150px)
-		int[] columnWidths2 = {50,100,100,50,150};
+		int[] columnWidths2 = {50,100,100,50};
         for (int i = 0; i < columnWidths2.length; i++) {
             TableColumn column = columnModel2.getColumn(i);
             column.setPreferredWidth(columnWidths[i]);
@@ -231,7 +233,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 		btnLoaiSP.setText("Loại bỏ khỏi giỏ");
 		btnLoaiSP.setFont(new Font("Dialog", Font.BOLD, 12));
 		
-		JLabel lbl_SoLuong = new JLabel("Số lượng:");
+		lbl_SoLuong = new JLabel("Số lượng:");
 		lbl_SoLuong.setForeground(Color.BLACK);
 		lbl_SoLuong.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
@@ -296,22 +298,22 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 		btnTimKhachHang.setText("Tìm");
 		btnTimKhachHang.setFont(new Font("Dialog", Font.BOLD, 12));
 		
-		lbl_txt_HoTenKhachHang = new JLabel("");
+		lbl_txt_HoTenKhachHang = new JTextField("");
 		lbl_txt_HoTenKhachHang.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		lbl_txt_HoTenKhachHang.setBackground(Custom_ColorPicker.snowwhite_F2F0EB);
 		lbl_txt_HoTenKhachHang.setOpaque(true);
 		
-		lbl_txt_GioiTinh = new JLabel("");
+		lbl_txt_GioiTinh = new JTextField("");
 		lbl_txt_GioiTinh.setOpaque(true);
 		lbl_txt_GioiTinh.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		lbl_txt_GioiTinh.setBackground(new Color(242, 240, 235));
 		
-		lbl_txt_SoDienThoai = new JLabel("");
+		lbl_txt_SoDienThoai = new JTextField("");
 		lbl_txt_SoDienThoai.setOpaque(true);
 		lbl_txt_SoDienThoai.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		lbl_txt_SoDienThoai.setBackground(new Color(242, 240, 235));
 		
-		lbl_txt_TongTien = new JLabel("");
+		lbl_txt_TongTien = new JTextField("");
 		lbl_txt_TongTien.setOpaque(true);
 		lbl_txt_TongTien.setFont(new Font("SansSerif", Font.PLAIN, 16));
 		lbl_txt_TongTien.setBackground(new Color(242, 240, 235));
@@ -319,6 +321,10 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 		btnDatHang = new Custom_Button();
 		btnDatHang.setText("Đặt hàng");
 		btnDatHang.setFont(new Font("Dialog", Font.BOLD, 12));
+		
+		btnXoaTrang = new Custom_Button();
+		btnXoaTrang.setText("Xóa trắng");
+		btnXoaTrang.setFont(new Font("Dialog", Font.BOLD, 12));
 		GroupLayout gl_pnLapDatHang = new GroupLayout(pnLapDatHang);
 		gl_pnLapDatHang.setHorizontalGroup(
 			gl_pnLapDatHang.createParallelGroup(Alignment.LEADING)
@@ -335,15 +341,18 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 								.addComponent(lbl_TongTien, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(gl_pnLapDatHang.createParallelGroup(Alignment.LEADING)
-								.addComponent(lbl_txt_TongTien, GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
-								.addComponent(lbl_txt_SoDienThoai, GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
-								.addComponent(lbl_txt_GioiTinh, GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+								.addComponent(lbl_txt_TongTien, GroupLayout.DEFAULT_SIZE, 632, Short.MAX_VALUE)
+								.addComponent(lbl_txt_SoDienThoai, GroupLayout.DEFAULT_SIZE, 632, Short.MAX_VALUE)
+								.addComponent(lbl_txt_GioiTinh, GroupLayout.DEFAULT_SIZE, 632, Short.MAX_VALUE)
 								.addGroup(gl_pnLapDatHang.createSequentialGroup()
-									.addComponent(cbo_TraKhachHang, GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+									.addComponent(cbo_TraKhachHang, GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
 									.addGap(13)
 									.addComponent(btnTimKhachHang, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE))
-								.addComponent(lbl_txt_HoTenKhachHang, GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)))
-						.addComponent(btnDatHang, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
+								.addComponent(lbl_txt_HoTenKhachHang, GroupLayout.DEFAULT_SIZE, 632, Short.MAX_VALUE)))
+						.addGroup(Alignment.TRAILING, gl_pnLapDatHang.createSequentialGroup()
+							.addComponent(btnXoaTrang, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnDatHang, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap())
 		);
 		gl_pnLapDatHang.setVerticalGroup(
@@ -372,19 +381,23 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 						.addComponent(lbl_TongTien, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lbl_txt_TongTien, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnDatHang, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(336, Short.MAX_VALUE))
+					.addGroup(gl_pnLapDatHang.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnDatHang, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnXoaTrang, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(53, Short.MAX_VALUE))
 		);
+		gl_pnLapDatHang.linkSize(SwingConstants.VERTICAL, new Component[] {cbo_TraKhachHang, btnTimKhachHang, lbl_txt_HoTenKhachHang, lbl_txt_GioiTinh, lbl_txt_SoDienThoai, lbl_txt_TongTien});
 		gl_pnLapDatHang.linkSize(SwingConstants.VERTICAL, new Component[] {lbl_TraSDT, lbl_HoTenKhachHang, lbl_GioiTinh, lbl_SoDienThoai, lbl_TongTien});
-		gl_pnLapDatHang.linkSize(SwingConstants.VERTICAL, new Component[] {lbl_txt_TongTien, cbo_TraKhachHang, btnTimKhachHang, lbl_txt_HoTenKhachHang, lbl_txt_GioiTinh, lbl_txt_SoDienThoai});
 		pnLapDatHang.setLayout(gl_pnLapDatHang);
         this.setLayout(layout);
         addAction();
-        
+        setting();
+        setEditableToFalseTextfield();
     }// </editor-fold>//GEN-END:initComponents
     private void addAction()
     {
     	btnDatHang.addActionListener(this);
+    	btnXoaTrang.addActionListener(this);
     	btnThemSP.addActionListener(this);
     	btnTimKhachHang.addActionListener(this);
     	btnLoaiSP.addActionListener(this);
@@ -403,7 +416,7 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
     private void resetTable()
     {
     	dtm_SP.setRowCount(0);
-    	sqlSanPham_BUS.xuatDanhSachSanPham_DonDat(dtm_SP);
+    	sqlSanPham_BUS.xuatDanhSachSanPham_LapHoaDon(dtm_SP);
     }
     private void resetTable_GioHang()
     {
@@ -438,13 +451,37 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
-			JOptionPane.showMessageDialog(null, "Vui lòng chọn số điện thoại để tra.", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+			String canhBao = null,loaiCanhBao = null;
+			if (settingModel.getNgonNgu().equals("Vietnamese")) {
+				canhBao = "Vui lòng chọn số điện thoại để tra.";
+				loaiCanhBao = "Lỗi";
+			}
+			if (settingModel.getNgonNgu().equals("English")) {
+				canhBao = "Please select a phone number to look up.";
+				loaiCanhBao = "Error";
+			}
+			JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
     	}
     	else
     	{
     		lbl_txt_HoTenKhachHang.setText(sqlCTDonDatHang_BUS.getHoTen_KhachHang(sdt));
     		lbl_txt_SoDienThoai.setText(sqlCTDonDatHang_BUS.getSDT_KhachHang(sdt));
-    		lbl_txt_GioiTinh.setText(gioiTinh_String(sdt));
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			if(gioiTinh_String(sdt).equals("Nam")) {
+					lbl_txt_GioiTinh.setText("Nam");
+				}
+				if(gioiTinh_String(sdt).equals("Nữ")) {
+					lbl_txt_GioiTinh.setText("Nữ");
+				}
+			}
+			if (settingModel.getNgonNgu().equals("English")) {
+				if(gioiTinh_String(sdt).equals("Nam")) {
+					lbl_txt_GioiTinh.setText("Male");
+				}
+				if(gioiTinh_String(sdt).equals("Nữ")) {
+					lbl_txt_GioiTinh.setText("Female");
+				}
+			}
     	}
     }
     private void them_SP()
@@ -455,7 +492,16 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 		{
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Vui lòng chọn số lượng phải lớn hơn 0.", "Cảnh báo.", JOptionPane.WARNING_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+			if (settingModel.getNgonNgu().equals("Vietnamese")) {
+				canhBao = "Vui lòng chọn số lượng phải lớn hơn 0.";
+				loaiCanhBao = "Lỗi";
+			}
+			if (settingModel.getNgonNgu().equals("English")) {
+				canhBao = "Please choose a quantity that must be greater than 0";
+				loaiCanhBao = "Error";
+			}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 	        spinner.setValue(0);
 	        
 		}
@@ -466,44 +512,41 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 			{
 				//public CTDonDatHang(double donGia, int soLuong, double thanhTien) 
 	    		String maSP=tbl_DSSP.getValueAt(row, 0).toString();
-				String giaBan=tbl_DSSP.getValueAt(row, 7).toString();
-				String soLuongCon=tbl_DSSP.getValueAt(row, 8).toString();
-				int soLuongCon_Int=Integer.parseInt(soLuongCon);
-				if(soLuong>soLuongCon_Int)
-				{
+				String giaBan=tbl_DSSP.getValueAt(row, 3).toString();
+				
+				try {
+		            double giaBan_Double=Double.parseDouble(giaBan);
+		            SanPham s=new SanPham();
+		            s.setMaSP(maSP);
+		            CTDonDatHang ct=new CTDonDatHang();
+		            ct.setDonGia(giaBan_Double);
+		            ct.setSoLuong(soLuong);
+		            sqlCTDonDatHang_BUS.themCTDonDatHang(s, ct);
+		            //System.out.println("Thêm giỏ hàng thành công");
+		            resetTable();
+		            resetTable_GioHang();
+		            spinner.setValue(0);
+		            lbl_txt_TongTien.setText(Double.toString(sqlCTDonDatHang_BUS.tinhTongTien_GioHang())); 
+				} catch (NumberFormatException e) {
 					UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-			        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-			        JOptionPane.showMessageDialog(null, "Số lượng đã chọn lớn hơn số lượng còn.", "Cảnh báo.", JOptionPane.WARNING_MESSAGE);
-			        spinner.setValue(0);
-				}
-				else
-				{
-					try {
-			            double giaBan_Double=Double.parseDouble(giaBan);
-			            SanPham s=new SanPham();
-			            s.setMaSP(maSP);
-			            CTDonDatHang ct=new CTDonDatHang();
-			            ct.setDonGia(giaBan_Double);
-			            ct.setSoLuong(soLuong);
-			            sqlCTDonDatHang_BUS.themCTDonDatHang(s, ct);
-			            //System.out.println("Thêm giỏ hàng thành công");
-			            resetTable();
-			            resetTable_GioHang();
-			            spinner.setValue(0);
-			            lbl_txt_TongTien.setText(Double.toString(sqlCTDonDatHang_BUS.tinhTongTien_GioHang())); 
-					} catch (NumberFormatException e) {
-						UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-						UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-						JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-					}
+					UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			else
 			{
 				UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 		        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-		        JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm đề thêm vào giỏ.", "Thông báo.", JOptionPane.INFORMATION_MESSAGE);
-			}
+		        String canhBao = null,loaiCanhBao = null;
+				if (settingModel.getNgonNgu().equals("Vietnamese")) {
+					canhBao = "Vui lòng chọn sản phẩm để thêm vào giỏ.";
+					loaiCanhBao = "Lỗi";
+				}
+				if (settingModel.getNgonNgu().equals("English")) {
+					canhBao = "Please select a product to add to your cart";
+					loaiCanhBao = "Error";
+				}
+				JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);			}
 		}	
     }
     private void xoa_SP()
@@ -521,7 +564,16 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 		{
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm loại bỏ.", "Thông báo.", JOptionPane.INFORMATION_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+			if (settingModel.getNgonNgu().equals("Vietnamese")) {
+				canhBao = "Vui lòng chọn sản phẩm loại bỏ.";
+				loaiCanhBao = "Lỗi";
+			}
+			if (settingModel.getNgonNgu().equals("English")) {
+				canhBao = "Please select the product to be removed.";
+				loaiCanhBao = "Error";
+			}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.INFORMATION_MESSAGE);
 		}
     }
     private boolean gioiTinh_Boolean(String gioiTinh)
@@ -537,7 +589,16 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Vui lòng tìm khách hàng để đặt hàng.", "Cảnh báo.", JOptionPane.WARNING_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+			if (settingModel.getNgonNgu().equals("Vietnamese")) {
+				canhBao = "Vui lòng tra khách hàng để đặt hàng.";
+				loaiCanhBao = "Lỗi";
+			}
+			if (settingModel.getNgonNgu().equals("English")) {
+				canhBao = "Please look up customer to place an order.";
+				loaiCanhBao = "Error";
+			}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
     	}
     	else
     	{
@@ -608,7 +669,34 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 	private boolean isTableEmpty(CustomTable tbl_DSCTDD) {
         return tbl_DSCTDD.getModel().getRowCount() == 0;
     }
-
+	private void checkText()
+	{
+		
+		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+	    UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+	    String canhBao = null,loaiCanhBao = null;
+		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+			canhBao = "Không tìm thấy khách hàng.";
+			loaiCanhBao = "Cảnh báo";
+		}
+		if (settingModel.getNgonNgu().equals("English")) {
+			canhBao = "Can't find customer.";
+			loaiCanhBao = "Warning";
+		}
+	    JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.WARNING_MESSAGE);
+		
+	}
+	private void xoaTrang()
+	{
+		lbl_txt_HoTenKhachHang.setText("");
+		lbl_txt_SoDienThoai.setText("");
+		lbl_txt_GioiTinh.setText("");
+		lbl_txt_TongTien.setText("0.0");
+		cbo_TraKhachHang.setSelectedItem("");
+		addCombobox();
+		resetTable_GioHang();
+		resetTable();
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -616,7 +704,14 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 		if(o.equals(btnTimKhachHang))
 		{
 			tim_KhachHang();
-			
+			String tenKH=lbl_txt_HoTenKhachHang.getText();
+			String gioiTinh=lbl_txt_GioiTinh.getText();
+			//String sdt=(String) cbo_TraKhachHang.getSelectedItem();
+			if(tenKH.equalsIgnoreCase("") && !gioiTinh.equalsIgnoreCase(""))
+			{
+				checkText();
+				xoaTrang();
+			}	
 		}
 		if(o.equals(btnThemSP))
 		{
@@ -636,8 +731,102 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
 			{
 				UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 		        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-		        JOptionPane.showMessageDialog(null, "Giỏ hàng không được trống.", "Cảnh báo.", JOptionPane.WARNING_MESSAGE);
+		        String canhBao = null,loaiCanhBao = null;
+				if (settingModel.getNgonNgu().equals("Vietnamese")) {
+					canhBao = "Giỏ hàng không được trống.";
+					loaiCanhBao = "Lỗi";
+				}
+				if (settingModel.getNgonNgu().equals("English")) {
+					canhBao = "Cart cannot be emty";
+					loaiCanhBao = "Error";
+				}
+		        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		if(o.equals(btnXoaTrang))
+		{
+			lbl_txt_HoTenKhachHang.setText("");
+			lbl_txt_SoDienThoai.setText("");
+			lbl_txt_GioiTinh.setText("");
+			lbl_txt_TongTien.setText("0.0");
+			cbo_TraKhachHang.setSelectedItem("");
+			addCombobox();
+			resetTable_GioHang();
+			resetTable();
+		}
+	}
+	private void setting() {
+    	settingModel = new SettingModel();
+    	try {
+			settingModel.readFrom();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	//settingButton();
+    	settingLanguage();
+    	//settingCombobox();
+    	//settingTable();
+    }
+	private void settingLanguage() {
+		// TODO Auto-generated method stub
+    	if(settingModel.getNgonNgu().equals("Vietnamese")) {
+    		lbl_Title_DatHang.setText("Danh sách đơn đặt chưa thanh toán");
+    		lbl_TraSDT.setText("Tra SĐT khách");
+    		lbl_HoTenKhachHang.setText("Họ tên khách");
+    		lbl_GioiTinh.setText("Giới tính");
+    		lbl_SoDienThoai.setText("Số điện thoại");
+    		lbl_TongTien.setText("Tổng tiền");
+    		btnTimKhachHang.setText("Tra");
+    		btnXoaTrang.setText("Xóa trắng");
+    		btnDatHang.setText("Đặt hàng");
+    		lbl_Title_DSSP.setText("Chọn sản phẩm");
+    		tbl_DSSP.getColumnModel().getColumn(0).setHeaderValue("Mã sản phẩm");
+    		tbl_DSSP.getColumnModel().getColumn(1).setHeaderValue("Tên sản phẩm");
+    		tbl_DSSP.getColumnModel().getColumn(2).setHeaderValue("Số lượng còn");
+    		tbl_DSSP.getColumnModel().getColumn(3).setHeaderValue("Đơn giá");
+    		lbl_Title_CTDD.setText("Giỏ hàng");
+    		tbl_DSCTDD.getColumnModel().getColumn(0).setHeaderValue("Mã sản phẩm");
+    		tbl_DSCTDD.getColumnModel().getColumn(1).setHeaderValue("Tên sản phẩm");
+    		tbl_DSCTDD.getColumnModel().getColumn(2).setHeaderValue("Đơn giá");
+    		tbl_DSCTDD.getColumnModel().getColumn(3).setHeaderValue("Số lượng đặt");
+    		tbl_DSCTDD.getColumnModel().getColumn(4).setHeaderValue("Thành tiền");
+    		btnLoaiSP.setText("Loại bỏ khỏi giỏ");
+    		lbl_SoLuong.setText("Số lượng");
+    		btnThemSP.setText("Thêm vào giỏ");
+    	}
+    	if(settingModel.getNgonNgu().equals("English")) {
+    		lbl_Title_DatHang.setText("List of orders");
+    		lbl_TraSDT.setText("C.P.Number");
+    		lbl_HoTenKhachHang.setText("Customer name");
+    		lbl_GioiTinh.setText("Sex");
+    		lbl_SoDienThoai.setText("Customer P.Number");
+    		lbl_TongTien.setText("Total due");
+    		btnTimKhachHang.setText("Search");
+    		btnXoaTrang.setText("Refresh");
+    		btnDatHang.setText("Make order");
+    		lbl_Title_DSSP.setText("Product selection");
+    		tbl_DSSP.getColumnModel().getColumn(0).setHeaderValue("Product number");
+    		tbl_DSSP.getColumnModel().getColumn(1).setHeaderValue("Product name");
+    		tbl_DSSP.getColumnModel().getColumn(2).setHeaderValue("Quantity remaining");
+    		tbl_DSSP.getColumnModel().getColumn(3).setHeaderValue("Price");
+    		lbl_Title_CTDD.setText("Cart");
+    		tbl_DSCTDD.getColumnModel().getColumn(0).setHeaderValue("Product number");
+    		tbl_DSCTDD.getColumnModel().getColumn(1).setHeaderValue("Product name");
+    		tbl_DSCTDD.getColumnModel().getColumn(2).setHeaderValue("Price");
+    		tbl_DSCTDD.getColumnModel().getColumn(3).setHeaderValue("Quantity selected");
+    		tbl_DSCTDD.getColumnModel().getColumn(4).setHeaderValue("Amount");
+    		btnLoaiSP.setText("Remove from cart");
+    		lbl_SoLuong.setText("Quantity");
+    		btnThemSP.setText("Add to cart");
+    	}	
+	}
+	private void setEditableToFalseTextfield() {
+		for (Component component : pnLapDatHang.getComponents()) {
+	        if (component instanceof JTextField) {
+	        	((JTextField)component).setEditable(false);
+	        	((JTextField)component).setCaretColor(component.getBackground());
+	        }
+	    }
 	}
 }

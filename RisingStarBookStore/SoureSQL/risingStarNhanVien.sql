@@ -101,3 +101,31 @@ FROM [dbo].[TaiKhoan]
 select tenNV
 FROM [dbo].[NhanVien]
 where maNV='NV3';
+--Xuất
+SELECT * FROM [dbo].[DonDatHang]
+SELECT * FROM [dbo].[CTDonDatHang]
+SELECT * FROM [dbo].[KhachHang]
+SELECT * FROM [dbo].[HoaDon]
+SELECT * FROM [dbo].[CTHoaDon]
+
+
+WITH RankedTable AS (
+    SELECT 
+        maDDH, maSP, donGia, soLuong, thanhTien,
+        ROW_NUMBER() OVER (ORDER BY sTT) AS RowNum
+    FROM [dbo].[CTDonDatHang]
+)
+UPDATE RankedTable
+SET sTT = RowNum;
+--
+WITH RankedTable AS (
+    SELECT 
+        maDDH, maSP, donGia, soLuong, thanhTien, sTT,
+        ROW_NUMBER() OVER (ORDER BY sTT) AS RowNum
+	FROM [dbo].[CTDonDatHang]
+)
+UPDATE t
+SET sTT = rt.RowNum
+FROM [dbo].[CTDonDatHang] t
+JOIN RankedTable rt ON t.sTT = rt.sTT;
+

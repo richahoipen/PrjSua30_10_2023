@@ -100,19 +100,43 @@ public class CTDonDatHang_DAO implements CTDonDatHang_Method {
 			return false;
 		}
 	}
-	
+	/*
+	 * WITH RankedTable AS (
+	    SELECT 
+	        maDDH, maSP, donGia, soLuong, thanhTien
+	        ROW_NUMBER() OVER (ORDER BY sTT) AS RowNum
+	    FROM [dbo].[CTDonDatHang]
+	)
+	UPDATE RankedTable
+	SET sTT = RowNum;
+
+	 */
 	@Override
 	public boolean xoaCTDonDatHang(SanPham s) {
 		String sqlDelete = "DELETE FROM [dbo].[CTDonDatHang]\r\n"
 				+ "where maSP=? and maDDH is null";
+		//Cập nhật cột
+		String sqlUpdate="WITH RankedTable AS (\r\n"
+				+ "    SELECT \r\n"
+				+ "        maDDH, maSP, donGia, soLuong, thanhTien, sTT,\r\n"
+				+ "        ROW_NUMBER() OVER (ORDER BY sTT) AS RowNum\r\n"
+				+ "	FROM [dbo].[CTDonDatHang]\r\n"
+				+ ")\r\n"
+				+ "UPDATE t\r\n"
+				+ "SET sTT = rt.RowNum\r\n"
+				+ "FROM [dbo].[CTDonDatHang] t\r\n"
+				+ "JOIN RankedTable rt ON t.sTT = rt.sTT;";	
 		try {
 			
 			
 			PreparedStatement preparedStatement_Delete = con.con().prepareStatement(sqlDelete);
+			PreparedStatement preparedStatement_Update = con.con().prepareStatement(sqlUpdate);
 			preparedStatement_Delete.setString(1, s.getMaSP());		
 			preparedStatement_Delete.executeUpdate();
+			preparedStatement_Update.executeUpdate();
 			con.con().close();
 			preparedStatement_Delete.close();	
+			preparedStatement_Update.close();
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();

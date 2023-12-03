@@ -1,5 +1,6 @@
 package gui_Panel_NhaCungCap;
 
+import com.raven.model.SettingModel;
 import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 import com.toedter.calendar.JDateChooser;
@@ -74,6 +75,7 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 	private DefaultTableModel dtm_NCC;
 	//private NhaCungCap_DAO sqlNhaCungCap_BUS=new NhaCungCap_DAO();
 	private NhaCungCap_BUS sqlNhaCungCap_BUS=new NhaCungCap_BUS();
+	private SettingModel settingModel;
     // End of variables declaration//GEN-END:variables
     public Panel_QuanLyNhaCungCap() {
         initComponents();
@@ -305,6 +307,7 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
         gl_pn_QL_NCC.linkSize(SwingConstants.HORIZONTAL, new Component[] {lbl_Email, lbl_DiaChi, lbl_SoDienThoai});
         pn_QL_NCC.setLayout(gl_pn_QL_NCC);
         addAction();
+        setting();
     }// </editor-fold>//GEN-END:initComponents
     private void addAction()
 	{
@@ -405,9 +408,18 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 		}
 		else
 		{
+			String message = null, title = null;
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Vui lòng chọn dữ liệu để cập nhật.", "Thông báo.", JOptionPane.INFORMATION_MESSAGE);
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			if (settingModel.getNgonNgu().equals("Vietnamese")) {
+			    message = "Vui lòng chọn dữ liệu để cập nhật.";
+			    title = "Thông báo.";
+			}
+			if (settingModel.getNgonNgu().equals("English")) {
+			    message = "Please select data to update.";
+			    title = "Notification.";
+			}
+			JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -417,47 +429,89 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 		String diaChi=txt_DiaChi.getText();
 		String sdt=txt_SoDienThoai.getText();
 		String email=txt_Email.getText();
+		String warning = null, warningType = null;
 		if(tenNCC.trim().equals("")||diaChi.trim().equals("")||sdt.trim().equals("")||email.trim().equals(""))
 		{
-			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Vui lòng nhập hết dữ liệu.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        txt_HoTen.requestFocus();
-	        return false;
+		    UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		    UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		    if (settingModel.getNgonNgu().equals("Vietnamese")) {
+		        warning = "Vui lòng nhập hết dữ liệu.";
+		        warningType = "Lỗi";
+		    }
+		    if (settingModel.getNgonNgu().equals("English")) {
+		        warning = "Please enter all data.";
+		        warningType = "Error";
+		    }
+		    JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+		    txt_HoTen.requestFocus();
+		    return false;
 		}
 		if(!tenNCC.matches("^[\\p{Lu}][\\p{Ll}]+(\\s[\\p{Lu}][\\p{Ll}]+)*$"))
 		{
-			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Họ và tên không hợp lệ.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        txt_HoTen.requestFocus();
-	        return false;
+		    UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		    UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		    if (settingModel.getNgonNgu().equals("Vietnamese")) {
+		        warning = "Họ và tên không hợp lệ.";
+		        warningType = "Lỗi";
+		    }
+		    if (settingModel.getNgonNgu().equals("English")) {
+		        warning = "Invalid full name.";
+		        warningType = "Error";
+		    }
+		    JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+		    txt_HoTen.requestFocus();
+		    return false;
 		}
 		if(!sdt.matches("^0[0-9]{9}$"))
 		{
-			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        txt_SoDienThoai.requestFocus();
-	        return false;
+		    UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		    UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		    if (settingModel.getNgonNgu().equals("Vietnamese")) {
+		        warning = "Số điện thoại không hợp lệ.";
+		        warningType = "Lỗi";
+		    }
+		    if (settingModel.getNgonNgu().equals("English")) {
+		        warning = "Invalid phone number.";
+		        warningType = "Error";
+		    }
+		    JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+		    txt_SoDienThoai.requestFocus();
+		    return false;
 		}
 		if(!diaChi.matches("^[a-zA-Z0-9,./\\p{L} ]*$"))
 		{
-			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Địa chỉ không hợp lệ do có kí tự đặc biệt.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        txt_DiaChi.requestFocus();
-	        return false;
+		    UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		    UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		    if (settingModel.getNgonNgu().equals("Vietnamese")) {
+		        warning = "Địa chỉ không hợp lệ do có kí tự đặc biệt.";
+		        warningType = "Lỗi";
+		    }
+		    if (settingModel.getNgonNgu().equals("English")) {
+		        warning = "Invalid address due to special characters.";
+		        warningType = "Error";
+		    }
+		    JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+		    txt_DiaChi.requestFocus();
+		    return false;
 		}
 		if(!email.matches("^[A-Za-z0-9]+@[A-Za-z0-9]+\\.[A-Za-z]{2,}$"))
 		{
-			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Email không hợp lệ.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        txt_DiaChi.requestFocus();
-	        return false;
+		    UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		    UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		    if (settingModel.getNgonNgu().equals("Vietnamese")) {
+		        warning = "Email không hợp lệ.";
+		        warningType = "Lỗi";
+		    }
+		    if (settingModel.getNgonNgu().equals("English")) {
+		        warning = "Invalid email.";
+		        warningType = "Error";
+		    }
+		    JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+		    txt_DiaChi.requestFocus();
+		    return false;
 		}
 		return true;
+
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -517,4 +571,54 @@ public class Panel_QuanLyNhaCungCap extends JPanel implements ActionListener, Mo
 		// TODO Auto-generated method stub
 		
 	}
+	private void setting() {
+    	settingModel = new SettingModel();
+    	try {
+			settingModel.readFrom();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	//settingButton();
+    	settingLanguage();
+    }
+	private void settingLanguage() {
+		// TODO Auto-generated method stub
+    	if(settingModel.getNgonNgu().equals("Vietnamese")) {
+    		lbl_Title_QL_NCC.setText("Quản lí nhà cung cấp");
+    		lbl_MaNCC.setText("Mã nhà cung cấp");
+    		lbl_TenNCC.setText("Tên nhà cung cấp");
+    		lbl_Email.setText("Email:");
+    		lbl_DiaChi.setText("Địa chỉ");
+    		lbl_SoDienThoai.setText("Số điện thoại");
+    		btn_XoaTrang.setText("Xóa trắng");
+    		btn_Them.setText("Thêm");
+    		btn_CapNhat.setText("Cập nhật");
+    		btn_XoaTrang.setText("Xóa trắng");
+    		lbl_Title_DSNCC.setText("Danh sách nhà cung cấp");
+    		tbl_DSNCC.getColumnModel().getColumn(0).setHeaderValue("Mã nhà cung cấp");
+    		tbl_DSNCC.getColumnModel().getColumn(1).setHeaderValue("Tên nhà cung cấp");
+    		tbl_DSNCC.getColumnModel().getColumn(2).setHeaderValue("Số điện thoại");
+    		tbl_DSNCC.getColumnModel().getColumn(3).setHeaderValue("Email");
+    		tbl_DSNCC.getColumnModel().getColumn(4).setHeaderValue("Địa chỉ");
+    	}
+    	if(settingModel.getNgonNgu().equals("English")) {
+    		lbl_Title_QL_NCC.setText("Suppliers searching");
+    		lbl_MaNCC.setText("Supplier number");
+    		lbl_TenNCC.setText("Supplier name");
+    		lbl_Email.setText("Email:");
+    		lbl_DiaChi.setText("Address");
+    		lbl_SoDienThoai.setText("Contact phone");
+    		btn_XoaTrang.setText("Refresh");
+    		btn_Them.setText("Add");
+    		btn_CapNhat.setText("Update");
+    		btn_XoaTrang.setText("Refresh");
+    		lbl_Title_DSNCC.setText("Suppilers list");
+    		tbl_DSNCC.getColumnModel().getColumn(0).setHeaderValue("Supplier number");
+    		tbl_DSNCC.getColumnModel().getColumn(1).setHeaderValue("Supplier name");
+    		tbl_DSNCC.getColumnModel().getColumn(2).setHeaderValue("Contact phone");
+    		tbl_DSNCC.getColumnModel().getColumn(3).setHeaderValue("Email");
+    		tbl_DSNCC.getColumnModel().getColumn(4).setHeaderValue("Address");
+    	}	
+    }
 }

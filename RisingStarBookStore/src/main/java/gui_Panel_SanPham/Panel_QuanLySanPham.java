@@ -3,6 +3,7 @@ package gui_Panel_SanPham;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
 import image.ImageToBytesExample;
+import jnr.ffi.Struct.caddr_t;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -17,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.raven.model.SettingModel;
 import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 
@@ -86,6 +88,7 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
 	private NhaCungCap_BUS sqlNhaCungCap_BUS=new NhaCungCap_BUS();
 	private SanPham_BUS sqlSanPham_BUS=new SanPham_BUS();
 	private boolean daChon=false;
+	private SettingModel settingModel;
 	private byte[] duLieuAnh;
     // End of variables declaration//GEN-END:variables
     public Panel_QuanLySanPham() {
@@ -208,7 +211,6 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
 		txt_NhaXuatBan = new JTextField();
 		txt_NhaXuatBan.setForeground(Color.black);
 		txt_NhaXuatBan.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		
 		spn_NamXuatBan = new JSpinner();
 		spn_NamXuatBan.setForeground(Color.black);
 		spn_NamXuatBan.setFont(new Font("Times New Roman", Font.PLAIN, 14));
@@ -269,7 +271,7 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
 		});
 		btn_ChonAnh.setBuffered_Icon("src/main/images/view_image/Add image.png");
 		btn_ChonAnh.resizeIcon(14, 14);
-		btn_ChonAnh.setText("Chọn ảnh");
+		btn_ChonAnh.setText(" ảnh");
 		btn_ChonAnh.setFont(new Font("Inner", Font.BOLD, 12));
 		btn_ChonAnh.setOver(true);
 		btn_ChonAnh.setColor_Foreground(Color.black);
@@ -514,6 +516,7 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
         gl_pn_QL_SP.linkSize(SwingConstants.HORIZONTAL, new Component[] {lbl_MaSP, lbl_TenSP, lbl_LoaiSP, lbl_NgonNgu, lbl_NhaCungCap, lbl_NamXuatBan, lbl_TacGia, lbl_SoLuongCon, lbl_SoLuongBan, lbl_GiaNhap, lbl_GiaBan});
         pn_QL_SP.setLayout(gl_pn_QL_SP);
         addAction();
+        setting();
     }// </editor-fold>//GEN-END:initComponents
     private void addAction()
     {
@@ -529,7 +532,7 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     private void addCombobox()
     {
     	//TenSP
-    	cbo_TenSP.addItem("");
+    	cbo_TenSP.getMyVector().add("");
     	cbo_TenSP.addItem("Doraemon tập 1");
     	cbo_TenSP.getMyVector().add("Doraemon tập 1");
     	cbo_TenSP.addItem("Doraemon tập 2");
@@ -546,33 +549,9 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     	cbo_TenSP.getMyVector().add("Doraemon tập 50");
     	cbo_TenSP.addItem("Ba chàng lính ngự lâm");
     	cbo_TenSP.getMyVector().add("Ba chàng lính ngự lâm");
-    	//loaiSP
-    	cbo_LoaiSP.addItem("");
-    	cbo_LoaiSP.addItem("Sách thiếu nhi");
-    	cbo_LoaiSP.getMyVector().add("Sách thiếu nhi");
-    	cbo_LoaiSP.addItem("Tiểu thuyết");
-    	cbo_LoaiSP.getMyVector().add("Tiểu thuyết");
-    	cbo_LoaiSP.addItem("Truyện tranh");
-    	cbo_LoaiSP.getMyVector().add("Truyện tranh");
     	//nha cung cap
     	cbo_NhaCungCap.addItem("");
     	sqlNhaCungCap_BUS.dayComboBoxTenNCC(cbo_NhaCungCap);
-    	//ngon ngu
-    	cbo_NgonNgu.addItem("");
-    	cbo_NgonNgu.addItem("Tiếng việt");
-    	cbo_NgonNgu.getMyVector().add("Tiếng việt");
-    	cbo_NgonNgu.addItem("Tiếng anh");
-    	cbo_NgonNgu.getMyVector().add("Tiếng anh");
-    	cbo_NgonNgu.addItem("Tiếng pháp");
-    	cbo_NgonNgu.getMyVector().add("Tiếng pháp");
-    	cbo_NgonNgu.addItem("Tiếng trung");
-    	cbo_NgonNgu.getMyVector().add("Tiếng trung");
-    	cbo_NgonNgu.addItem("Tiếng hàn");
-    	cbo_NgonNgu.getMyVector().add("Tiếng hàn");
-    	cbo_NgonNgu.addItem("Tiếng nhật");
-    	cbo_NgonNgu.getMyVector().add("Tiếng nhật");
-    	cbo_NgonNgu.addItem("Tiếng đức");
-    	cbo_NgonNgu.getMyVector().add("Tiếng đức");
     	
     }
     private void resetTable()
@@ -615,7 +594,16 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
             UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-            JOptionPane.showMessageDialog(null, "Dữ liệu ở thanh xổ không được rỗng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            String warning = null, warningType = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+	            warning = "Dữ liệu ở thanh xổ không được rỗng.";
+	            warningType = "Cảnh báo";
+	        }
+	        if (settingModel.getNgonNgu().equals("English")) {
+	            warning = "All combobox cannot be emty";
+	            warningType = "Warning";
+	        }
+            JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
             return false;
     	}
     }
@@ -625,9 +613,18 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     	Object soLuong=spn_SoLuongCon.getValue();
     	if(namXuatBan instanceof String || soLuong instanceof String)
     	{
+    		String warning = null, warningType = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+	            warning = "Năm xuất bản hoặc số lượng phải là số.";
+	            warningType = "Cảnh báo";
+	        }
+	        if (settingModel.getNgonNgu().equals("English")) {
+	            warning = "Publication year or quantity remaining must be numeric.";
+	            warningType = "Warning";
+	        }
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
             UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-            JOptionPane.showMessageDialog(null, "Năm xuất bản hoặc số lượng không được là chuỗi.", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
     		return false; 		
     	}
     	else
@@ -654,14 +651,23 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     	String nhaCungCap=(String) cbo_NhaCungCap.getSelectedItem();
     	LocalDate ngayHienTai=LocalDate.now();
     	String chon="";
+    	String warning = null, warningType = null;
     	if(tenSP.equalsIgnoreCase(chon) || loaiSP.equalsIgnoreCase(chon) || tacGia.trim().equals("") ||
     			nhaXuatBan.trim().equals("")|| namXuatBan==0|| soLuong==0||
     				ngonNgu.equalsIgnoreCase(chon)|| giaNhap.trim().equals("")||nhaCungCap.equalsIgnoreCase(chon)||
     				giaBan.trim().equals(""))
     	{
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+	            warning = "Vui lòng nhập hết dữ liệu.";
+	            warningType = "Cảnh báo";
+	        }
+	        if (settingModel.getNgonNgu().equals("English")) {
+	            warning = "Please enter all field";
+	            warningType = "Warning";
+	        }
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
             UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập hết dữ liệu.", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
             return false;
     	}
     	
@@ -669,79 +675,151 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     		return false;
     	if(!checkJSpinner())
     		return false;
-    	if(!tacGia.matches("^[\\p{Lu}][\\p{Ll}]+(\\s[\\p{Lu}][\\p{Ll}]+)*$"))
-    	{
-    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Tên tác giả không hợp lệ.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        txt_TacGia.requestFocus();
-	        return false;
-    	}
-    	if(namXuatBan<=1800)
-    	{
-    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Năm xuất bản trước 1800.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        return false;
-    	}
-    	if(namXuatBan>ngayHienTai.getYear())
-    	{
-    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Năm xuất bản sau năm hiện tại.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        return false;
-    	}
     	
-    	if(soLuong<=0)
-    	{
-    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Số lượng phải lớn hơn 0.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        return false;
-    	}
-    	if(!giaNhap.matches("^\\d+(\\.\\d+)?$"))
-    	{
-    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Giá nhập phải là số.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        txt_GiaNhap.requestFocus();
-	        return false;
-    	}
-    	double giaNhap_Double=Double.parseDouble(giaNhap);
-    	
-    	if(giaNhap_Double<=0)
-    	{
-    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Giá nhập phải lớn hơn 0.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        txt_GiaNhap.requestFocus();
-	        return false;
-    	}
-    	double giaBan_Double=Double.parseDouble(giaBan);
-    	if(!giaBan.matches("^\\d+(\\.\\d+)?$"))
-    	{
-    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Giá bán phải là số.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        txt_GiaNhap.requestFocus();
-	        return false;
-    	}
-    	if(giaBan_Double<=0)
-    	{
-    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Giá bán phải lớn hơn 0.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        txt_GiaNhap.requestFocus();
-	        return false;
-    	}
-    	if(isDaChon()==false)
-    	{
-    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-	        JOptionPane.showMessageDialog(null, "Vui lòng thêm ảnh.", "Warning", JOptionPane.WARNING_MESSAGE);
-	        txt_GiaNhap.requestFocus();
-	        return false;
-    	}
+    	    if(!tacGia.matches("^[\\p{Lu}][\\p{Ll}]+(\\s[\\p{Lu}][\\p{Ll}]+)*$"))
+    	    {
+    	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+    	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+    	        if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    	            warning = "Tên tác giả không hợp lệ.";
+    	            warningType = "Cảnh báo";
+    	        }
+    	        if (settingModel.getNgonNgu().equals("English")) {
+    	            warning = "Invalid author name.";
+    	            warningType = "Warning";
+    	        }
+    	        JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+    	        txt_TacGia.requestFocus();
+    	        return false;
+    	    }
+    	    if(namXuatBan<=1800)
+    	    {
+    	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+    	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+    	        if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    	            warning = "Năm xuất bản trước 1800.";
+    	            warningType = "Cảnh báo";
+    	        }
+    	        if (settingModel.getNgonNgu().equals("English")) {
+    	            warning = "Publication year before 1800.";
+    	            warningType = "Warning";
+    	        }
+    	        JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+    	        return false;
+    	    }
+    	    if(namXuatBan>ngayHienTai.getYear())
+    	    {
+    	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+    	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+    	        if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    	            warning = "Năm xuất bản sau năm hiện tại.";
+    	            warningType = "Cảnh báo";
+    	        }
+    	        if (settingModel.getNgonNgu().equals("English")) {
+    	            warning = "Publication year after current year.";
+    	            warningType = "Warning";
+    	        }
+    	        JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+    	        return false;
+    	    }
+    	    if(soLuong<=0)
+    	    {
+    	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+    	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+    	        if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    	            warning = "Số lượng phải lớn hơn 0.";
+    	            warningType = "Cảnh báo";
+    	        }
+    	        if (settingModel.getNgonNgu().equals("English")) {
+    	            warning = "Quantity must be greater than 0.";
+    	            warningType = "Warning";
+    	        }
+    	        JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+    	        return false;
+    	    }
+    	    if(!giaNhap.matches("^\\d+(\\.\\d+)?$"))
+    	    {
+    	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+    	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+    	        if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    	            warning = "Giá nhập phải là số.";
+    	            warningType = "Cảnh báo";
+    	        }
+    	        if (settingModel.getNgonNgu().equals("English")) {
+    	            warning = "Input price must be a number.";
+    	            warningType = "Warning";
+    	        }
+    	        JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+    	        txt_GiaNhap.requestFocus();
+    	        return false;
+    	    }
+    	    double giaNhap_Double=Double.parseDouble(giaNhap);
+    	    if(giaNhap_Double<=0)
+    	    {
+    	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+    	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+    	        if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    	            warning = "Giá nhập phải lớn hơn 0.";
+    	            warningType = "Cảnh báo";
+    	        }
+    	        if (settingModel.getNgonNgu().equals("English")) {
+    	            warning = "Input price must be greater than 0.";
+    	            warningType = "Warning";
+    	        }
+    	        JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+    	        txt_GiaNhap.requestFocus();
+    	        return false;
+    	    }
+    	    double giaBan_Double=Double.parseDouble(giaBan);
+    	    if(!giaBan.matches("^\\d+(\\.\\d+)?$"))
+    	    {
+    	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+    	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+    	        if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    	            warning = "Giá bán phải là số.";
+    	            warningType = "Cảnh báo";
+    	        }
+    	        if (settingModel.getNgonNgu().equals("English")) {
+    	            warning = "Sale price must be a number.";
+    	            warningType = "Warning";
+    	        }
+    	        JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+    	        txt_GiaNhap.requestFocus();
+    	        return false;
+    	    }
+    	    if(giaBan_Double<=0)
+    	    {
+    	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+    	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+    	        if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    	            warning = "Giá bán phải lớn hơn 0.";
+    	            warningType = "Cảnh báo";
+    	        }
+    	        if (settingModel.getNgonNgu().equals("English")) {
+    	            warning = "Sale price must be greater than 0.";
+    	            warningType = "Warning";
+    	        }
+    	        JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+    	        txt_GiaNhap.requestFocus();
+    	        return false;
+    	    }
+    	    if(isDaChon()==false)
+    	    {
+    	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+    	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+    	        if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    	            warning = "Vui lòng thêm ảnh.";
+    	            warningType = "Cảnh báo";
+    	        }
+    	        if (settingModel.getNgonNgu().equals("English")) {
+    	            warning = "Please add an image.";
+    	            warningType = "Warning";
+    	        }
+    	        JOptionPane.showMessageDialog(null, warning, warningType, JOptionPane.ERROR_MESSAGE);
+    	        txt_GiaNhap.requestFocus();
+    	        return false;
+    	    }
+
     			
     	
     	return true;
@@ -793,18 +871,119 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     			//int soLuong, String ngonNgu, double giaNhap, double giaBan,byte[] hinhAnh) 
     	try
     	{
-    		String tenSP=(String) cbo_TenSP.getSelectedItem();
-    		String loaiSP=(String) cbo_LoaiSP.getSelectedItem();
-    		String tacGia=txt_TacGia.getText();
-    		String nhaXuatBan=txt_NhaXuatBan.getText();
-    		int namXuatBan=(Integer)spn_NamXuatBan.getValue();
-    		int soLuong=(Integer)spn_SoLuongCon.getValue();
-    		String ngonNgu=(String) cbo_NgonNgu.getSelectedItem();
-    		String giaNhap=txt_GiaNhap.getText();   
-    		double giaNhap_Double=Double.parseDouble(giaNhap);
-    		String giaBan=txt_GiaBan.getText();
-    		double giaBan_Double=Double.parseDouble(giaBan);
-    		String nhaCungCap=(String) cbo_NhaCungCap.getSelectedItem();	
+    		String maSP = lbl_txt_MaSP.getText();
+    		String tenSP = (String) cbo_TenSP.getSelectedItem();
+    		String loaiSP = (String) cbo_LoaiSP.getSelectedItem();
+    		String tacGia = txt_TacGia.getText();
+    		String nhaXuatBan = txt_NhaXuatBan.getText();
+    		int namXuatBan = (Integer)spn_NamXuatBan.getValue();
+    		int soLuong = (Integer)spn_SoLuongCon.getValue();
+    		String ngonNgu = (String) cbo_NgonNgu.getSelectedItem();
+    		String giaNhap = txt_GiaNhap.getText();   
+    		double giaNhap_Double = Double.parseDouble(giaNhap);
+    		String giaBan = txt_GiaBan.getText();
+    		double giaBan_Double = Double.parseDouble(giaBan);
+    		String nhaCungCap = (String) cbo_NhaCungCap.getSelectedItem();
+
+    		// Convert to Vietnamese if the interface is in English
+    		if (settingModel.getNgonNgu().equals("English")) {
+    		    switch (loaiSP) {
+    		        case "Children's books":
+    		            loaiSP = "Sách thiếu nhi";
+    		            break;
+    		        case "Novels":
+    		            loaiSP = "Tiểu thuyết";
+    		            break;
+    		        case "Comic books":
+    		            loaiSP = "Truyện tranh";
+    		            break;
+    		        case "Literature books":
+    		            loaiSP = "Sách văn học";
+    		            break;
+    		        case "Economics books":
+    		            loaiSP = "Sách kinh tế";
+    		            break;
+    		        case "Life skills books":
+    		            loaiSP = "Sách kỹ năng sống";
+    		            break;
+    		        case "Women's books":
+    		            loaiSP = "Sách phụ nữ";
+    		            break;
+    		        case "Foreign language learning books":
+    		            loaiSP = "Sách học ngoại ngữ";
+    		            break;
+    		        case "Reference - guide books":
+    		            loaiSP = "Sách tham khảo - hướng dẫn";
+    		            break;
+    		        case "Dictionary":
+    		            loaiSP = "Từ điển";
+    		            break;
+    		        case "Science - technology books":
+    		            loaiSP = "Sách khoa học - kỹ thuật";
+    		            break;
+    		        case "History books":
+    		            loaiSP = "Sách lịch sử";
+    		            break;
+    		        case "Religion books":
+    		            loaiSP = "Sách tôn giáo";
+    		            break;
+    		        case "Literature - art books":
+    		            loaiSP = "Sách văn học - nghệ thuật";
+    		            break;
+    		        case "Agriculture - forestry - fishery books":
+    		            loaiSP = "Sách nông - lâm - ngư nghiệp";
+    		            break;
+    		        case "Politics - law books":
+    		            loaiSP = "Sách chính trị - pháp lý";
+    		            break;
+    		        case "Information technology books":
+    		            loaiSP = "Sách công nghệ thông tin";
+    		            break;
+    		        case "Medical books":
+    		            loaiSP = "Sách y học";
+    		            break;
+    		        case "Magazines":
+    		            loaiSP = "Tạp chí";
+    		            break;
+    		        case "Psychology books":
+    		            loaiSP = "Sách tâm lý";
+    		            break;
+    		        case "Physical education - sports":
+    		            loaiSP = "Thể dục - thể thao";
+    		            break;
+    		        case "Cooking books":
+    		            loaiSP = "Sách nấu ăn";
+    		            break;
+    		        case "Travel books":
+    		            loaiSP = "Sách du lịch";
+    		            break;
+    		    }
+
+    		    switch (ngonNgu) {
+    		        case "Vietnamese":
+    		            ngonNgu = "Tiếng việt";
+    		            break;
+    		        case "English":
+    		            ngonNgu = "Tiếng anh";
+    		            break;
+    		        case "French":
+    		            ngonNgu = "Tiếng pháp";
+    		            break;
+    		        case "Chinese":
+    		            ngonNgu = "Tiếng trung";
+    		            break;
+    		        case "Korean":
+    		            ngonNgu = "Tiếng hàn";
+    		            break;
+    		        case "Japanese":
+    		            ngonNgu = "Tiếng nhật";
+    		            break;
+    		        case "German":
+    		            ngonNgu = "Tiếng đức";
+    		            break;
+    		    }
+    		}
+
     		SanPham s=new SanPham();
     		s.setTenSP(tenSP);
     		s.setLoaiSP(loaiSP);
@@ -832,19 +1011,119 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
     {
     	try
     	{
-    		String maSP=lbl_txt_MaSP.getText();
-        	String tenSP=(String) cbo_TenSP.getSelectedItem();
-    		String loaiSP=(String) cbo_LoaiSP.getSelectedItem();
-    		String tacGia=txt_TacGia.getText();
-    		String nhaXuatBan=txt_NhaXuatBan.getText();
-    		int namXuatBan=(Integer)spn_NamXuatBan.getValue();
-    		int soLuong=(Integer)spn_SoLuongCon.getValue();
-    		String ngonNgu=(String) cbo_NgonNgu.getSelectedItem();
-    		String giaNhap=txt_GiaNhap.getText();   
-    		double giaNhap_Double=Double.parseDouble(giaNhap);
-    		String giaBan=txt_GiaBan.getText();
-    		double giaBan_Double=Double.parseDouble(giaBan);
-    		String nhaCungCap=(String) cbo_NhaCungCap.getSelectedItem();
+    		String maSP = lbl_txt_MaSP.getText();
+    		String tenSP = (String) cbo_TenSP.getSelectedItem();
+    		String loaiSP = (String) cbo_LoaiSP.getSelectedItem();
+    		String tacGia = txt_TacGia.getText();
+    		String nhaXuatBan = txt_NhaXuatBan.getText();
+    		int namXuatBan = (Integer)spn_NamXuatBan.getValue();
+    		int soLuong = (Integer)spn_SoLuongCon.getValue();
+    		String ngonNgu = (String) cbo_NgonNgu.getSelectedItem();
+    		String giaNhap = txt_GiaNhap.getText();   
+    		double giaNhap_Double = Double.parseDouble(giaNhap);
+    		String giaBan = txt_GiaBan.getText();
+    		double giaBan_Double = Double.parseDouble(giaBan);
+    		String nhaCungCap = (String) cbo_NhaCungCap.getSelectedItem();
+
+    		// Convert to Vietnamese if the interface is in English
+    		if (settingModel.getNgonNgu().equals("English")) {
+    		    switch (loaiSP) {
+    		        case "Children's books":
+    		            loaiSP = "Sách thiếu nhi";
+    		            break;
+    		        case "Novels":
+    		            loaiSP = "Tiểu thuyết";
+    		            break;
+    		        case "Comic books":
+    		            loaiSP = "Truyện tranh";
+    		            break;
+    		        case "Literature books":
+    		            loaiSP = "Sách văn học";
+    		            break;
+    		        case "Economics books":
+    		            loaiSP = "Sách kinh tế";
+    		            break;
+    		        case "Life skills books":
+    		            loaiSP = "Sách kỹ năng sống";
+    		            break;
+    		        case "Women's books":
+    		            loaiSP = "Sách phụ nữ";
+    		            break;
+    		        case "Foreign language learning books":
+    		            loaiSP = "Sách học ngoại ngữ";
+    		            break;
+    		        case "Reference - guide books":
+    		            loaiSP = "Sách tham khảo - hướng dẫn";
+    		            break;
+    		        case "Dictionary":
+    		            loaiSP = "Từ điển";
+    		            break;
+    		        case "Science - technology books":
+    		            loaiSP = "Sách khoa học - kỹ thuật";
+    		            break;
+    		        case "History books":
+    		            loaiSP = "Sách lịch sử";
+    		            break;
+    		        case "Religion books":
+    		            loaiSP = "Sách tôn giáo";
+    		            break;
+    		        case "Literature - art books":
+    		            loaiSP = "Sách văn học - nghệ thuật";
+    		            break;
+    		        case "Agriculture - forestry - fishery books":
+    		            loaiSP = "Sách nông - lâm - ngư nghiệp";
+    		            break;
+    		        case "Politics - law books":
+    		            loaiSP = "Sách chính trị - pháp lý";
+    		            break;
+    		        case "Information technology books":
+    		            loaiSP = "Sách công nghệ thông tin";
+    		            break;
+    		        case "Medical books":
+    		            loaiSP = "Sách y học";
+    		            break;
+    		        case "Magazines":
+    		            loaiSP = "Tạp chí";
+    		            break;
+    		        case "Psychology books":
+    		            loaiSP = "Sách tâm lý";
+    		            break;
+    		        case "Physical education - sports":
+    		            loaiSP = "Thể dục - thể thao";
+    		            break;
+    		        case "Cooking books":
+    		            loaiSP = "Sách nấu ăn";
+    		            break;
+    		        case "Travel books":
+    		            loaiSP = "Sách du lịch";
+    		            break;
+    		    }
+
+    		    switch (ngonNgu) {
+    		        case "Vietnamese":
+    		            ngonNgu = "Tiếng việt";
+    		            break;
+    		        case "English":
+    		            ngonNgu = "Tiếng anh";
+    		            break;
+    		        case "French":
+    		            ngonNgu = "Tiếng pháp";
+    		            break;
+    		        case "Chinese":
+    		            ngonNgu = "Tiếng trung";
+    		            break;
+    		        case "Korean":
+    		            ngonNgu = "Tiếng hàn";
+    		            break;
+    		        case "Japanese":
+    		            ngonNgu = "Tiếng nhật";
+    		            break;
+    		        case "German":
+    		            ngonNgu = "Tiếng đức";
+    		            break;
+    		    }
+    		}
+
     		SanPham s=new SanPham(maSP, tenSP, loaiSP, tacGia, nhaXuatBan, namXuatBan, soLuong, soLuong, ngonNgu, giaNhap_Double, giaBan_Double, duLieuAnh);
     		s.setMaNhaCungCap(sqlNhaCungCap_BUS.getMaNhaCungCap(nhaCungCap));
     		sqlSanPham_BUS.capNhatSanPham(s, dtm_SP);
@@ -942,12 +1221,14 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
 		if(o.equals(btn_XoaTrang))
 		{
 			xoaTrang();
+			settingTable();
 		}
 		if(o.equals(btn_Them))
 		{
 			if(kiemTraRangBuoc())
 			{
 				themSP();
+				settingTable();
 			}
 		}
 		if(o.equals(btn_ChonAnh))
@@ -959,6 +1240,7 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
 			if(kiemTraRangBuoc())
 			{
 				capNhatSP();
+				settingTable();
 			}
 		}
 		
@@ -987,4 +1269,320 @@ public class Panel_QuanLySanPham extends JPanel implements ActionListener,MouseL
 	public void setDuLieuAnh(byte[] duLieuAnh) {
 		this.duLieuAnh = duLieuAnh;
 	}
+	private void settingLanguage() {
+		// TODO Auto-generated method stub
+			if(settingModel.getNgonNgu().equals("Vietnamese")) {
+				lbl_Title_QL_SP.setText("Quản lý sản phẩm");
+				lbl_MaSP.setText("Mã sản phẩm");
+				lbl_TenSP.setText("Tên sản phẩm");
+				lbl_LoaiSP.setText("Loại sản phẩm");
+				lbl_NgonNgu.setText("Ngôn ngữ");
+				lbl_NhaCungCap.setText("Nhà xuất bản");
+				lbl_NhaXuatBan.setText("Nhà cung cấp");
+				lbl_NamXuatBan.setText("Năm xuất bản");
+				lbl_TacGia.setText("Tác giả");
+				lbl_SoLuongBan.setText("Số lượng bán");
+				lbl_SoLuongCon.setText("Số lượng còn");
+				lbl_GiaBan.setText("Giá bán");
+				lbl_GiaNhap.setText("Giá nhập");
+				btn_XoaTrang.setText("Xóa trắng");
+				btn_CapNhat.setText("Cập nhật");
+				btn_Them.setText("Thêm");
+				btn_ChonAnh.setText(" ảnh");
+				lbl_Title_DSSP.setText("Danh sách sản phẩm");
+				tbl_DSSP.getColumnModel().getColumn(0).setHeaderValue("Mã sản phẩm");
+				tbl_DSSP.getColumnModel().getColumn(1).setHeaderValue("Tên sản phẩm");
+				tbl_DSSP.getColumnModel().getColumn(2).setHeaderValue("Loại");
+				tbl_DSSP.getColumnModel().getColumn(3).setHeaderValue("Ngôn ngữ");
+				tbl_DSSP.getColumnModel().getColumn(4).setHeaderValue("Nhà cung cấp");
+				tbl_DSSP.getColumnModel().getColumn(5).setHeaderValue("NXB");
+				tbl_DSSP.getColumnModel().getColumn(6).setHeaderValue("Năm XB");
+				tbl_DSSP.getColumnModel().getColumn(7).setHeaderValue("Tác giả");
+				tbl_DSSP.getColumnModel().getColumn(8).setHeaderValue("SL còn");
+				tbl_DSSP.getColumnModel().getColumn(9).setHeaderValue("SL bán");
+				tbl_DSSP.getColumnModel().getColumn(10).setHeaderValue("Giá nhập");
+				tbl_DSSP.getColumnModel().getColumn(11).setHeaderValue("Giá bán");
+			}
+			if(settingModel.getNgonNgu().equals("English")) {
+				lbl_Title_QL_SP.setText("Product updating");
+				lbl_MaSP.setText("Product number");
+				lbl_TenSP.setText("Product name");
+				lbl_LoaiSP.setText("Product type");
+				lbl_NgonNgu.setText("Language");
+				lbl_NhaCungCap.setText("Publisher");
+				lbl_NhaXuatBan.setText("Supplier");
+				lbl_NamXuatBan.setText("Publishing year");
+				lbl_TacGia.setText("Author");
+				lbl_SoLuongBan.setText("Sell ​​number");
+				lbl_SoLuongCon.setText("Quantity remaining");
+				lbl_GiaBan.setText("Export price");
+				lbl_GiaNhap.setText("Import price");
+				btn_XoaTrang.setText("Refresh");
+				btn_CapNhat.setText("Update");
+				btn_Them.setText("Add");
+				btn_ChonAnh.setText("Select photo");
+				lbl_Title_DSSP.setText("List of products");
+				tbl_DSSP.getColumnModel().getColumn(0).setHeaderValue("Product number");
+				tbl_DSSP.getColumnModel().getColumn(1).setHeaderValue("Product name");
+				tbl_DSSP.getColumnModel().getColumn(2).setHeaderValue("Product type");
+				tbl_DSSP.getColumnModel().getColumn(3).setHeaderValue("Language");
+				tbl_DSSP.getColumnModel().getColumn(4).setHeaderValue("Supplier");
+				tbl_DSSP.getColumnModel().getColumn(5).setHeaderValue("Publisher");
+				tbl_DSSP.getColumnModel().getColumn(6).setHeaderValue("Publishing year");
+				tbl_DSSP.getColumnModel().getColumn(7).setHeaderValue("Author");
+				tbl_DSSP.getColumnModel().getColumn(8).setHeaderValue("Quantity remaining");
+				tbl_DSSP.getColumnModel().getColumn(9).setHeaderValue("Sell ​​number");
+				tbl_DSSP.getColumnModel().getColumn(10).setHeaderValue("Import price");
+				tbl_DSSP.getColumnModel().getColumn(11).setHeaderValue("Export price");
+			}	
+		}
+		private void setting() {
+	    	settingModel = new SettingModel();
+	    	try {
+				settingModel.readFrom();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	//settingButton();
+	    	settingLanguage();
+	    	settingCombobox();
+	    	settingTable();
+	    }
+		private void settingCombobox() {
+	    	if(settingModel.getNgonNgu().equals("Vietnamese")) {
+				cbo_LoaiSP.addItem("Sách thiếu nhi");
+				cbo_LoaiSP.addItem("Tiểu thuyết");
+				cbo_LoaiSP.addItem("Truyện tranh");
+				cbo_LoaiSP.addItem("Sách văn học");
+				cbo_LoaiSP.addItem("Sách kinh tế");
+				cbo_LoaiSP.addItem("Sách kỹ năng sống");
+				cbo_LoaiSP.addItem("Sách phụ nữ");
+				cbo_LoaiSP.addItem("Sách học ngoại ngữ");
+				cbo_LoaiSP.addItem("Sách tham khảo - hướng dẫn");
+				cbo_LoaiSP.addItem("Từ điển");
+				cbo_LoaiSP.addItem("Sách khoa học - kỹ thuật");
+				cbo_LoaiSP.addItem("Sách lịch sử");
+				cbo_LoaiSP.addItem("Sách tôn giáo");
+				cbo_LoaiSP.addItem("Sách văn học - nghệ thuật");
+				cbo_LoaiSP.addItem("Sách nông - lâm - ngư nghiệp");
+				cbo_LoaiSP.addItem("Sách chính trị - pháp lý");
+				cbo_LoaiSP.addItem("Sách công nghệ thông tin");
+				cbo_LoaiSP.addItem("Sách y học");
+				cbo_LoaiSP.addItem("Tạp chí");
+				cbo_LoaiSP.addItem("Sách tâm lý");
+				cbo_LoaiSP.addItem("Thể dục - thể thao");
+				cbo_LoaiSP.addItem("Sách nấu ăn");
+				cbo_LoaiSP.addItem("Sách du lịch");
+
+				cbo_LoaiSP.getMyVector().add("Sách thiếu nhi");
+				cbo_LoaiSP.getMyVector().add("Tiểu thuyết");
+				cbo_LoaiSP.getMyVector().add("Truyện tranh");
+				cbo_LoaiSP.getMyVector().add("Sách văn học");
+				cbo_LoaiSP.getMyVector().add("Sách kinh tế");
+				cbo_LoaiSP.getMyVector().add("Sách kỹ năng sống");
+				cbo_LoaiSP.getMyVector().add("Sách phụ nữ");
+				cbo_LoaiSP.getMyVector().add("Sách học ngoại ngữ");
+				cbo_LoaiSP.getMyVector().add("Sách tham khảo - hướng dẫn");
+				cbo_LoaiSP.getMyVector().add("Từ điển");
+				cbo_LoaiSP.getMyVector().add("Sách khoa học - kỹ thuật");
+				cbo_LoaiSP.getMyVector().add("Sách lịch sử");
+				cbo_LoaiSP.getMyVector().add("Sách tôn giáo");
+				cbo_LoaiSP.getMyVector().add("Sách văn học - nghệ thuật");
+				cbo_LoaiSP.getMyVector().add("Sách nông - lâm - ngư nghiệp");
+				cbo_LoaiSP.getMyVector().add("Sách chính trị - pháp lý");
+				cbo_LoaiSP.getMyVector().add("Sách công nghệ thông tin");
+				cbo_LoaiSP.getMyVector().add("Sách y học");
+				cbo_LoaiSP.getMyVector().add("Tạp chí");
+				cbo_LoaiSP.getMyVector().add("Sách tâm lý");
+				cbo_LoaiSP.getMyVector().add("Thể dục - thể thao");
+				cbo_LoaiSP.getMyVector().add("Sách nấu ăn");
+				cbo_LoaiSP.getMyVector().add("Sách du lịch");
+				
+				cbo_NgonNgu.addItem("");
+		    	cbo_NgonNgu.addItem("Tiếng việt");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng việt");
+		    	cbo_NgonNgu.addItem("Tiếng anh");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng anh");
+		    	cbo_NgonNgu.addItem("Tiếng pháp");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng pháp");
+		    	cbo_NgonNgu.addItem("Tiếng trung");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng trung");
+		    	cbo_NgonNgu.addItem("Tiếng hàn");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng hàn");
+		    	cbo_NgonNgu.addItem("Tiếng nhật");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng nhật");
+		    	cbo_NgonNgu.addItem("Tiếng đức");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng đức");
+			}
+	    	if(settingModel.getNgonNgu().equals("English")) {
+	    		cbo_LoaiSP.addItem("Children's books");
+	    		cbo_LoaiSP.addItem("Novels");
+	    		cbo_LoaiSP.addItem("Comic books");
+	    		cbo_LoaiSP.addItem("Literature books");
+	    		cbo_LoaiSP.addItem("Economics books");
+	    		cbo_LoaiSP.addItem("Life skills books");
+	    		cbo_LoaiSP.addItem("Women's books");
+	    		cbo_LoaiSP.addItem("Foreign language learning books");
+	    		cbo_LoaiSP.addItem("Reference - guide books");
+	    		cbo_LoaiSP.addItem("Dictionary");
+	    		cbo_LoaiSP.addItem("Science - technology books");
+	    		cbo_LoaiSP.addItem("History books");
+	    		cbo_LoaiSP.addItem("Religion books");
+	    		cbo_LoaiSP.addItem("Literature - art books");
+	    		cbo_LoaiSP.addItem("Agriculture - forestry - fishery books");
+	    		cbo_LoaiSP.addItem("Politics - law books");
+	    		cbo_LoaiSP.addItem("Information technology books");
+	    		cbo_LoaiSP.addItem("Medical books");
+	    		cbo_LoaiSP.addItem("Magazines");
+	    		cbo_LoaiSP.addItem("Psychology books");
+	    		cbo_LoaiSP.addItem("Physical education - sports");
+	    		cbo_LoaiSP.addItem("Cooking books");
+	    		cbo_LoaiSP.addItem("Travel books");
+
+	    		cbo_LoaiSP.getMyVector().add("Children's books");
+	    		cbo_LoaiSP.getMyVector().add("Novels");
+	    		cbo_LoaiSP.getMyVector().add("Comic books");
+	    		cbo_LoaiSP.getMyVector().add("Literature books");
+	    		cbo_LoaiSP.getMyVector().add("Economics books");
+	    		cbo_LoaiSP.getMyVector().add("Life skills books");
+	    		cbo_LoaiSP.getMyVector().add("Women's books");
+	    		cbo_LoaiSP.getMyVector().add("Foreign language learning books");
+	    		cbo_LoaiSP.getMyVector().add("Reference - guide books");
+	    		cbo_LoaiSP.getMyVector().add("Dictionary");
+	    		cbo_LoaiSP.getMyVector().add("Science - technology books");
+	    		cbo_LoaiSP.getMyVector().add("History books");
+	    		cbo_LoaiSP.getMyVector().add("Religion books");
+	    		cbo_LoaiSP.getMyVector().add("Literature - art books");
+	    		cbo_LoaiSP.getMyVector().add("Agriculture - forestry - fishery books");
+	    		cbo_LoaiSP.getMyVector().add("Politics - law books");
+	    		cbo_LoaiSP.getMyVector().add("Information technology books");
+	    		cbo_LoaiSP.getMyVector().add("Medical books");
+	    		cbo_LoaiSP.getMyVector().add("Magazines");
+	    		cbo_LoaiSP.getMyVector().add("Psychology books");
+	    		cbo_LoaiSP.getMyVector().add("Physical education - sports");
+	    		cbo_LoaiSP.getMyVector().add("Cooking books");
+	    		cbo_LoaiSP.getMyVector().add("Travel books");
+
+	    		cbo_NgonNgu.addItem("");
+	    		cbo_NgonNgu.addItem("Vietnamese");
+	    		cbo_NgonNgu.getMyVector().add("Vietnamese");
+	    		cbo_NgonNgu.addItem("English");
+	    		cbo_NgonNgu.getMyVector().add("English");
+	    		cbo_NgonNgu.addItem("French");
+	    		cbo_NgonNgu.getMyVector().add("French");
+	    		cbo_NgonNgu.addItem("Chinese");
+	    		cbo_NgonNgu.getMyVector().add("Chinese");
+	    		cbo_NgonNgu.addItem("Korean");
+	    		cbo_NgonNgu.getMyVector().add("Korean");
+	    		cbo_NgonNgu.addItem("Japanese");
+	    		cbo_NgonNgu.getMyVector().add("Japanese");
+	    		cbo_NgonNgu.addItem("German");
+	    		cbo_NgonNgu.getMyVector().add("German");
+
+	    	}
+		}
+		private void settingTable() {
+			if(settingModel.getNgonNgu().equals("English"))
+				for (int i = 0; i < tbl_DSSP.getRowCount(); i++) {
+				    String productType = tbl_DSSP.getModel().getValueAt(i, 2).toString();
+				    String language = tbl_DSSP.getModel().getValueAt(i, 3).toString();
+				    switch (productType) {
+				        case "Sách thiếu nhi":
+				            tbl_DSSP.getModel().setValueAt("Children's books", i, 2);
+				            break;
+				        case "Tiểu thuyết":
+				            tbl_DSSP.getModel().setValueAt("Novels", i, 2);
+				            break;
+				        case "Truyện tranh":
+				            tbl_DSSP.getModel().setValueAt("Comic books", i, 2);
+				            break;
+				        case "Sách văn học":
+				            tbl_DSSP.getModel().setValueAt("Literature books", i, 2);
+				            break;
+				        case "Sách kinh tế":
+				            tbl_DSSP.getModel().setValueAt("Economics books", i, 2);
+				            break;
+				        case "Sách kỹ năng sống":
+				            tbl_DSSP.getModel().setValueAt("Life skills books", i, 2);
+				            break;
+				        case "Sách phụ nữ":
+				            tbl_DSSP.getModel().setValueAt("Women's books", i, 2);
+				            break;
+				        case "Sách học ngoại ngữ":
+				            tbl_DSSP.getModel().setValueAt("Foreign language learning books", i, 2);
+				            break;
+				        case "Sách tham khảo - hướng dẫn":
+				            tbl_DSSP.getModel().setValueAt("Reference - guide books", i, 2);
+				            break;
+				        case "Từ điển":
+				            tbl_DSSP.getModel().setValueAt("Dictionary", i, 2);
+				            break;
+				        case "Sách khoa học - kỹ thuật":
+				            tbl_DSSP.getModel().setValueAt("Science - technology books", i, 2);
+				            break;
+				        case "Sách lịch sử":
+				            tbl_DSSP.getModel().setValueAt("History books", i, 2);
+				            break;
+				        case "Sách tôn giáo":
+				            tbl_DSSP.getModel().setValueAt("Religion books", i, 2);
+				            break;
+				        case "Sách văn học - nghệ thuật":
+				            tbl_DSSP.getModel().setValueAt("Literature - art books", i, 2);
+				            break;
+				        case "Sách nông - lâm - ngư nghiệp":
+				            tbl_DSSP.getModel().setValueAt("Agriculture - forestry - fishery books", i, 2);
+				            break;
+				        case "Sách chính trị - pháp lý":
+				            tbl_DSSP.getModel().setValueAt("Politics - law books", i, 2);
+				            break;
+				        case "Sách công nghệ thông tin":
+				            tbl_DSSP.getModel().setValueAt("Information technology books", i, 2);
+				            break;
+				        case "Sách y học":
+				            tbl_DSSP.getModel().setValueAt("Medical books", i, 2);
+				            break;
+				        case "Tạp chí":
+				            tbl_DSSP.getModel().setValueAt("Magazines", i, 2);
+				            break;
+				        case "Sách tâm lý":
+				            tbl_DSSP.getModel().setValueAt("Psychology books", i, 2);
+				            break;
+				        case "Thể dục - thể thao":
+				            tbl_DSSP.getModel().setValueAt("Physical education - sports", i, 2);
+				            break;
+				        case "Sách nấu ăn":
+				            tbl_DSSP.getModel().setValueAt("Cooking books", i, 2);
+				            break;
+				        case "Sách du lịch":
+				            tbl_DSSP.getModel().setValueAt("Travel books", i, 2);
+				            break;
+				    }
+
+				    switch (language) {
+				        case "Tiếng việt":
+				            tbl_DSSP.getModel().setValueAt("Vietnamese", i, 3);
+				            break;
+				        case "Tiếng anh":
+				            tbl_DSSP.getModel().setValueAt("English", i, 3);
+				            break;
+				        case "Tiếng pháp":
+				            tbl_DSSP.getModel().setValueAt("French", i, 3);
+				            break;
+				        case "Tiếng trung":
+				            tbl_DSSP.getModel().setValueAt("Chinese", i, 3);
+				            break;
+				        case "Tiếng hàn":
+				            tbl_DSSP.getModel().setValueAt("Korean", i, 3);
+				            break;
+				        case "Tiếng nhật":
+				            tbl_DSSP.getModel().setValueAt("Japanese", i, 3);
+				            break;
+				        case "Tiếng đức":
+				            tbl_DSSP.getModel().setValueAt("German", i, 3);
+				            break;
+				    }
+				}
+
+		}
 }

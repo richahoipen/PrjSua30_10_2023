@@ -61,7 +61,7 @@ public class Panel_TimKiemHoaDon extends JPanel {
 	private BufferedImage bfi_ChonNgay;
 	private Custom_Button btn_TimKiem,btn_XoaTrang;
 	private CustomTable tbl_DSHD,tbl_DSCTHD;
-	private DefaultTableModel dtm_HD;
+	private DefaultTableModel dtm_HD,dtm_CTHD;
 	private JScrollPane scr_DSCTHD,scr_DSHD;
     // End of variables declaration//GEN-END:variables
     public Panel_TimKiemHoaDon() {
@@ -79,7 +79,7 @@ public class Panel_TimKiemHoaDon extends JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-    	lbl_Title_TK_NV = new JLabel("Quản lý nhân viên");
+    	lbl_Title_TK_NV = new JLabel("Tìm kiếm hóa đơn");
     	lbl_Title_TK_NV.setVerticalAlignment(SwingConstants.TOP);
 		lbl_Title_TK_NV.setForeground(new Color(0, 0, 255));
 		lbl_Title_TK_NV.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -195,17 +195,19 @@ public class Panel_TimKiemHoaDon extends JPanel {
 		lbl_Title_DSHD.setForeground(Color.BLUE);
 		lbl_Title_DSHD.setFont(new Font("SansSerif", Font.BOLD, 12));
 		
-		dtm_HD = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Loại sản phẩm","Ngôn ngữ","Nhà cung cấp","Nhà xuất bản","Năm xuất bản","Tác giả","Số lượng còn","Số lượng bán","Giá Nhập","Giá Bán"},0);
-		for (int i = 0; i < 1000; i++) {
-			dtm_HD.addRow(new String[] {"SP0001","199 Đề Và Bài Văn Hay 9","Sách kham khảo","Tiếng Việt","Dn Tư Nhân Thương Mại Toàn Phúc","NXB Đại Học Quốc Gia Hà Nội","2018","	Phạm Ngọc Thắm","455","65","44.000đ","50.000đ"});
-		}
+		dtm_HD = new DefaultTableModel(new String[] {"Mã hóa đơn","Tên NV","Ngày lập","Tổng tiền","Tên KH","SĐT Khách"},0);
+		
+		dtm_CTHD = new DefaultTableModel(new String[] {"Mã SP","Đơn giá","Số lượng","Thành tiền"},0);
+		
 		tbl_DSHD = new CustomTable();
 		tbl_DSHD.setModel(dtm_HD);
+		
+		
 		JScrollPane scr_DSHD = new JScrollPane(tbl_DSHD);
 		TableColumnModel columnModel = tbl_DSHD.getColumnModel();
 		
 		tbl_DSCTHD = new CustomTable();
-		tbl_DSCTHD.setModel(dtm_HD);
+		tbl_DSCTHD.setModel(dtm_CTHD );
 		JScrollPane scr_DSCTHD = new JScrollPane(tbl_DSCTHD);
 		//TableColumnModel columnModel = tbl_DSCTHD.getColumnModel();
 		//JScrollPane scr_DSHD = new JScrollPane(tbl_DSHD);

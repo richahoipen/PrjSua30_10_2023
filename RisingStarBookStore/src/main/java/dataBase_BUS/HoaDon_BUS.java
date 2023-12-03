@@ -45,5 +45,11 @@ public class HoaDon_BUS implements HoaDon_Method
 		// TODO Auto-generated method stub
 		return sqlHoaDon_DAO.capNhat_CTHoaDon(maHD);
 	}
+
+	@Override
+	public HoaDon get_HoaDon(String maHD) {
+		// TODO Auto-generated method stub
+		return sqlHoaDon_DAO.get_HoaDon(maHD);
+	}
 	
 }

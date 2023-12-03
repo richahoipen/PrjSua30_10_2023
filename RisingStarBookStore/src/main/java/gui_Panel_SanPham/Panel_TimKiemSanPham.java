@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.raven.model.SettingModel;
 import com.raven.swing.icon.GoogleMaterialDesignIcons;
 import com.raven.swing.icon.IconFontSwing;
 
@@ -53,6 +54,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import javax.swing.JButton;
@@ -73,6 +75,7 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
 	private DefaultTableModel dtm_SP;
 	private SanPham_BUS sqlSanPham_BUS=new SanPham_BUS();
 	private NhaCungCap_BUS sqlNhaCungCap_BUS=new NhaCungCap_BUS();
+	private SettingModel settingModel;
     // End of variables declaration//GEN-END:variables
     public Panel_TimKiemSanPham() {
         initComponents();
@@ -426,6 +429,7 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
         gl_pn_QL_SP.linkSize(SwingConstants.HORIZONTAL, new Component[] {lbl_MaSP, lbl_TenSP, lbl_LoaiSP, lbl_NgonNgu});
         pn_QL_SP.setLayout(gl_pn_QL_SP);
         addAction();
+        setting();
     }// </editor-fold>//GEN-END:initComponents
     private void addAction()
     {
@@ -445,6 +449,7 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     	btn_TimKiem.addActionListener(this);
     	addCombobox();
     	resetTable();
+    	//checkTable();
     }
     private void addCombobox()
     {
@@ -453,7 +458,7 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     	cbo_TenSP.addItem("");
     	sqlSanPham_BUS.dayCombobox_tenSP(cbo_TenSP);
     	cbo_LoaiSP.addItem("");
-    	sqlSanPham_BUS.dayCombobox_loaiSP(cbo_LoaiSP);
+    	//sqlSanPham_BUS.dayCombobox_loaiSP(cbo_LoaiSP);
     	cbo_TacGia.addItem("");
     	sqlSanPham_BUS.dayCombobox_tacGia(cbo_TacGia);
     	cbo_NhaXuatBan.addItem("");
@@ -463,7 +468,7 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     	cbo_NhaCungCap.addItem("");
     	sqlNhaCungCap_BUS.dayComboBoxTenNCC(cbo_NhaCungCap);
     	cbo_NgonNgu.addItem("");
-    	sqlSanPham_BUS.dayCombobox_ngonNgu(cbo_NgonNgu);
+    	//sqlSanPham_BUS.dayCombobox_ngonNgu(cbo_NgonNgu);
     	cbo_GiaNhap.addItem("");
     	sqlSanPham_BUS.dayCombobox_giaBan(cbo_GiaNhap);
     	cbo_GiaBan.addItem("");
@@ -478,7 +483,8 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     	dtm_SP.setRowCount(0);
     	sqlSanPham_BUS.xuatDanhSachSanPham(dtm_SP);
     }
-    private boolean checkComboboxNULL()
+    /*
+    private void changeNULLToEmty()
     {
     	String maSP=(String) cbo_MaSP.getSelectedItem();
     	String tenSP=(String) cbo_TenSP.getSelectedItem();
@@ -492,6 +498,11 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     	String soLuongBan=(String) cbo_SoLuongBan.getSelectedItem();
     	String giaNhap=(String) cbo_GiaNhap.getSelectedItem();
     	String giaBan=(String) cbo_GiaBan.getSelectedItem();
+    	if(Objects.isNull(maSP))
+    	{
+    		maSP.
+    	}
+    	/*
     	if(maSP!=null && tenSP!=null && loaiSP!=null && ngonNgu!=null && nhaCungCap!=null && nhaXuatBan!=null &&
     			namXuatBan!=null && tacGia!=null && soLuong!=null && soLuongBan!=null && giaNhap!=null && giaBan!=null)
     	{
@@ -501,10 +512,19 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
             UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-            JOptionPane.showMessageDialog(null, "Dữ liệu tìm kiếm không được rỗng.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Dữ liệu tìm kiếm không được rỗng.";
+    			loaiCanhBao = "Lỗi";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Search data cannot be empty.";
+    			loaiCanhBao = "Error";
+    		}
+            JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
             return false;
-    	}			
-    }
+    	}	
+    }*/
     private void xoaTrang()
     {
     	String chon="";
@@ -524,6 +544,64 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
 		lbl_hinhAnhSP.setIcon(null);
 		resetTable();
     }
+    private void checkTable()
+    {
+    	if(isTableEmpty(tbl_DSSP))
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+            String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Không thể tìm thấy.";
+    			loaiCanhBao = "Cảnh báo";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Can't find.";
+    			loaiCanhBao = "Warning";
+    		}
+            JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.WARNING_MESSAGE);
+    	}
+    }
+    private boolean isTableEmpty(CustomTable tbl_DSSP) {
+        return tbl_DSSP.getModel().getRowCount() == 0;
+    }
+    private void changeNULL(String maSP, String tenSP, String loaiSP, 
+    		String ngonNgu,String nhaCungCap, String namXuatBan,String tacGia,String soLuong,String soLuongBan,String giaNhap,String giaBan)
+    {
+    	if(Objects.isNull(maSP))
+    	{
+    		maSP="";
+    	}
+    	if(Objects.isNull(tenSP))
+    	{
+    		tenSP="";
+    	}
+    	if(Objects.isNull(loaiSP))
+    	{
+    		loaiSP="";
+    	}
+    	if(Objects.isNull(tacGia))
+    	{
+    		tacGia="";
+    	}
+    	if(Objects.isNull(soLuong))
+    	{
+    		soLuong="";
+    	}
+    	if(Objects.isNull(soLuongBan))
+    	{
+    		soLuongBan="";
+    	}
+    	if(Objects.isNull(giaNhap))
+    	{
+    		giaNhap="";
+    	}
+    	if(Objects.isNull(giaBan))
+    	{
+    		giaBan="";
+    	}
+    		
+    }
     private void timKiem()
     {
     	
@@ -539,6 +617,106 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     	String soLuongBan=(String) cbo_SoLuongBan.getSelectedItem();
     	String giaNhap=(String) cbo_GiaNhap.getSelectedItem();
     	String giaBan=(String) cbo_GiaBan.getSelectedItem();
+    	changeNULL(maSP, tenSP, loaiSP, ngonNgu, nhaCungCap, namXuatBan, tacGia, soLuong, soLuongBan, giaNhap, giaBan);
+    	// Convert to Vietnamese if the interface is in English
+		if (settingModel.getNgonNgu().equals("English")) {
+		    switch (loaiSP) {
+		        case "Children's books":
+		            loaiSP = "Sách thiếu nhi";
+		            break;
+		        case "Novels":
+		            loaiSP = "Tiểu thuyết";
+		            break;
+		        case "Comic books":
+		            loaiSP = "Truyện tranh";
+		            break;
+		        case "Literature books":
+		            loaiSP = "Sách văn học";
+		            break;
+		        case "Economics books":
+		            loaiSP = "Sách kinh tế";
+		            break;
+		        case "Life skills books":
+		            loaiSP = "Sách kỹ năng sống";
+		            break;
+		        case "Women's books":
+		            loaiSP = "Sách phụ nữ";
+		            break;
+		        case "Foreign language learning books":
+		            loaiSP = "Sách học ngoại ngữ";
+		            break;
+		        case "Reference - guide books":
+		            loaiSP = "Sách tham khảo - hướng dẫn";
+		            break;
+		        case "Dictionary":
+		            loaiSP = "Từ điển";
+		            break;
+		        case "Science - technology books":
+		            loaiSP = "Sách khoa học - kỹ thuật";
+		            break;
+		        case "History books":
+		            loaiSP = "Sách lịch sử";
+		            break;
+		        case "Religion books":
+		            loaiSP = "Sách tôn giáo";
+		            break;
+		        case "Literature - art books":
+		            loaiSP = "Sách văn học - nghệ thuật";
+		            break;
+		        case "Agriculture - forestry - fishery books":
+		            loaiSP = "Sách nông - lâm - ngư nghiệp";
+		            break;
+		        case "Politics - law books":
+		            loaiSP = "Sách chính trị - pháp lý";
+		            break;
+		        case "Information technology books":
+		            loaiSP = "Sách công nghệ thông tin";
+		            break;
+		        case "Medical books":
+		            loaiSP = "Sách y học";
+		            break;
+		        case "Magazines":
+		            loaiSP = "Tạp chí";
+		            break;
+		        case "Psychology books":
+		            loaiSP = "Sách tâm lý";
+		            break;
+		        case "Physical education - sports":
+		            loaiSP = "Thể dục - thể thao";
+		            break;
+		        case "Cooking books":
+		            loaiSP = "Sách nấu ăn";
+		            break;
+		        case "Travel books":
+		            loaiSP = "Sách du lịch";
+		            break;
+		    }
+
+		    switch (ngonNgu) {
+		        case "Vietnamese":
+		            ngonNgu = "Tiếng việt";
+		            break;
+		        case "English":
+		            ngonNgu = "Tiếng anh";
+		            break;
+		        case "French":
+		            ngonNgu = "Tiếng pháp";
+		            break;
+		        case "Chinese":
+		            ngonNgu = "Tiếng trung";
+		            break;
+		        case "Korean":
+		            ngonNgu = "Tiếng hàn";
+		            break;
+		        case "Japanese":
+		            ngonNgu = "Tiếng nhật";
+		            break;
+		        case "German":
+		            ngonNgu = "Tiếng đức";
+		            break;
+		    }
+		}
+		
     	String chon="";
     	if(maSP.equalsIgnoreCase(chon)&& tenSP.equalsIgnoreCase(chon)&&loaiSP.equalsIgnoreCase(chon)&&ngonNgu.equalsIgnoreCase(chon)&&
     			nhaCungCap.equalsIgnoreCase(chon)&&nhaXuatBan.equalsIgnoreCase(chon)&&namXuatBan.equalsIgnoreCase(chon)&&
@@ -547,7 +725,16 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
     	{
     		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-			JOptionPane.showMessageDialog(null, "Vui lòng chọn thông tin để tìm kiếm.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+	        String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Vui lòng chọn thông tin để tìm kiếm.";
+    			loaiCanhBao = "Lỗi";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Please select information to search.";
+    			loaiCanhBao = "Error";
+    		}
+	        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
     	}
     	else
     	{
@@ -682,11 +869,326 @@ public class Panel_TimKiemSanPham extends JPanel implements ActionListener, Mous
 		if(o.equals(btn_XoaTrang))
 		{
 			xoaTrang();
+			settingTable();
 		}
 		if(o.equals(btn_TimKiem))
 		{
-			if(checkComboboxNULL())
-				timKiem();
+			//changeNULLToEmty();
+			timKiem();
+			checkTable();
+			settingTable();
 		}
 	}
+	private void settingLanguage() {
+		// TODO Auto-generated method stub
+			if(settingModel.getNgonNgu().equals("Vietnamese")) {
+				lbl_Title_QL_SP.setText("Quản lý sản phẩm");
+				lbl_MaSP.setText("Mã sản phẩm");
+				lbl_TenSP.setText("Tên sản phẩm");
+				lbl_LoaiSP.setText("Loại sản phẩm");
+				lbl_NgonNgu.setText("Ngôn ngữ");
+				lbl_NhaCungCap.setText("Nhà xuất bản");
+				lbl_NhaXuatBan.setText("Nhà cung cấp");
+				lbl_NamXuatBan.setText("Năm xuất bản");
+				lbl_TacGia.setText("Tác giả");
+				lbl_SoLuongBan.setText("Số lượng bán");
+				lbl_SoLuongCon.setText("Số lượng còn");
+				lbl_GiaBan.setText("Giá bán");
+				lbl_GiaNhap.setText("Giá nhập");
+				btn_XoaTrang.setText("Xóa trắng");
+				btn_TimKiem.setText("Tìm kiếm");
+				lbl_Title_DSSP.setText("Danh sách sản phẩm");
+				tbl_DSSP.getColumnModel().getColumn(0).setHeaderValue("Mã sản phẩm");
+				tbl_DSSP.getColumnModel().getColumn(1).setHeaderValue("Tên sản phẩm");
+				tbl_DSSP.getColumnModel().getColumn(2).setHeaderValue("Loại");
+				tbl_DSSP.getColumnModel().getColumn(3).setHeaderValue("Ngôn ngữ");
+				tbl_DSSP.getColumnModel().getColumn(4).setHeaderValue("Nhà cung cấp");
+				tbl_DSSP.getColumnModel().getColumn(5).setHeaderValue("NXB");
+				tbl_DSSP.getColumnModel().getColumn(6).setHeaderValue("Năm XB");
+				tbl_DSSP.getColumnModel().getColumn(7).setHeaderValue("Tác giả");
+				tbl_DSSP.getColumnModel().getColumn(8).setHeaderValue("SL còn");
+				tbl_DSSP.getColumnModel().getColumn(9).setHeaderValue("SL bán");
+				tbl_DSSP.getColumnModel().getColumn(10).setHeaderValue("Giá nhập");
+				tbl_DSSP.getColumnModel().getColumn(11).setHeaderValue("Giá bán");
+			}
+			if(settingModel.getNgonNgu().equals("English")) {
+				lbl_Title_QL_SP.setText("Product updating");
+				lbl_MaSP.setText("Product number");
+				lbl_TenSP.setText("Product name");
+				lbl_LoaiSP.setText("Product type");
+				lbl_NgonNgu.setText("Language");
+				lbl_NhaCungCap.setText("Publisher");
+				lbl_NhaXuatBan.setText("Supplier");
+				lbl_NamXuatBan.setText("Publishing year");
+				lbl_TacGia.setText("Author");
+				lbl_SoLuongBan.setText("Sell ​​number");
+				lbl_SoLuongCon.setText("Quantity remaining");
+				lbl_GiaBan.setText("Export price");
+				lbl_GiaNhap.setText("Import price");
+				btn_XoaTrang.setText("Refresh");
+				btn_TimKiem.setText("Search");
+				lbl_Title_DSSP.setText("List of products");
+				tbl_DSSP.getColumnModel().getColumn(0).setHeaderValue("Product number");
+				tbl_DSSP.getColumnModel().getColumn(1).setHeaderValue("Product name");
+				tbl_DSSP.getColumnModel().getColumn(2).setHeaderValue("Product type");
+				tbl_DSSP.getColumnModel().getColumn(3).setHeaderValue("Language");
+				tbl_DSSP.getColumnModel().getColumn(4).setHeaderValue("Supplier");
+				tbl_DSSP.getColumnModel().getColumn(5).setHeaderValue("Publisher");
+				tbl_DSSP.getColumnModel().getColumn(6).setHeaderValue("Publishing year");
+				tbl_DSSP.getColumnModel().getColumn(7).setHeaderValue("Author");
+				tbl_DSSP.getColumnModel().getColumn(8).setHeaderValue("Quantity remaining");
+				tbl_DSSP.getColumnModel().getColumn(9).setHeaderValue("Sell ​​number");
+				tbl_DSSP.getColumnModel().getColumn(10).setHeaderValue("Import price");
+				tbl_DSSP.getColumnModel().getColumn(11).setHeaderValue("Export price");
+			}	
+		}
+		private void setting() {
+	    	settingModel = new SettingModel();
+	    	try {
+				settingModel.readFrom();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    	//settingButton();
+	    	settingLanguage();
+	    	settingCombobox();
+	    	settingTable();
+	    }
+		private void settingCombobox() {
+	    	if(settingModel.getNgonNgu().equals("Vietnamese")) {
+				cbo_LoaiSP.addItem("Sách thiếu nhi");
+				cbo_LoaiSP.addItem("Tiểu thuyết");
+				cbo_LoaiSP.addItem("Truyện tranh");
+				cbo_LoaiSP.addItem("Sách văn học");
+				cbo_LoaiSP.addItem("Sách kinh tế");
+				cbo_LoaiSP.addItem("Sách kỹ năng sống");
+				cbo_LoaiSP.addItem("Sách phụ nữ");
+				cbo_LoaiSP.addItem("Sách học ngoại ngữ");
+				cbo_LoaiSP.addItem("Sách tham khảo - hướng dẫn");
+				cbo_LoaiSP.addItem("Từ điển");
+				cbo_LoaiSP.addItem("Sách khoa học - kỹ thuật");
+				cbo_LoaiSP.addItem("Sách lịch sử");
+				cbo_LoaiSP.addItem("Sách tôn giáo");
+				cbo_LoaiSP.addItem("Sách văn học - nghệ thuật");
+				cbo_LoaiSP.addItem("Sách nông - lâm - ngư nghiệp");
+				cbo_LoaiSP.addItem("Sách chính trị - pháp lý");
+				cbo_LoaiSP.addItem("Sách công nghệ thông tin");
+				cbo_LoaiSP.addItem("Sách y học");
+				cbo_LoaiSP.addItem("Tạp chí");
+				cbo_LoaiSP.addItem("Sách tâm lý");
+				cbo_LoaiSP.addItem("Thể dục - thể thao");
+				cbo_LoaiSP.addItem("Sách nấu ăn");
+				cbo_LoaiSP.addItem("Sách du lịch");
+
+				cbo_LoaiSP.getMyVector().add("Sách thiếu nhi");
+				cbo_LoaiSP.getMyVector().add("Tiểu thuyết");
+				cbo_LoaiSP.getMyVector().add("Truyện tranh");
+				cbo_LoaiSP.getMyVector().add("Sách văn học");
+				cbo_LoaiSP.getMyVector().add("Sách kinh tế");
+				cbo_LoaiSP.getMyVector().add("Sách kỹ năng sống");
+				cbo_LoaiSP.getMyVector().add("Sách phụ nữ");
+				cbo_LoaiSP.getMyVector().add("Sách học ngoại ngữ");
+				cbo_LoaiSP.getMyVector().add("Sách tham khảo - hướng dẫn");
+				cbo_LoaiSP.getMyVector().add("Từ điển");
+				cbo_LoaiSP.getMyVector().add("Sách khoa học - kỹ thuật");
+				cbo_LoaiSP.getMyVector().add("Sách lịch sử");
+				cbo_LoaiSP.getMyVector().add("Sách tôn giáo");
+				cbo_LoaiSP.getMyVector().add("Sách văn học - nghệ thuật");
+				cbo_LoaiSP.getMyVector().add("Sách nông - lâm - ngư nghiệp");
+				cbo_LoaiSP.getMyVector().add("Sách chính trị - pháp lý");
+				cbo_LoaiSP.getMyVector().add("Sách công nghệ thông tin");
+				cbo_LoaiSP.getMyVector().add("Sách y học");
+				cbo_LoaiSP.getMyVector().add("Tạp chí");
+				cbo_LoaiSP.getMyVector().add("Sách tâm lý");
+				cbo_LoaiSP.getMyVector().add("Thể dục - thể thao");
+				cbo_LoaiSP.getMyVector().add("Sách nấu ăn");
+				cbo_LoaiSP.getMyVector().add("Sách du lịch");
+				
+				cbo_NgonNgu.addItem("");
+		    	cbo_NgonNgu.addItem("Tiếng việt");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng việt");
+		    	cbo_NgonNgu.addItem("Tiếng anh");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng anh");
+		    	cbo_NgonNgu.addItem("Tiếng pháp");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng pháp");
+		    	cbo_NgonNgu.addItem("Tiếng trung");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng trung");
+		    	cbo_NgonNgu.addItem("Tiếng hàn");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng hàn");
+		    	cbo_NgonNgu.addItem("Tiếng nhật");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng nhật");
+		    	cbo_NgonNgu.addItem("Tiếng đức");
+		    	cbo_NgonNgu.getMyVector().add("Tiếng đức");
+			}
+	    	if(settingModel.getNgonNgu().equals("English")) {
+	    		cbo_LoaiSP.addItem("Children's books");
+	    		cbo_LoaiSP.addItem("Novels");
+	    		cbo_LoaiSP.addItem("Comic books");
+	    		cbo_LoaiSP.addItem("Literature books");
+	    		cbo_LoaiSP.addItem("Economics books");
+	    		cbo_LoaiSP.addItem("Life skills books");
+	    		cbo_LoaiSP.addItem("Women's books");
+	    		cbo_LoaiSP.addItem("Foreign language learning books");
+	    		cbo_LoaiSP.addItem("Reference - guide books");
+	    		cbo_LoaiSP.addItem("Dictionary");
+	    		cbo_LoaiSP.addItem("Science - technology books");
+	    		cbo_LoaiSP.addItem("History books");
+	    		cbo_LoaiSP.addItem("Religion books");
+	    		cbo_LoaiSP.addItem("Literature - art books");
+	    		cbo_LoaiSP.addItem("Agriculture - forestry - fishery books");
+	    		cbo_LoaiSP.addItem("Politics - law books");
+	    		cbo_LoaiSP.addItem("Information technology books");
+	    		cbo_LoaiSP.addItem("Medical books");
+	    		cbo_LoaiSP.addItem("Magazines");
+	    		cbo_LoaiSP.addItem("Psychology books");
+	    		cbo_LoaiSP.addItem("Physical education - sports");
+	    		cbo_LoaiSP.addItem("Cooking books");
+	    		cbo_LoaiSP.addItem("Travel books");
+
+	    		cbo_LoaiSP.getMyVector().add("Children's books");
+	    		cbo_LoaiSP.getMyVector().add("Novels");
+	    		cbo_LoaiSP.getMyVector().add("Comic books");
+	    		cbo_LoaiSP.getMyVector().add("Literature books");
+	    		cbo_LoaiSP.getMyVector().add("Economics books");
+	    		cbo_LoaiSP.getMyVector().add("Life skills books");
+	    		cbo_LoaiSP.getMyVector().add("Women's books");
+	    		cbo_LoaiSP.getMyVector().add("Foreign language learning books");
+	    		cbo_LoaiSP.getMyVector().add("Reference - guide books");
+	    		cbo_LoaiSP.getMyVector().add("Dictionary");
+	    		cbo_LoaiSP.getMyVector().add("Science - technology books");
+	    		cbo_LoaiSP.getMyVector().add("History books");
+	    		cbo_LoaiSP.getMyVector().add("Religion books");
+	    		cbo_LoaiSP.getMyVector().add("Literature - art books");
+	    		cbo_LoaiSP.getMyVector().add("Agriculture - forestry - fishery books");
+	    		cbo_LoaiSP.getMyVector().add("Politics - law books");
+	    		cbo_LoaiSP.getMyVector().add("Information technology books");
+	    		cbo_LoaiSP.getMyVector().add("Medical books");
+	    		cbo_LoaiSP.getMyVector().add("Magazines");
+	    		cbo_LoaiSP.getMyVector().add("Psychology books");
+	    		cbo_LoaiSP.getMyVector().add("Physical education - sports");
+	    		cbo_LoaiSP.getMyVector().add("Cooking books");
+	    		cbo_LoaiSP.getMyVector().add("Travel books");
+
+	    		cbo_NgonNgu.addItem("");
+	    		cbo_NgonNgu.addItem("Vietnamese");
+	    		cbo_NgonNgu.getMyVector().add("Vietnamese");
+	    		cbo_NgonNgu.addItem("English");
+	    		cbo_NgonNgu.getMyVector().add("English");
+	    		cbo_NgonNgu.addItem("French");
+	    		cbo_NgonNgu.getMyVector().add("French");
+	    		cbo_NgonNgu.addItem("Chinese");
+	    		cbo_NgonNgu.getMyVector().add("Chinese");
+	    		cbo_NgonNgu.addItem("Korean");
+	    		cbo_NgonNgu.getMyVector().add("Korean");
+	    		cbo_NgonNgu.addItem("Japanese");
+	    		cbo_NgonNgu.getMyVector().add("Japanese");
+	    		cbo_NgonNgu.addItem("German");
+	    		cbo_NgonNgu.getMyVector().add("German");
+
+	    	}
+		}
+		private void settingTable() {
+			if(settingModel.getNgonNgu().equals("English"))
+				for (int i = 0; i < tbl_DSSP.getRowCount(); i++) {
+				    String productType = tbl_DSSP.getModel().getValueAt(i, 2).toString();
+				    String language = tbl_DSSP.getModel().getValueAt(i, 3).toString();
+				    switch (productType) {
+				        case "Sách thiếu nhi":
+				            tbl_DSSP.getModel().setValueAt("Children's books", i, 2);
+				            break;
+				        case "Tiểu thuyết":
+				            tbl_DSSP.getModel().setValueAt("Novels", i, 2);
+				            break;
+				        case "Truyện tranh":
+				            tbl_DSSP.getModel().setValueAt("Comic books", i, 2);
+				            break;
+				        case "Sách văn học":
+				            tbl_DSSP.getModel().setValueAt("Literature books", i, 2);
+				            break;
+				        case "Sách kinh tế":
+				            tbl_DSSP.getModel().setValueAt("Economics books", i, 2);
+				            break;
+				        case "Sách kỹ năng sống":
+				            tbl_DSSP.getModel().setValueAt("Life skills books", i, 2);
+				            break;
+				        case "Sách phụ nữ":
+				            tbl_DSSP.getModel().setValueAt("Women's books", i, 2);
+				            break;
+				        case "Sách học ngoại ngữ":
+				            tbl_DSSP.getModel().setValueAt("Foreign language learning books", i, 2);
+				            break;
+				        case "Sách tham khảo - hướng dẫn":
+				            tbl_DSSP.getModel().setValueAt("Reference - guide books", i, 2);
+				            break;
+				        case "Từ điển":
+				            tbl_DSSP.getModel().setValueAt("Dictionary", i, 2);
+				            break;
+				        case "Sách khoa học - kỹ thuật":
+				            tbl_DSSP.getModel().setValueAt("Science - technology books", i, 2);
+				            break;
+				        case "Sách lịch sử":
+				            tbl_DSSP.getModel().setValueAt("History books", i, 2);
+				            break;
+				        case "Sách tôn giáo":
+				            tbl_DSSP.getModel().setValueAt("Religion books", i, 2);
+				            break;
+				        case "Sách văn học - nghệ thuật":
+				            tbl_DSSP.getModel().setValueAt("Literature - art books", i, 2);
+				            break;
+				        case "Sách nông - lâm - ngư nghiệp":
+				            tbl_DSSP.getModel().setValueAt("Agriculture - forestry - fishery books", i, 2);
+				            break;
+				        case "Sách chính trị - pháp lý":
+				            tbl_DSSP.getModel().setValueAt("Politics - law books", i, 2);
+				            break;
+				        case "Sách công nghệ thông tin":
+				            tbl_DSSP.getModel().setValueAt("Information technology books", i, 2);
+				            break;
+				        case "Sách y học":
+				            tbl_DSSP.getModel().setValueAt("Medical books", i, 2);
+				            break;
+				        case "Tạp chí":
+				            tbl_DSSP.getModel().setValueAt("Magazines", i, 2);
+				            break;
+				        case "Sách tâm lý":
+				            tbl_DSSP.getModel().setValueAt("Psychology books", i, 2);
+				            break;
+				        case "Thể dục - thể thao":
+				            tbl_DSSP.getModel().setValueAt("Physical education - sports", i, 2);
+				            break;
+				        case "Sách nấu ăn":
+				            tbl_DSSP.getModel().setValueAt("Cooking books", i, 2);
+				            break;
+				        case "Sách du lịch":
+				            tbl_DSSP.getModel().setValueAt("Travel books", i, 2);
+				            break;
+				    }
+
+				    switch (language) {
+				        case "Tiếng việt":
+				            tbl_DSSP.getModel().setValueAt("Vietnamese", i, 3);
+				            break;
+				        case "Tiếng anh":
+				            tbl_DSSP.getModel().setValueAt("English", i, 3);
+				            break;
+				        case "Tiếng pháp":
+				            tbl_DSSP.getModel().setValueAt("French", i, 3);
+				            break;
+				        case "Tiếng trung":
+				            tbl_DSSP.getModel().setValueAt("Chinese", i, 3);
+				            break;
+				        case "Tiếng hàn":
+				            tbl_DSSP.getModel().setValueAt("Korean", i, 3);
+				            break;
+				        case "Tiếng nhật":
+				            tbl_DSSP.getModel().setValueAt("Japanese", i, 3);
+				            break;
+				        case "Tiếng đức":
+				            tbl_DSSP.getModel().setValueAt("German", i, 3);
+				            break;
+				    }
+				}
+
+		}
 }

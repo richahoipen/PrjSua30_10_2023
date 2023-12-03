@@ -12,9 +12,12 @@
 		<class>entities.NhanVien</class>
 		<class>entities.TaiKhoan</class>
 		<class>entities.DonDatHang</class>
+		<class>entities.HoaDon</class>
 		<class>entities.KhachHang</class>
 		<class>entities.CTHoaDon</class>
-		<class>entities.DonDatHang</class>
+		<class>entities.CTDonDatHang</class>
+		
+		
 
 		<properties>
 			<!-- Thông tin kết nối cơ sở dữ liệu -->

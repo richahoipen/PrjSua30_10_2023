@@ -92,9 +92,11 @@ public class DonDatHang_DAO implements DonDatHang_Method, ICombobox_TimKiem_DonD
 	        return null;
 	    }
 	}
+	//Hết 15 ngày sẽ ko xuất
 	@Override
 	public boolean xuat_DonDat_ChuaThanhToan(String maNV, DefaultTableModel dtm_DD,String maKH) {
-		String sqlSelect = "SELECT * FROM [dbo].[DonDatHang] WHERE maNV = ? AND daLapHoaDon = ? AND maKH= ? "
+		String sqlSelect = "SELECT * FROM [dbo].[DonDatHang] WHERE maNV = ? AND daLapHoaDon = ? AND maKH= ? "	
+				+ "AND DATEDIFF(day, ngayDat, GETDATE()) <= 15 "
 				+ "ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maKH)) AS INT) ASC;";
 		try {
 			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);
@@ -106,10 +108,10 @@ public class DonDatHang_DAO implements DonDatHang_Method, ICombobox_TimKiem_DonD
 			{
 				String maDDH=rs.getString("maDDH");
 				Date ngayDat=rs.getDate("ngayDat");
-				String maKHang=rs.getNString("maKH");
+				//String maKHang=rs.getNString("maKH");
 				DonDatHang d=new DonDatHang();
 				d.setNgayDat(ngayDat);
-				String[] row= {maDDH,sqlKhachHang_BUS.getTenKhachHang_TheoMa(maKHang),d.getNgayDatToString(),Double.toString(getTongTien_DonDatHang(maDDH))};
+				String[] row= {maDDH,d.getNgayDatToString(),d.getNgayHetHanToString(),Double.toString(getTongTien_DonDatHang(maDDH))};
 				dtm_DD.addRow(row);
 			}	
 			con.con().close();
@@ -502,6 +504,12 @@ public class DonDatHang_DAO implements DonDatHang_Method, ICombobox_TimKiem_DonD
 			return null;
 			
 		}
+	}
+	@Override
+	public boolean tim_DonDatHang(DonDatHang d, String tenNV, KhachHang k, int ngay, int thang, int nam,
+			DefaultTableModel dtm_DD) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 	

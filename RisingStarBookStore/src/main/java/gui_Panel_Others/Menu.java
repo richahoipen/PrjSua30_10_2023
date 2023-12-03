@@ -19,7 +19,7 @@ import swing.MenuAnimation;
 import swing.MenuItem;
 import swing.PanelTransparent;
 
-public class Menu extends PanelTransparent {
+public class Menu extends JPanel {
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private JButton button;
     private JPanel panel;
@@ -32,6 +32,9 @@ public class Menu extends PanelTransparent {
     private boolean enableMenu = true;
     private boolean showMenu = true;
     // End of variables declaration//GEN-END:variables
+    public JScrollPane getSp() {
+		return sp;
+	}
     public boolean isShowMenu() {
         return showMenu;
     }
@@ -56,12 +59,11 @@ public class Menu extends PanelTransparent {
 
     public Menu(String maNV) {
         initComponents(maNV);
-        setOpaque(false);
-        sp.getViewport().setOpaque(false);
+        setOpaque(true);
+        sp.getViewport().setOpaque(true);
         sp.setVerticalScrollBar(new ScrollBarCustom());
         layout = new MigLayout("wrap, fillx, insets 0", "[fill]", "[]0[]");
         panel.setLayout(layout);
-        setTransparent(0.5f);
     }
 
     public void initExampleMenuItem() {
@@ -83,6 +85,22 @@ public class Menu extends PanelTransparent {
 
     public void addMenu(ModelMenu menu) {
         panel.add(new MenuItem(menu, getEventMenu(), event, panel.getComponentCount()), "h 40!");
+    }
+    public void changeLanguage(String language) {
+    	if(language.equals("Tiếng Anh")) {
+    		
+    	}
+    	for (Component com : panel.getComponents()) {
+            MenuItem item = (MenuItem) com;
+            panel.remove(com);
+        }
+    }
+    public void removeAllMenu() {
+    	
+    	for (Component com : panel.getComponents()) {
+            MenuItem item = (MenuItem) com;
+            panel.remove(com);
+        }
     }
     public void addMenuEvent(ActionListener event) {
 		button.addActionListener(event);
