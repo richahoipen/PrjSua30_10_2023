@@ -6,13 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.util.ArrayList;
+
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 
 import connectDB.Connect;
-import entities.CTDonDatHang;
+import entities.DonDatHang;
 import entities.HoaDon;
 
 import interface_Method_DAO.HoaDon_Method;
@@ -27,19 +28,19 @@ public class HoaDon_DAO implements HoaDon_Method
 	}
 	//SỬA LẠI GẤP
 	@Override
-	public boolean themHoaDon(HoaDon h, String maNV, String maKH,ArrayList<CTDonDatHang> listCTDonDatHang) {
+	public boolean themHoaDon(HoaDon h, String maNV, String maKH) {
 		String sqlInsert_HoaDon = "DECLARE @NextIndex INT;\r\n"
 				+ "SELECT @NextIndex = ISNULL(MAX(CAST(SUBSTRING(maHD,3, LEN(maHD)) AS INT)), 0) + 1 FROM HoaDon;\r\n"
 				+ "DECLARE @NewMaHD VARCHAR(20);\r\n"
 				+ "SET  @NewMaHD = 'HD' + CAST(@NextIndex AS VARCHAR);\r\n"
 				+ "insert into [dbo].[HoaDon]([maHD],[ngayLap],[gioLap],[tienKhachDua],[tongTien],[maNV],[maKH])\r\n"
 				+ "values (@NewMaHD,?,?,?,?,?,?)";
-		String sqlInsert_CTHoaDon="DECLARE @NewSTT INT;\r\n"
+		/*String sqlInsert_CTHoaDon="DECLARE @NewSTT INT;\r\n"
 				+ "SET @NewSTT = ISNULL((SELECT MAX(sTT) FROM [dbo].[CTHoaDon]), 0) + 1;\r\n"
 				+ "insert into [dbo].[CTHoaDon]([sTT],[maSP],[donGia],[soLuong],[thanhTien])\r\n"
-				+ "values (@NewSTT,?,?,?,?)";
+				+ "values (@NewSTT,?,?,?,?)";*/
 		try {
-			PreparedStatement preparedStatement_Insert_CTHoaDon = con.con().prepareStatement(sqlInsert_CTHoaDon);
+			//PreparedStatement preparedStatement_Insert_CTHoaDon = con.con().prepareStatement(sqlInsert_CTHoaDon);
 			
 			PreparedStatement preparedStatement_Insert_HoaDon = con.con().prepareStatement(sqlInsert_HoaDon);
 			preparedStatement_Insert_HoaDon.setDate(1, h.getNgayLap());
@@ -52,7 +53,7 @@ public class HoaDon_DAO implements HoaDon_Method
 			//Thực thi câu lệnh
 			preparedStatement_Insert_HoaDon.executeUpdate();
 			//Truy vấn CTHoaDon
-			
+			/*
 			for(CTDonDatHang c: listCTDonDatHang)
 			{
 				
@@ -63,10 +64,10 @@ public class HoaDon_DAO implements HoaDon_Method
 				preparedStatement_Insert_CTHoaDon.executeUpdate();
 				System.out.println("Lập CTHD");
 			}
-			System.out.println("Lập hóa đơn thành công");
+			System.out.println("Lập hóa đơn thành công");*/
 			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
 			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
-			JOptionPane.showMessageDialog(null,"Lập hóa đơn thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null,"Lập hóa đơn thành công.\nMake bill success.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 			con.con().close();
 			preparedStatement_Insert_HoaDon.close();
 			
@@ -172,6 +173,7 @@ public class HoaDon_DAO implements HoaDon_Method
 	 * update [dbo].[CTHoaDon]
 		set maHD=? where maHD is null
 	 */
+	//KHÔNG XÀI
 	@Override
 	public boolean capNhat_CTHoaDon(String maHD) 
 	{
@@ -223,6 +225,86 @@ public class HoaDon_DAO implements HoaDon_Method
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			return null;
 			
+		}
+	}
+	/*
+	 * SELECT TOP 1 maHD
+FROM [dbo].[HoaDon]
+ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maKH)) AS INT) DESC;
+	 */
+	@Override
+	public String get_MaHD_MoiNhat() {
+		String sqlSelect = "SELECT TOP 1 maHD\r\n"
+				+ "FROM [dbo].[HoaDon]\r\n"
+				+ "ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) DESC;";		
+	    try {
+	    	String maHD_LayVe="";
+	    	//PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);
+	        //ResultSet rs = preparedStatement.executeQuery();
+	    	ResultSet rs = con.resultSet(sqlSelect);
+	        while (rs.next()) {
+	            String maHD=rs.getNString("maHD");
+	            maHD_LayVe+=maHD;
+	        }
+	        System.out.println("mã hóa đơn mới nhất:"+maHD_LayVe);
+	        con.con().close();
+	        //preparedStatement.close();
+	        rs.close();
+	        return maHD_LayVe;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return null;
+	    }
+	}
+	/*
+	 * SELECT HoaDon.maHD, HoaDon.ngayLap, HoaDon.tongTien,
+       KhachHang.tenKH, KhachHang.sdt,
+       NhanVien.tenNV
+		FROM HoaDon
+		JOIN NhanVien ON HoaDon.maNV = NhanVien.maNV
+		JOIN KhachHang ON HoaDon.maKH = KhachHang.maKH
+		ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) ASC;
+	 */
+	@Override
+	public boolean xuat_DanhSach_HoaDon(DefaultTableModel dtm_HD) {
+		String sqlSelect ="SELECT HoaDon.maHD, HoaDon.ngayLap, HoaDon.tongTien,\r\n"
+				+ "       KhachHang.tenKH, KhachHang.sdt,\r\n"
+				+ "       NhanVien.tenNV\r\n"
+				+ "		FROM HoaDon\r\n"
+				+ "		JOIN NhanVien ON HoaDon.maNV = NhanVien.maNV\r\n"
+				+ "		JOIN KhachHang ON HoaDon.maKH = KhachHang.maKH\r\n"
+				+ "		ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) ASC;";
+		try {
+			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);
+	        //preparedStatement.setNString(1, maNV);
+	        
+			ResultSet rs = preparedStatement.executeQuery();
+			while(rs.next())
+			{
+				String maHD=rs.getNString("maHD");
+				String tenNV=rs.getNString("tenNV");
+				String tenKH=rs.getNString("tenKH");
+				String sdt=rs.getNString("sdt");
+				Date ngayLap=rs.getDate("ngayLap");
+				double tongTien=rs.getDouble("tongTien");	
+				HoaDon h=new HoaDon();
+				h.setNgayLap(ngayLap);
+				String[] row= {maHD,tenNV,tenKH,sdt,h.getNgayLapToString(),Double.toString(tongTien)};
+				dtm_HD.addRow(row);
+			}	
+			con.con().close();
+			con.stmt().close();
+			rs.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 	

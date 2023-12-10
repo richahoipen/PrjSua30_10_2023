@@ -34,12 +34,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Font;
 
-public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionListener {
+public class Frame_ThongKeSanPham extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
-	private JTextField txt_SoHoaDon;
-	private JTextField txt_SLSPB;
-	private JTextField txt_SoKhach;
+	private JTextField txt_SLTon;
+	private JTextField txt_SLBan;
 	private DefaultTableModel dtm_ChiTiet;
 	private JTextField txt_LoiNhuan;
 	private JTextField txt_Chi;
@@ -59,23 +58,27 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 	private JLabel lbl_ThoiGian;
 	private JLabel lbl_ThoiGianBatDau;
 	private Component lbl_ThoiGianKetThuc;
-	private Component lbl_LuongHoaDon;
-	private Component lbl_LuongKhachHang;
+	private Component lbl_SLTon;
 	private JLabel lbl_Chi;
 	private JLabel lbl_Thu;
-	private Component lbl_SLSPB;
 	private JLabel lbl_LoiNhuan;
 	private JPanel pn_Show;
-	private Panel_ThongKeDoanhThuTheoHoaDon pn_Parent;
+	private Panel_ThongKeSanPham pn_Parent;
 	private JLabel lbl_ShowName;
+	private JLabel lbl_ShowName_1;
 	private Custom_Button btn_XuatPDF;
+	private JLabel lbl_SLLoaiSP;
+	private JTextField txt_SLLoaiSP;
+	private JTextField txt_SLLoaiSPTong;
+	private JLabel lbl_SLLoaiSPTong;
+	private JLabel lbl_SLBan;
 
 	/**
 	 * Create the frame.
 	 */
-	public Frame_ThongKeDoanhThuTheoHoaDon(Panel_ThongKeDoanhThuTheoHoaDon pnParent) {
-		pn_Parent = (Panel_ThongKeDoanhThuTheoHoaDon) pnParent;
-		setTitle("RisingStar - THỐNG KÊ THEO HÓA ĐƠN");
+	public Frame_ThongKeSanPham(Panel_ThongKeSanPham pnParent) {
+		pn_Parent = (Panel_ThongKeSanPham) pnParent;
+		setTitle("RisingStar - THỐNG KÊ THEO SẢN PHẨM");
 		setIconImage(new CustomIcon("src/main/images/view_image/Logo.png").getImage());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocation(500, 0);
@@ -102,7 +105,7 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 		lbl_Hotline.setHorizontalAlignment(SwingConstants.CENTER);
 		pn_CuaHang.add(lbl_Hotline, "cell 0 1 2 1,growx,aligny center");
 
-		lbl_Title_Main = new JLabel("THỐNG KÊ THEO HÓA ĐƠN");
+		lbl_Title_Main = new JLabel("THỐNG KÊ THEO SẢN PHẨM");
 		lbl_Title_Main.setFont(new Font("Tahoma", Font.BOLD, 17));
 		lbl_Title_Main.setHorizontalAlignment(SwingConstants.CENTER);
 		pn_CuaHang.add(lbl_Title_Main, "cell 0 2 2 1,growx");
@@ -113,7 +116,7 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 
 		pn_ThongTin = new JPanel();
 		pn_Center.add(pn_ThongTin, BorderLayout.NORTH);
-		pn_ThongTin.setLayout(new MigLayout("", "[][grow][][grow]", "[][][][][][]"));
+		pn_ThongTin.setLayout(new MigLayout("", "[][grow][][grow]", "[][][][][][][]"));
 
 		lbl_LoaiThoiGian = new JLabel("Loại thời gian");
 		pn_ThongTin.add(lbl_LoaiThoiGian, "cell 0 0,alignx trailing");
@@ -151,14 +154,14 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 		txt_ThoiGianKetThuc.setCaretColor(UIManager.getColor("Button.background"));
 		pn_ThongTin.add(txt_ThoiGianKetThuc, "cell 3 1,growx");
 
-		lbl_LuongHoaDon = new JLabel("Số hóa đơn");
-		pn_ThongTin.add(lbl_LuongHoaDon, "cell 0 2,alignx trailing");
+		lbl_SLTon = new JLabel("Lượng tồn kho");
+		pn_ThongTin.add(lbl_SLTon, "cell 0 2,alignx trailing");
 
-		txt_SoHoaDon = new JTextField();
-		txt_SoHoaDon.setEditable(false);
-		txt_SoHoaDon.setCaretColor(txt_SoHoaDon.getBackground());
-		pn_ThongTin.add(txt_SoHoaDon, "cell 1 2,growx");
-		txt_SoHoaDon.setColumns(10);
+		txt_SLTon = new JTextField();
+		txt_SLTon.setEditable(false);
+		txt_SLTon.setCaretColor(txt_SLTon.getBackground());
+		pn_ThongTin.add(txt_SLTon, "cell 1 2,growx");
+		txt_SLTon.setColumns(10);
 
 		lbl_Thu = new JLabel("Thu");
 		pn_ThongTin.add(lbl_Thu, "cell 2 2,alignx trailing");
@@ -169,14 +172,11 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 		txt_Thu.setCaretColor(UIManager.getColor("Button.background"));
 		pn_ThongTin.add(txt_Thu, "cell 3 2,growx");
 
-		lbl_LuongKhachHang = new JLabel("Lượng khách");
-		pn_ThongTin.add(lbl_LuongKhachHang, "cell 0 3,alignx trailing");
-
-		txt_SoKhach = new JTextField();
-		txt_SoKhach.setEditable(false);
-		txt_SoKhach.setCaretColor(txt_SoKhach.getBackground());
-		txt_SoKhach.setColumns(10);
-		pn_ThongTin.add(txt_SoKhach, "cell 1 3,growx");
+		txt_SLBan = new JTextField();
+		txt_SLBan.setEditable(false);
+		txt_SLBan.setCaretColor(txt_SLBan.getBackground());
+		txt_SLBan.setColumns(10);
+		pn_ThongTin.add(txt_SLBan, "cell 1 3,growx");
 
 		lbl_Chi = new JLabel("Chi");
 		pn_ThongTin.add(lbl_Chi, "cell 2 3,alignx trailing");
@@ -186,15 +186,16 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 		txt_Chi.setColumns(10);
 		txt_Chi.setCaretColor(UIManager.getColor("Button.background"));
 		pn_ThongTin.add(txt_Chi, "cell 3 3,growx");
-
-		lbl_SLSPB = new JLabel("Lượng sản phẩm bán được");
-		pn_ThongTin.add(lbl_SLSPB, "cell 0 4,alignx trailing");
-
-		txt_SLSPB = new JTextField();
-		txt_SLSPB.setEditable(false);
-		txt_SLSPB.setCaretColor(txt_SLSPB.getBackground());
-		txt_SLSPB.setColumns(10);
-		pn_ThongTin.add(txt_SLSPB, "cell 1 4,growx");
+		
+		lbl_SLLoaiSP = new JLabel("Số lượng sản phẩm");
+		pn_ThongTin.add(lbl_SLLoaiSP, "cell 0 4,alignx trailing");
+		
+		txt_SLLoaiSP = new JTextField();
+		txt_SLLoaiSP.setText((String) null);
+		txt_SLLoaiSP.setEditable(false);
+		txt_SLLoaiSP.setColumns(10);
+		txt_SLLoaiSP.setCaretColor(UIManager.getColor("Button.background"));
+		pn_ThongTin.add(txt_SLLoaiSP, "cell 1 4,growx");
 
 		lbl_LoiNhuan = new JLabel("Lợi nhuận");
 		pn_ThongTin.add(lbl_LoiNhuan, "cell 2 4,alignx trailing");
@@ -206,12 +207,25 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 		pn_ThongTin.add(txt_LoiNhuan, "cell 3 4,growx");
 		
 		btn_XuatPDF = new Custom_Button();
-		btn_XuatPDF.setText("Xuất pdf");
 		btn_XuatPDF.setBorder(BorderFactory.createLineBorder(Color.CYAN));
+		btn_XuatPDF.setText("Xuất pdf");
 		btn_XuatPDF.setPreferredSize(new Dimension(100, 40));
 		btn_XuatPDF.addActionListener(this);
-		pn_ThongTin.add(btn_XuatPDF, "cell 0 5");
-		lbl_ShowName = new JLabel("Biểu đồ thể hiện doanh thu - chi - lợi nhuận từ hóa đơn");
+		
+		lbl_SLLoaiSPTong = new JLabel("Tổng sản phẩm hiện có");
+		pn_ThongTin.add(lbl_SLLoaiSPTong, "cell 0 5,alignx trailing");
+		
+		txt_SLLoaiSPTong = new JTextField();
+		txt_SLLoaiSPTong.setText((String) null);
+		txt_SLLoaiSPTong.setEditable(false);
+		txt_SLLoaiSPTong.setColumns(10);
+		txt_SLLoaiSPTong.setCaretColor(UIManager.getColor("Button.background"));
+		pn_ThongTin.add(txt_SLLoaiSPTong, "cell 1 5,growx");
+		pn_ThongTin.add(btn_XuatPDF, "cell 0 6");
+		
+		lbl_SLBan = new JLabel("Lượng sản phẩm bán được");
+		pn_ThongTin.add(lbl_SLBan, "cell 0 3");
+		lbl_ShowName = new JLabel("Biểu đồ");
 		lbl_ShowName.setFont(new Font("Tahoma", Font.BOLD, 14));
 		pn_Center.add(lbl_ShowName, BorderLayout.SOUTH);
 		lbl_ShowName.setHorizontalAlignment(SwingConstants.CENTER);
@@ -241,6 +255,22 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
     		loaiThoiGian = "Theo năm";
     		break;
 		}
+		String loc = "";
+	    if (pn_Parent.getCbo_Loc().getSelectedItem()==null||pn_Parent.getCbo_Loc().getSelectedItem().equals("All products")){
+	    	loc = "Tất cả sản phẩm";
+	    }
+	    if (loc.equals("Tất cả sản phẩm")) {
+	    	System.out.println("a");
+	    	lbl_SLLoaiSP.setText("Lượng sản phẩm theo thời gian");
+	    	txt_SLLoaiSP.setText(pn_Parent.getTxt_Read_NVLoc().getText());
+	    	lbl_ShowName.setText("Biểu đồ thống kê doanh thu - chi - lợi theo top 10 sản phẩm");
+	    }
+	    else {
+	    	lbl_SLLoaiSP.setText("Mã sản phẩm");
+	    	txt_SLLoaiSP.setText(loc);
+	    	lbl_ShowName.setText("Biểu đồ thống kê doanh thu - chi - lợi theo sản phẩm");
+	    }
+	    txt_SLLoaiSPTong.setText(pn_Parent.getTxt_Read_NVTong().getText());
 		txt_LoaiThoiGian.setText(loaiThoiGian);
 		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
         LocalDateTime now = LocalDateTime.now();
@@ -249,15 +279,14 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 		txt_ThoiGianBatDau.setText(formatter2.format(pn_Parent.getDcr_NgayBatDau().getDate()));
 		txt_ThoiGianKetThuc.setText(formatter2.format(pn_Parent.getDcr_NgayKetThuc().getDate()));
 		
-		txt_SoHoaDon.setText(pn_Parent.getTxt_read_SoLuongHoaDon().getText());
-		txt_SoKhach.setText(pn_Parent.getTxt_read_SoLuongKhach().getText());
-		txt_SLSPB.setText(pn_Parent.getTxt_read_SoLuongSanPhamBanDuoc().getText());
+		txt_SLTon.setText(pn_Parent.getTxt_Read_TonKho().getText());
+		txt_SLBan.setText(pn_Parent.getTxt_Read_BanDuoc().getText());
 		
 		txt_Thu.setText(pn_Parent.getTxt_read_DoanhThu().getText());
 		txt_Chi.setText(pn_Parent.getTxt_read_Chi().getText());
 		txt_LoiNhuan.setText(pn_Parent.getTxt_read_LoiNhuan().getText());
 		//pn_ThongTin.setPreferredSize(new Dimension(600,200));
-		pn_Show.setPreferredSize(new Dimension(1280,325));
+		pn_Show.setPreferredSize(new Dimension(1280,300));
 		
 		pn_Show.add(new JLabel("a"));
 		pn_Show.repaint();
@@ -269,7 +298,7 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 		Object o = e.getSource();
 		if(o.equals(btn_XuatPDF)) {
 			btn_XuatPDF.setVisible(false);
-			XuatFile.saveToPDF(this, "Thống kê doanh thu theo hóa đơn");
+			XuatFile.saveToPDF(this, "Thống kê doanh thu theo sản phẩm");
 			btn_XuatPDF.setVisible(true);
 		}
 	}

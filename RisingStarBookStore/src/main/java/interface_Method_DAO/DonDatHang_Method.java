@@ -18,6 +18,8 @@ public interface DonDatHang_Method {
 	public double getTongTien_DonDatHang(String maDDH);
 	public boolean xuat_DonDatHang_TimKiem(DefaultTableModel dtm_DD);
 	public Date getNgayDat(String maDDH);
+	//public
+	public String get_MaDDH_MoiNhat();
 	//public DonDatHang(String maDDH, Date ngayDat,boolean daLapHoaDon)
 	public boolean tim_DonDatHang(DonDatHang d,String tenNV,KhachHang k,int ngay,int thang,int nam,DefaultTableModel dtm_DD);
 }

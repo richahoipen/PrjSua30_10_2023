@@ -1,9 +1,11 @@
 package dataBase_BUS;
 
-import java.util.ArrayList;
+
+
+import javax.swing.table.DefaultTableModel;
 
 import dataBase_DAO.HoaDon_DAO;
-import entities.CTDonDatHang;
+
 import entities.HoaDon;
 import interface_Method_DAO.HoaDon_Method;
 
@@ -17,9 +19,9 @@ public class HoaDon_BUS implements HoaDon_Method
 	}
 
 	@Override
-	public boolean themHoaDon(HoaDon h, String maNV, String maKH,ArrayList<CTDonDatHang> listCTDonDatHang) {
+	public boolean themHoaDon(HoaDon h, String maNV, String maKH) {
 		// TODO Auto-generated method stub
-		return sqlHoaDon_DAO.themHoaDon(h, maNV, maKH,listCTDonDatHang);
+		return sqlHoaDon_DAO.themHoaDon(h, maNV, maKH);
 	}
 
 	@Override
@@ -50,6 +52,18 @@ public class HoaDon_BUS implements HoaDon_Method
 	public HoaDon get_HoaDon(String maHD) {
 		// TODO Auto-generated method stub
 		return sqlHoaDon_DAO.get_HoaDon(maHD);
+	}
+
+	@Override
+	public String get_MaHD_MoiNhat() {
+		// TODO Auto-generated method stub
+		return sqlHoaDon_DAO.get_MaHD_MoiNhat();
+	}
+
+	@Override
+	public boolean xuat_DanhSach_HoaDon(DefaultTableModel dtm_HD) {
+		// TODO Auto-generated method stub
+		return sqlHoaDon_DAO.xuat_DanhSach_HoaDon(dtm_HD);
 	}
 	
 }

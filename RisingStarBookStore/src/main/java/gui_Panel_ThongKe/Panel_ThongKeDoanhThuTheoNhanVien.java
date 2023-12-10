@@ -21,6 +21,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.IsoFields;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Random;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -55,7 +56,7 @@ import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
-public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
+public class Panel_ThongKeDoanhThuTheoNhanVien extends JPanel implements ActionListener{
 	private JPanel panel = new JPanel();
     private JPanel pn_TieuDe = new JPanel();
     private JLabel lbl_Title_BaoCaoDoanhThu = new JLabel();
@@ -67,7 +68,7 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
     private JPanel pn_Control_Main = new JPanel();
     private Custom_Button btn_TimKiem = new Custom_Button();
     private Custom_Button btn_XuatExcel = new Custom_Button();
-    private Custom_Button btn_InBaoCao = new Custom_Button();
+    private Custom_Button btn_XuatPDF = new Custom_Button();
     private JPanel pn_Control_Show = new JPanel();
     private Custom_Button btn_BieuDo = new Custom_Button();
     private Custom_Button btn_HienThi = new Custom_Button();
@@ -98,12 +99,98 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 	private final JTextField txt_read_SoLuongSanPhamBanDuoc = new JTextField();
 	private final JLabel lbl_SLKhach = new JLabel("Lượng khách");
 	private final JLabel lbl_SLSPB = new JLabel("Lượng sản phảm bán được");
+	private final Custom_ComboBox cbo_Loc = new Custom_ComboBox();
+	private final JLabel lbl_Loc = new JLabel("Lọc theo");
+	private final JLabel lbl_ShowName = new JLabel("");
+	private final JLabel lbl_Read_Loc = new JLabel("Lọc theo");
+	private final JTextField txt_Read_Loc = new JTextField();
+	private final JTextField txt_Read_NVLoc = new JTextField();
+	private final JLabel lbl_Read_NVLoc = new JLabel("Lượng nhân viên theo thời gian");
+	private final JLabel lbl_Read_NVTong = new JLabel("Lượng nhân tổng");
+	private final JTextField txt_Read_NVTong = new JTextField();
 	
     /**
 	 * @return the panel
 	 */
 	public JPanel getPanel() {
 		return panel;
+	}
+
+	/**
+	 * @return the btn_XuatPDF
+	 */
+	public Custom_Button getBtn_XuatPDF() {
+		return btn_XuatPDF;
+	}
+
+	/**
+	 * @return the cbo_Loc
+	 */
+	public Custom_ComboBox getCbo_Loc() {
+		return cbo_Loc;
+	}
+
+	/**
+	 * @return the lbl_Loc
+	 */
+	public JLabel getLbl_Loc() {
+		return lbl_Loc;
+	}
+
+	/**
+	 * @return the lbl_ShowName
+	 */
+	public JLabel getLbl_ShowName() {
+		return lbl_ShowName;
+	}
+
+	/**
+	 * @return the lbl_Read_Loc
+	 */
+	public JLabel getLbl_Read_Loc() {
+		return lbl_Read_Loc;
+	}
+
+	/**
+	 * @return the txt_Read_Loc
+	 */
+	public JTextField getTxt_Read_Loc() {
+		return txt_Read_Loc;
+	}
+
+	/**
+	 * @return the txt_Read_NVLoc
+	 */
+	public JTextField getTxt_Read_NVLoc() {
+		return txt_Read_NVLoc;
+	}
+
+	/**
+	 * @return the lbl_Read_NVLoc
+	 */
+	public JLabel getLbl_Read_NVLoc() {
+		return lbl_Read_NVLoc;
+	}
+
+	/**
+	 * @return the lbl_Read_NVTong
+	 */
+	public JLabel getLbl_Read_NVTong() {
+		return lbl_Read_NVTong;
+	}
+
+	/**
+	 * @return the txt_Read_NVTong
+	 */
+	public JTextField getTxt_Read_NVTong() {
+		return txt_Read_NVTong;
+	}
+
+	/**
+	 * @param btn_XuatPDF the btn_XuatPDF to set
+	 */
+	public void setBtn_XuatPDF(Custom_Button btn_XuatPDF) {
+		this.btn_XuatPDF = btn_XuatPDF;
 	}
 
 	/**
@@ -177,10 +264,10 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 	}
 
 	/**
-	 * @return the btn_InBaoCao
+	 * @return the btn_XuatPDF
 	 */
-	public Custom_Button getBtn_InBaoCao() {
-		return btn_InBaoCao;
+	public Custom_Button getbtn_XuatPDF() {
+		return btn_XuatPDF;
 	}
 
 	/**
@@ -471,10 +558,10 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 	}
 
 	/**
-	 * @param btn_InBaoCao the btn_InBaoCao to set
+	 * @param btn_XuatPDF the btn_XuatPDF to set
 	 */
-	public void setBtn_InBaoCao(Custom_Button btn_InBaoCao) {
-		this.btn_InBaoCao = btn_InBaoCao;
+	public void setbtn_XuatPDF(Custom_Button btn_XuatPDF) {
+		this.btn_XuatPDF = btn_XuatPDF;
 	}
 
 	/**
@@ -662,7 +749,7 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 	/**
 	 * Create the panel.
 	 */
-	public Panel_ThongKeDoanhThu() {
+	public Panel_ThongKeDoanhThuTheoNhanVien() {
 		lbl_Title_BaoCaoDoanhThu.setFont(new Font("Times New Roman", Font.BOLD, 30));
         setLayout(new BorderLayout(0, 0));
 		add(panel, BorderLayout.NORTH);
@@ -672,8 +759,6 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
         pn_TieuDe.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         pn_TieuDe.add(lbl_Title_BaoCaoDoanhThu);
         panel.add(pn_Control, BorderLayout.CENTER);
-        dcr_NgayBatDau = new JDateChooser ();
-        dcr_NgayKetThuc = new JDateChooser ();
 		try {
 			bfi_ChonNgay = ImageIO.read(new File("src\\main\\images\\view_image\\Calendar.png"));
 		} catch (IOException e) {
@@ -682,11 +767,25 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		}
 		bfi_ChonNgay = Custom_Function.resize(bfi_ChonNgay, 20, 20);
 		
+		pn_Control.setLayout(new MigLayout("", "[grow][grow][grow][grow]", "[][][grow][][grow]"));
+		pn_Control.add(lbl_LoaiThoiGian, "cell 0 0,alignx left");
+		pn_Control.add(cbo_LoaiThoiGian, "cell 1 0,growx, width 50%");
+		lbl_Loc.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		pn_Control.add(lbl_Loc, "cell 2 0,alignx left");
+		
+		pn_Control.add(cbo_Loc, "cell 3 0,growx");
+		pn_Control.add(lbl_ThoiGianBatDau, "cell 0 1,alignx left");
+		dcr_NgayBatDau = new JDateChooser ();
+		
 		dcr_NgayBatDau.setIcon (new ImageIcon(bfi_ChonNgay));
 		ftf_NgayBatDau = (JFormattedTextField) dcr_NgayBatDau.getComponent(1);
 		ftf_NgayBatDau.setHorizontalAlignment(SwingConstants.RIGHT);
 		dcr_NgayBatDau.getJCalendar().setPreferredSize (new Dimension ((int) 400,(int) 200));
 		dcr_NgayBatDau.setDateFormatString("dd-MM-yyyy");
+		pn_Control.add(dcr_NgayBatDau, "cell 1 1,growx,width 50%");
+		pn_Control.add(lbl_ThoiGianKetThuc, "cell 2 1,alignx left");
+		dcr_NgayKetThuc = new JDateChooser ();
 		
 		dcr_NgayKetThuc.setIcon (new ImageIcon(bfi_ChonNgay));
 		ftf_NgayKetThuc = (JFormattedTextField) dcr_NgayKetThuc.getComponent(1);
@@ -694,14 +793,8 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		dcr_NgayKetThuc.getJCalendar().setPreferredSize (new Dimension ((int) 400,(int) 200));
 		dcr_NgayKetThuc.setDateFormatString("dd-MM-yyyy");
 		
-		pn_Control.setLayout(new MigLayout("", "[][grow][][grow][][grow][][grow]", "[][grow]"));
-		pn_Control.add(lbl_LoaiThoiGian, "cell 0 0,alignx trailing");
-		pn_Control.add(cbo_LoaiThoiGian, "cell 1 0,growx, width 50%");
-		pn_Control.add(lbl_ThoiGianBatDau, "cell 2 0,alignx trailing");
-		pn_Control.add(dcr_NgayBatDau, "cell 3 0,growx, width 50%");
-		pn_Control.add(lbl_ThoiGianKetThuc, "cell 4 0,alignx trailing");
-		pn_Control.add(dcr_NgayKetThuc, "cell 5 0,growx, width 50%");
-		pn_Control.add(pn_Control_Main, "cell 0 1 2 1");
+		pn_Control.add(dcr_NgayKetThuc, "cell 3 1,growx,width 50%");
+		pn_Control.add(pn_Control_Main, "flowx,cell 0 2 2 1,growx");
 
         
         pn_Control_Main.add(lbl_Control_Main);
@@ -709,9 +802,12 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
         pn_Control_Main.add(btn_TimKiem);
         btn_XuatExcel.setText("Xuất Excel");
         pn_Control_Main.add(btn_XuatExcel);
-        btn_InBaoCao.setText("In báo cáo");
-        pn_Control_Main.add(btn_InBaoCao);
-        pn_Control.add(pn_Control_Show, "cell 5 1,grow");
+        btn_XuatPDF.setText("In báo cáo");
+        pn_Control_Main.add(btn_XuatPDF);
+        lbl_ShowName.setFont(new Font("Tahoma", Font.BOLD, 14));
+        
+        pn_Control.add(lbl_ShowName, "cell 0 3 6 1,alignx center");
+        pn_Control.add(pn_Control_Show, "cell 2 2 2 1,growx");
         
         pn_Control_Show.add(lbl_Control_Show);
         btn_BieuDo.setText("Biểu đồ");
@@ -719,34 +815,51 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
         btn_HienThi.setText("Hiển thị chi tiết");
         pn_Control_Show.add(btn_HienThi);
         add(pn_Info, BorderLayout.SOUTH);
-        pn_Info.setLayout(new MigLayout("", "[52px][grow][][grow][][grow]", "[][14px]"));
-        pn_Info.add(lbl_SLHoaDon, "cell 0 0,alignx trailing");
-        txt_read_SoLuongHoaDon.setColumns(10);
-        pn_Info.add(txt_read_SoLuongHoaDon, "cell 1 0,growx");
+        pn_Info.setLayout(new MigLayout("", "[52px][grow][][grow][][grow]", "[][][14px]"));
         
-        pn_Info.add(lbl_SLKhach, "cell 2 0,alignx trailing");
+        pn_Info.add(lbl_Read_Loc, "cell 0 0,alignx trailing");
+        txt_Read_Loc.setColumns(10);
+        
+        pn_Info.add(txt_Read_Loc, "cell 1 0,growx");
+        
+        pn_Info.add(lbl_Read_NVLoc, "cell 2 0,alignx trailing");
+        txt_Read_NVLoc.setText("0");
+        txt_Read_NVLoc.setColumns(10);
+        
+        pn_Info.add(txt_Read_NVLoc, "cell 3 0,growx");
+        
+        pn_Info.add(lbl_Read_NVTong, "cell 4 0,alignx trailing");
+        txt_Read_NVTong.setText("0");
+        txt_Read_NVTong.setColumns(10);
+        
+        pn_Info.add(txt_Read_NVTong, "cell 5 0,growx");
+        pn_Info.add(lbl_SLHoaDon, "cell 0 1,alignx trailing");
+        txt_read_SoLuongHoaDon.setColumns(10);
+        pn_Info.add(txt_read_SoLuongHoaDon, "cell 1 1,growx");
+        
+        pn_Info.add(lbl_SLKhach, "cell 2 1,alignx trailing");
         txt_read_SoLuongKhach.setText("0");
         txt_read_SoLuongKhach.setColumns(10);
         
-        pn_Info.add(txt_read_SoLuongKhach, "cell 3 0,growx");
+        pn_Info.add(txt_read_SoLuongKhach, "cell 3 1,growx");
         
-        pn_Info.add(lbl_SLSPB, "cell 4 0,alignx trailing");
+        pn_Info.add(lbl_SLSPB, "cell 4 1,alignx trailing");
         txt_read_SoLuongSanPhamBanDuoc.setText("0");
         txt_read_SoLuongSanPhamBanDuoc.setColumns(10);
         
-        pn_Info.add(txt_read_SoLuongSanPhamBanDuoc, "cell 5 0,growx");
-        pn_Info.add(lbl_DoanhThu, "cell 0 1,alignx trailing");
+        pn_Info.add(txt_read_SoLuongSanPhamBanDuoc, "cell 5 1,growx");
+        pn_Info.add(lbl_DoanhThu, "cell 0 2,alignx trailing");
         txt_read_DoanhThu.setColumns(10);
-        pn_Info.add(txt_read_DoanhThu, "cell 1 1,growx");
-        pn_Info.add(lbl_Chi, "cell 2 1,alignx trailing");
+        pn_Info.add(txt_read_DoanhThu, "cell 1 2,growx");
+        pn_Info.add(lbl_Chi, "cell 2 2,alignx trailing");
         txt_read_Chi.setColumns(10);
-        pn_Info.add(txt_read_Chi, "cell 3 1,growx");
-        pn_Info.add(lbl_LoiNhuan, "cell 4 1,alignx trailing");
+        pn_Info.add(txt_read_Chi, "cell 3 2,growx");
+        pn_Info.add(lbl_LoiNhuan, "cell 4 2,alignx trailing");
         txt_read_LoiNhuan.setColumns(10);
-        pn_Info.add(txt_read_LoiNhuan, "cell 5 1,growx");
+        pn_Info.add(txt_read_LoiNhuan, "cell 5 2,growx");
         
         add(pn_Show, BorderLayout.CENTER);
-        dtm_ChiTiet = new DefaultTableModel(new String[]{"Ngày","Lượng hóa đơn","Lượng khách","Lượng sản phẩm bán được","Thu","Chi","Lợi nhuận"},0);
+        dtm_ChiTiet = new DefaultTableModel(new String[]{"Mã nhân viên","Tên nhân viên","Lượng hóa đơn","Lượng khách","Lượng sản phẩm bán được","Thu","Chi","Lợi nhuận"},0);
         setEditableToFalseTextfield();
         addAction();
         loadInfoText();
@@ -755,17 +868,17 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 	
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
-		Panel_ThongKeDoanhThu panel_ThongKeDoanhThu = new Panel_ThongKeDoanhThu();
+		Panel_ThongKeDoanhThuTheoNhanVien panel_ThongKeDoanhThu = new Panel_ThongKeDoanhThuTheoNhanVien();
 		frame.getContentPane().add(panel_ThongKeDoanhThu);
         // Thiết lập các thuộc tính cho JFrame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1280, 720);
+        frame.setSize(1280, 700);
         frame.setVisible(true);
     }
 	private void addAction() {
 		btn_BieuDo.addActionListener(this);
 		btn_HienThi.addActionListener(this);
-		btn_InBaoCao.addActionListener(this);
+		btn_XuatPDF.addActionListener(this);
 		btn_TimKiem.addActionListener(this);
 		btn_XuatExcel.addActionListener(this);
 	}
@@ -781,21 +894,38 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		tinhBang();
 	    double revenue = 0, expenditure = 0;
 	    int rowCount = dtm_ChiTiet.getRowCount();
-	    int totalInvoices = 0, totalCustomers = 0, totalProductsSold = 0;
-
+	    int invoiceQuantity = 0, customerQuantity = 0, ProductsSoldQuantity = 0;
+	    String loc = "";
+	    if (cbo_Loc.getSelectedItem()==null){
+	    	String ngonNgu = settingModel.getNgonNgu(); 
+	    	if(ngonNgu.equals("Vietnamese"))
+	    		loc = "Tất cả nhân viên";
+	    	if(ngonNgu.equals("English"))
+	    		loc = "All employees";	    
+	    } 
+	    else loc = cbo_Loc.getSelectedItem().toString();
 	    for (int i = 0; i < rowCount; i++) {
-	        revenue += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 4).toString());
-	        expenditure += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 5).toString());
-	        totalInvoices += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 1).toString());
-	        totalCustomers += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 2).toString());
-	        totalProductsSold += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 3).toString());
-	    }
+	    	invoiceQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 2).toString());
+    		customerQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 3).toString());
+    		ProductsSoldQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 4).toString());
+    		revenue += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 5).toString());
+    		expenditure += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 6).toString());
+    	}
+	    if(loc.equals("Tất cả nhân viên")||loc.equals("All employees")) {
+    		txt_Read_NVLoc.setText(rowCount+"");
+    	} else {
+    		txt_Read_NVLoc.setText("1");
+    	}
 	    txt_read_DoanhThu.setText(revenue + "");
 	    txt_read_Chi.setText(expenditure + "");
 	    txt_read_LoiNhuan.setText(revenue - expenditure + "");
-	    txt_read_SoLuongHoaDon.setText(rowCount + "");
-	    txt_read_SoLuongKhach.setText(totalCustomers + "");
-	    txt_read_SoLuongSanPhamBanDuoc.setText(totalProductsSold + "");
+	    txt_read_SoLuongHoaDon.setText(invoiceQuantity + "");
+	    txt_read_SoLuongKhach.setText(customerQuantity + "");
+	    txt_read_SoLuongSanPhamBanDuoc.setText(ProductsSoldQuantity + "");
+	    //Nhật lo số lượng tổng nhé, dsnvToanbo.getlength
+	    txt_Read_NVTong.setText("");
+	    txt_Read_Loc.setText(loc);
+	    
 	}
 
 	private void tinhBang() {
@@ -803,7 +933,7 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
         tbl_ChiTiet.setModel(dtm_ChiTiet);
         dtm_ChiTiet.setRowCount(0);
         scr_ChiTiet = new JScrollPane(tbl_ChiTiet);
-        setNgayBatDau();
+        setDefaultValue();
         long daycount = 1,weekcount = 1,monthcount=1,quartercount=1,yearcount =1;
 		LocalDate ngayBatDau = dcr_NgayBatDau.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy ngày từ JDateChooser, chuyển đổi sang LocalDate
 		LocalDate ngayKetThuc = dcr_NgayKetThuc.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy ngày từ JDateChooser, chuyển đổi sang LocalDate
@@ -813,7 +943,33 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		quartercount =(long) ChronoUnit.MONTHS.between(ngayBatDau, ngayKetThuc)/4+1;
 		yearcount = ChronoUnit.YEARS.between(ngayBatDau, ngayKetThuc)+1;
 		String loaiThoiGian = (String) cbo_LoaiThoiGian.getSelectedItem();
-        if(loaiThoiGian.equals("By day")||loaiThoiGian.equals("Theo ngày")) {
+		String ngonNgu = settingModel.getNgonNgu();
+		String loc = "";
+		if(ngonNgu.equals("Vietnamese")) {
+			loc = (cbo_Loc.getSelectedItem()!=null) ? cbo_Loc.getSelectedItem().toString() : "Tất cả nhân viên";
+		}
+		if(ngonNgu.equals("English")) {
+			loc = (cbo_Loc.getSelectedItem()!=null) ? cbo_Loc.getSelectedItem().toString() : "All employee";
+		}
+		
+		Random rand = new Random();
+		if(loc.equals("Tất cả nhân viên")||loc.equals("All employees")) {
+			
+	        for (int i = 0; i < 20; i++) {
+	            String maNhanVien = "NV" + (i+1);
+	            String tenNhanVien = "Employee"+ (i+1);
+	            int luongHoaDon = rand.nextInt(50);
+	            int luongKhach = rand.nextInt(100);
+	            int luongSanPhamBanDuoc = rand.nextInt(200);
+	            int thu = rand.nextInt(7000);
+	            int chi = rand.nextInt(5000);
+	            int loiNhuan = thu - chi;
+	            dtm_ChiTiet.addRow(new Object[]{maNhanVien, tenNhanVien, luongHoaDon, luongKhach, luongSanPhamBanDuoc, thu, chi, loiNhuan});
+	        }
+		}
+		else {
+			tbl_ChiTiet.removeColumn(tbl_ChiTiet.getColumnModel().getColumn(1));
+			if(loaiThoiGian.equals("By day")||loaiThoiGian.equals("Theo ngày")) {
         	if(loaiThoiGian.equals("By day")) {
         		tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Date");
         	}
@@ -856,7 +1012,6 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
                 int thu = i * 100;
                 int chi = (i+1) * 100 - (100 - i);
                 int loiNhuan = (thu - chi);
-                System.out.println(thu +" "+chi+" "+loiNhuan);
                 Object[] row = { week, luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu, chi, loiNhuan };
                 dtm_ChiTiet.addRow(row);
             }
@@ -941,17 +1096,21 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
                 dtm_ChiTiet.addRow(row);
             }
         }
-
-
-
+        }
 	}
 	
 	private void hienChiTiet() {
+		String ngonNgu = settingModel.getNgonNgu();
+        if(ngonNgu.equals("English"))
+        	lbl_ShowName.setText("Detailed table of revenue statistics from employee");
+        if(ngonNgu.equals("Vietnamese"))
+        	lbl_ShowName.setText("Bảng chi tiết thống kê doanh thu từ nhân viên");
 		JPanel pn_Temp = new JPanel(new BorderLayout());
         tbl_ChiTiet = new CustomTable();
+        tinhBang();
         tbl_ChiTiet.setModel(dtm_ChiTiet);
         scr_ChiTiet = new JScrollPane(tbl_ChiTiet);
-        tinhBang();
+        
         
         pn_Temp.add(scr_ChiTiet, BorderLayout.CENTER);
         // Xóa component cũ khỏi container
@@ -967,8 +1126,8 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 	}
 	public JPanel tinhBieuDo() {
 		long daycount = 1,weekcount = 1,monthcount=1,quartercount=1,yearcount =1;
-		long maxcount = 12;
-		setNgayBatDau();
+		long maxcount = 2;
+		setDefaultValue();
 		LocalDate ngayBatDau = dcr_NgayBatDau.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy ngày từ JDateChooser, chuyển đổi sang LocalDate
 		LocalDate ngayKetThuc = dcr_NgayKetThuc.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy ngày từ JDateChooser, chuyển đổi sang LocalDate
 		daycount = ChronoUnit.DAYS.between(ngayBatDau, ngayKetThuc)+1;
@@ -987,7 +1146,29 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
         lineChart.addLegend(lbl_LoiNhuan.getText(), Custom_ColorPicker.blue_4B70F5,Custom_ColorPicker.blue_4B70F5);
 		String loaiThoiGian = (String) cbo_LoaiThoiGian.getSelectedItem();
 		Random rand = new Random();
-		if(loaiThoiGian.equals("By day")||loaiThoiGian.equals("Theo ngày")) {
+		String loc = cbo_Loc.getSelectedItem().toString();
+		String ngonNgu = settingModel.getNgonNgu();
+		if(loc.equals("Tất cả nhân viên")||loc.equals("All employees")) {
+	        if(ngonNgu.equals("English"))
+	        	lbl_ShowName.setText("Chart of revenue statistics by top 10 employees");
+	        if(ngonNgu.equals("Vietnamese"))
+	        	lbl_ShowName.setText("Biểu đồ thống kê doanh thu theo top 10 nhân viên");
+	        //Nhật ở đây NumberOfEmployee là số lượng nhân viên thực hiện giao dịch, tui để 10 để test, ông thanh thành list.length
+	        int NumberOfEmployee = 2;
+	        
+	        int result = (10 <= NumberOfEmployee) ? 10 : NumberOfEmployee;
+	        for (int i = 0; i < result; i++) {
+	            barChart.addData(new ModelChart("NV1 - Thái Gõ", new double[]{i+200, i+200, 20*(i+1)}));
+	        }
+			barChart.start();
+			return barChart;
+		}
+		else {
+			if(ngonNgu.equals("English"))
+	        	lbl_ShowName.setText("Statistics chart of revenue by employees");
+	        if(ngonNgu.equals("Vietnamese"))
+	        	lbl_ShowName.setText("Biểu đồ thống kê doanh thu theo nhân viên");
+			if(loaiThoiGian.equals("By day")||loaiThoiGian.equals("Theo ngày")) {
 			if(daycount<=maxcount) {
 				for (int i = 0; i < daycount; i++) {
 		            barChart.addData(new ModelChart(ngayBatDau.plusDays(i).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), new double[]{i+200, i+200, 20*(i+1)}));
@@ -999,7 +1180,7 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		        for (int i = 0; i < daycount; i++) {
 		        	int a = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến a
 		        	int b = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến b
-		        	int c = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến c
+		            int c = a-b; // lợi nhuận = doanh thu - chi
 		            lineChart.addData(new gui_Panel.lineChart.ModelChart(String.format(ngayBatDau.plusDays(i).format(DateTimeFormatter.ofPattern("dd-MM")), i+1), new double[]{a,b,c}));
 		        }
 		        lineChart.start();
@@ -1022,7 +1203,7 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		        for (int i = 0; i < weekcount; i++) {
 		            int a = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến a
 		            int b = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến b
-		            int c = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến c
+		            int c = a-b; // lợi nhuận = doanh thu - chi
 		            LocalDate date = ngayBatDau.plusWeeks(i);
 		            int weekOfYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
 		            int year = date.getYear();
@@ -1045,7 +1226,7 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		        for (int i = 0; i < monthcount; i++) {
 		            int a = rand.nextInt(1001);
 		            int b = rand.nextInt(1001);
-		            int c = rand.nextInt(1001);
+		            int c = a-b; // lợi nhuận = doanh thu - chi
 		            LocalDate date = ngayBatDau.plusMonths(i);
 		            int monthOfYear = date.getMonthValue();
 		            int year = date.getYear();
@@ -1069,7 +1250,7 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		        for (int i = 0; i < quartercount; i++) {
 		            int a = rand.nextInt(1001);
 		            int b = rand.nextInt(1001);
-		            int c = rand.nextInt(1001);
+		            int c = a-b; // lợi nhuận = doanh thu - chi
 		            LocalDate date = ngayBatDau.plusMonths(i*3);
 		            int quarterOfYear = (date.getMonthValue()-1)/3 + 1;
 		            int year = date.getYear();
@@ -1083,7 +1264,6 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		        for (int i = 0; i < yearcount; i++) {
 		            LocalDate date = ngayBatDau.plusYears(i);
 		            int year = date.getYear();
-		            System.out.println(year);
 		            barChart.addData(new ModelChart("Năm " + year, new double[]{i+200, i+200, 20*(i+1)}));
 		        }
 		        barChart.start();
@@ -1092,7 +1272,7 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		        for (int i = 0; i < yearcount; i++) {
 		            int a = rand.nextInt(1001);
 		            int b = rand.nextInt(1001);
-		            int c = rand.nextInt(1001);
+		            int c = a-b; // lợi nhuận = doanh thu - chi
 		            LocalDate date = ngayBatDau.plusYears(i);
 		            int year = date.getYear();
 		            lineChart.addData(new gui_Panel.lineChart.ModelChart(year+"", new double[]{a, b, c}));
@@ -1101,7 +1281,7 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		        return lineChart;
 		    }
 		}
-
+		}
 
 		return null;
 	}
@@ -1118,17 +1298,24 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
         this.revalidate();
         this.repaint();
 	}
-	private void setNgayBatDau() {
+	private void setDefaultValue() {
 	    Calendar cal = Calendar.getInstance();
+	    settingModel = new SettingModel();
+		try {
+			settingModel.readFrom();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String ngonNgu = settingModel.getNgonNgu();
+		if(cbo_Loc.getSelectedItem() == null) {
+			System.out.println("ngôn ngữ đọc đc " + ngonNgu);
+			if(ngonNgu.equals("Vietnamese"))
+	    		cbo_Loc.setSelectedItem("Tất cả nhân viên");
+	    	if(ngonNgu.equals("English"))
+	    		cbo_Loc.setSelectedItem("All employees");   	
+		}
 	    if(cbo_LoaiThoiGian.getSelectedItem() == null) {
-	    	settingModel = new SettingModel();
-			try {
-				settingModel.readFrom();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	String ngonNgu = settingModel.getNgonNgu();
 	    	if(ngonNgu.equals("Vietnamese"))
 	    		cbo_LoaiThoiGian.setSelectedItem("Theo ngày");
 	    	if(ngonNgu.equals("English"))
@@ -1152,7 +1339,6 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 	    		loaiThoiGian = "Theo năm";
 	    		break;
 	    }
-	    System.out.println(loaiThoiGian);
 	    if (dcr_NgayKetThuc.getDate() == null) dcr_NgayKetThuc.setDate(cal.getTime());
 	    if (dcr_NgayBatDau.getDate() == null) {
 	        switch (loaiThoiGian) {
@@ -1163,7 +1349,6 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 	            case "Theo tuần":
 	                // Đầu tuần (Thứ Hai)
 	                cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-	                System.out.println(cal.getTime());
 	                dcr_NgayBatDau.setDate(cal.getTime());
 	                break;
 	            case "Theo tháng":
@@ -1189,7 +1374,7 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 	}
 
 	private boolean kiemTraHopLe() {
-		setNgayBatDau();
+		setDefaultValue();
 		Date ngayHienTai = new Date();
         UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
         UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
@@ -1244,8 +1429,8 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		if (o.equals(btn_XuatExcel)) {
 			XuatFile.saveToExcel(dtm_ChiTiet,"Thống kê hóa đơn");
 		}
-		if (o.equals(btn_InBaoCao)) {
-			Frame_ThongKeDoanhThuTheoHoaDon frameXuatPDF = new Frame_ThongKeDoanhThuTheoHoaDon(this);
+		if (o.equals(btn_XuatPDF)&&kiemTraHopLe()) {
+			Frame_ThongKeDoanhThuTheoNhanVien frameXuatPDF = new Frame_ThongKeDoanhThuTheoNhanVien(this);
 			frameXuatPDF.setVisible(true);
 		}
 	}
@@ -1265,15 +1450,19 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 	}
 	private void settingLanguage() {
 	    if(settingModel.getNgonNgu().equals("Vietnamese")) {
-	    	lbl_Title_BaoCaoDoanhThu.setText("Thống kê doanh thu hóa đơn");
+	    	lbl_Title_BaoCaoDoanhThu.setText("Thống kê doanh thu theo nhân viên");
 	        lbl_LoaiThoiGian.setText("Loại thời gian");
+	        lbl_Loc.setText("Lọc theo");
 	        lbl_ThoiGianBatDau.setText("Thời gian bắt đầu");
 	        lbl_ThoiGianKetThuc.setText("Thời gian kết thúc");
 	        btn_TimKiem.setText("Tìm kiếm");
 	        btn_XuatExcel.setText("Xuất Excel");
-	        btn_InBaoCao.setText("In báo cáo");
+	        btn_XuatPDF.setText("Xuất PDF");
 	        btn_BieuDo.setText("Biểu đồ");
 	        btn_HienThi.setText("Hiển thị chi tiết");
+	        lbl_Read_Loc.setText("Lọc theo");
+	        lbl_Read_NVLoc.setText("Lượng nhân viên theo thời gian");
+	        lbl_Read_NVTong.setText("Lượng nhân viên tổng");
 	        lbl_DoanhThu.setText("Doanh thu");
 	        lbl_Chi.setText("Chi");
 	        lbl_LoiNhuan.setText("Lợi nhuận");
@@ -1282,45 +1471,57 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 	        lbl_SLSPB.setText("Lượng sản phẩm bán được");
 	        lbl_Control_Main.setText("Thao tác: ");
 	        lbl_Control_Show.setText("Nội dung: ");
-	        dtm_ChiTiet =  new DefaultTableModel(new String[]{"Ngày","Lượng hóa đơn","Lượng khách","Lượng sản phẩm bán được","Thu","Chi","Lợi nhuận"},0);
+	        dtm_ChiTiet =  new DefaultTableModel(new String[]{"Mã nhân viên","Tên nhân viên","Lượng hóa đơn","Lượng khách","Lượng sản phẩm bán được","Thu","Chi","Lợi nhuận"},0);
 	        cbo_LoaiThoiGian.addItem("Theo ngày");
 	        cbo_LoaiThoiGian.addItem("Theo tuần");
 	        cbo_LoaiThoiGian.addItem("Theo tháng");
 	        cbo_LoaiThoiGian.addItem("Theo quý");
 	        cbo_LoaiThoiGian.addItem("Theo năm");
+	        cbo_Loc.addItem("Tất cả nhân viên");
+	        lbl_ShowName.setText("Chọn nội dung hiển thị");
 	    }
 	    if(settingModel.getNgonNgu().equals("English")) {
-	    	lbl_Title_BaoCaoDoanhThu.setText("Invoice revenue statistics");
-	        lbl_LoaiThoiGian.setText("Time type");
-	        lbl_ThoiGianBatDau.setText("Start time");
-	        lbl_ThoiGianKetThuc.setText("End time");
-	        btn_TimKiem.setText("Search");
-	        btn_XuatExcel.setText("Export Excel");
-	        btn_InBaoCao.setText("Print report");
-	        btn_BieuDo.setText("Chart");
-	        btn_HienThi.setText("Show details");
-	        lbl_DoanhThu.setText("Revenue");
-	        lbl_Chi.setText("Expenditure");
-	        lbl_LoiNhuan.setText("Profit");
-	        lbl_SLHoaDon.setText("Number of Invoices");
-	        lbl_SLKhach.setText("Number of Customers");
-	        lbl_SLSPB.setText("Number of Products Sold");
-	        lbl_Control_Main.setText("Operation: ");
-	        lbl_Control_Show.setText("Content: ");
-	        dtm_ChiTiet =  new DefaultTableModel(new String[]{"Date","Number of Invoices","Number of Customers","Number of Products Sold","Revenue","Expenditure","Profit"},0);
+	    	lbl_Title_BaoCaoDoanhThu.setText("Revenue statistics by employee");
+	    	lbl_LoaiThoiGian.setText("Type of time");
+	    	lbl_Loc.setText("Filter by");
+	    	lbl_ThoiGianBatDau.setText("Start time");
+	    	lbl_ThoiGianKetThuc.setText("End time");
+	    	btn_TimKiem.setText("Search");
+	    	btn_XuatExcel.setText("Export Excel");
+	    	btn_XuatPDF.setText("Export PDF");
+	    	btn_BieuDo.setText("Chart");
+	    	btn_HienThi.setText("Show details");
+	    	lbl_Read_Loc.setText("Filter by");
+	    	lbl_Read_NVLoc.setText("Number of employees over time");
+	    	lbl_Read_NVTong.setText("Total number of employees");
+	    	lbl_DoanhThu.setText("Revenue");
+	    	lbl_Chi.setText("Expenditure");
+	    	lbl_LoiNhuan.setText("Profit");
+	    	lbl_SLHoaDon.setText("Number of invoices");
+	    	lbl_SLKhach.setText("Number of customers");
+	    	lbl_SLSPB.setText("Number of products sold");
+	    	lbl_Control_Main.setText("Operation: ");
+	    	lbl_Control_Show.setText("Content: ");
+	        dtm_ChiTiet =  new DefaultTableModel(new String[]{"Employee Number","Employee Name","Number of Invoices","Number of Customers","Number of Products Sold","Revenue","Expenditure","Profit"},0);
 	        cbo_LoaiThoiGian.addItem("By day");
 	        cbo_LoaiThoiGian.addItem("By week");
 	        cbo_LoaiThoiGian.addItem("By month");
 	        cbo_LoaiThoiGian.addItem("By quarter");
 	        cbo_LoaiThoiGian.addItem("By year");
+	        cbo_Loc.addItem("All employees");
+	        lbl_ShowName.setText("Select content to show");
 	    }
+	    
+	    //Nhật xóa các dòng dưới này
+	    cbo_Loc.addItem("NV1");
+	    cbo_Loc.addItem("NV2");
+	    cbo_Loc.addItem("NV3");
 	}
 	private void settingButton() {
 		// TODO Auto-generated method stub
 		for (Component component : pn_Control_Show.getComponents()) {
 		    if (component instanceof Custom_Button) {
 		        Custom_Button button = (Custom_Button) component;
-		    	System.out.println(button.getText());
 
 		        FontMetrics fm = button.getFontMetrics(button.getFont());
 		        int textWidth = fm.stringWidth(button.getText());
@@ -1338,7 +1539,6 @@ public class Panel_ThongKeDoanhThu extends JPanel implements ActionListener{
 		for (Component component : pn_Control_Main.getComponents()) {
 		    if (component instanceof Custom_Button) {
 		        Custom_Button button = (Custom_Button) component;
-		    	System.out.println(button.getText());
 
 		        FontMetrics fm = button.getFontMetrics(button.getFont());
 		        int textWidth = fm.stringWidth(button.getText());

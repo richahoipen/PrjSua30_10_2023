@@ -678,6 +678,34 @@ public class SanPham_DAO implements SanPham_Method
 			return false;
 		}
 	}
+	@Override
+	public String getTenSP_TheoMa(String maSP_CanTim) {
+		String sqlSelect="select tenSP from [dbo].[SanPham]\r\n"
+				+ "where maSP=?;";
+		try {
+			String tenSP_LayVe="";
+			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);	
+			preparedStatement.setNString(1,maSP_CanTim);
+			ResultSet rs = preparedStatement.executeQuery();
+			// NhanVien(String maNV, String tenNV, String sdt, String gioiTinh, String diaChi, Date ngaySinh, String chucVu,String cMND, String caLam)					
+			while (rs.next()) 
+			{
+				String tenSP=rs.getNString("tenSP");
+				tenSP_LayVe+=tenSP;
+			}
+			
+			con.con().close();
+			con.stmt().close();
+			preparedStatement.close();
+			return tenSP_LayVe;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
+	}
 
 	
 	

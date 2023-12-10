@@ -1,6 +1,13 @@
 ﻿use RisingStar
 --Lấy hóa đơn
 select * from [dbo].[HoaDon]
+--
+SELECT *
+FROM [dbo].[HoaDon]
+ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) ASC;
+
+
+--
 select * from [dbo].[CTHoaDon]
 
 select*from [dbo].[SanPham]
@@ -21,8 +28,16 @@ values (@NewMaHD,?,?,?,?,?,?,?)
 --thêm ct hoa don
 DECLARE @NewSTT INT;
 SET @NewSTT = ISNULL((SELECT MAX(sTT) FROM [dbo].[CTDonDatHang]), 0) + 1;
-insert into [dbo].[CTHoaDon]([sTT],[maSP],[donGia],[soLuong],[thanhTien])
-values (@NewSTT,?,?,?,?)
+insert into [dbo].[CTHoaDon]([sTT],[maSP],[donGia],[soLuong],[thanhTien],[maHD])
+values (@NewSTT,?,?,?,?,?)
+--
+DECLARE @NewSTT INT;
+SELECT @NewSTT = COUNT(*) + 1
+FROM [dbo].[CTHoaDon];
+INSERT INTO [dbo].[CTHoaDon] ([sTT], [maSP], [donGia], [soLuong], [thanhTien], [maHD])
+VALUES (@NewSTT, N'SP2', 34, 3, 34 * 3, N'HD11');
+
+
 
 select * from [DonDatHang]
 
@@ -65,3 +80,30 @@ where maDDH=?
 SELECT SUM(thanhTien) AS tongTien
 FROM CTDonDatHang
 GROUP BY maDDH;
+--Lay Hoa Don
+select * from [dbo].[HoaDon]
+where maHD=N'HD11';
+
+select * from [dbo].[DonDatHang]
+
+select * from [CTHoaDon]
+where maHD=N'HD10'
+ORDER BY CAST(SUBSTRING(maSP, 3, LEN(maSP)) AS INT) ASC;
+
+SELECT CTHoaDon.*, SanPham.tenSP
+FROM CTHoaDon
+JOIN SanPham ON CTHoaDon.maSP = SanPham.maSP
+WHERE CTHoaDon.maHD = N'HD10'
+ORDER BY CAST(SUBSTRING(CTHoaDon.maSP, 3, LEN(CTHoaDon.maSP)) AS INT) ASC;
+
+
+SELECT maHD
+FROM [dbo].[HoaDon]
+ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) DESC;
+
+SELECT TOP 1 maHD
+FROM [dbo].[HoaDon]
+ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) DESC;
+
+select tenSP from [dbo].[SanPham]
+where maSP=N'SP1';

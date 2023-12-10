@@ -12,6 +12,7 @@ import customEntities.Custom_Button;
 import customEntities.Custom_ColorPicker;
 import customEntities.Custom_ComboBox;
 import dataBase_BUS.CTDonDatHang_BUS;
+import dataBase_BUS.CTHoaDon_BUS;
 import dataBase_BUS.DonDatHang_BUS;
 import dataBase_BUS.HoaDon_BUS;
 import dataBase_BUS.KhachHang_BUS;
@@ -68,6 +69,7 @@ import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -116,6 +118,7 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 	private CTDonDatHang_BUS sqlCTDonDatHang_BUS=new CTDonDatHang_BUS();
 	private DonDatHang_BUS sqlDonDatHang_BUS=new DonDatHang_BUS();
 	private HoaDon_BUS sqlHoaDon_BUS=new HoaDon_BUS();
+	private CTHoaDon_BUS sqlCTHoaDon_BUS=new CTHoaDon_BUS();
 	private String maNV;
 	private SettingModel settingModel;
 	//private DD_BUS sqlSanPham_BUS=new SanPham_BUS();
@@ -824,7 +827,7 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 		}
 		return true;
 	}
-	private void lapHoaDon()
+	private boolean lapHoaDon()
 	{
 		if(checkText())
 		{
@@ -840,8 +843,8 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 					double tongTien_Double=Double.parseDouble(tongTien);
 					
 					//Tạo dòng và cột cho giỏ hàng
-					int rowCount = dtm_CTDD.getRowCount();
-					ArrayList<CTDonDatHang> listCTDonDatHang=new ArrayList<>();
+					//int rowCount = dtm_CTDD.getRowCount();
+					//ArrayList<CTDonDatHang> listCTDonDatHang=new ArrayList<>();
 					//public HoaDon(String maHD, Date ngayLap,Time gioLap,double tongTien,double tienKhachDua)
 					HoaDon h=new HoaDon();
 					Date ngayHienTai=new Date();
@@ -860,6 +863,7 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 			        k.setSdt(sdt);
 			        k.setGioiTinh(gioiTinh_Boolean(gioiTinh));
 			        String maKH=sqlDonDatHang_BUS.getMaKH(k);
+			        /*
 			        for (int row = 0; row < rowCount; row++) {
 		                String maSP=dtm_CTDD.getValueAt(row, 0).toString();
 		                String donGia=dtm_CTDD.getValueAt(row, 2).toString();
@@ -867,28 +871,33 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 		                String thanhTien=dtm_CTDD.getValueAt(row, 4).toString();
 		                //CTDonDatHang(double donGia, int soLuong, double thanhTien, String maSP)
 		                CTDonDatHang c=new CTDonDatHang(Double.parseDouble(donGia),Integer.parseInt(soLuongMua),Double.parseDouble(thanhTien),maSP);
-		                listCTDonDatHang.add(c);
-		            }
+		                //listCTDonDatHang.add(c);
+		                sqlCTHoaDon_BUS.them_CTHoaDon_TheoMaHD(c, sqlHoaDon_BUS.getMaHD_MoiNhat());
+		            }*/
 			        //tính tiền thống
 			        double tienThoi=tienKhanhDua_Double-tongTien_Double;
-			        sqlHoaDon_BUS.themHoaDon(h, maNV, maKH, listCTDonDatHang);	        
+			        sqlHoaDon_BUS.themHoaDon(h, maNV, maKH);	        
 			        lbl_txt_TienThoi.setText(Double.toString(tienThoi));
 			        sqlHoaDon_BUS.capNhatDonDatHang(maDDH);
+			        return true;
+			        /*
 			        for (int row = 0; row < rowCount; row++)
 			        {
 			        	String maSP=dtm_CTDD.getValueAt(row, 0).toString();
 			        	String soLuongMua=dtm_CTDD.getValueAt(row, 3).toString();
 			        	sqlHoaDon_BUS.capNhatSoLuong(maSP, Integer.parseInt(soLuongMua));
-			        }	           
+			        }	 */          
 				} catch(NumberFormatException e) {
 					UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 					UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
 					JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+					return false;
 				}catch(Exception e)
 				{
 					UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 					UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
 					JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+					return false;
 				}
 			}else
 			{
@@ -901,8 +910,8 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 					double tongTien_Double=Double.parseDouble(tongTien);
 					
 					//Tạo dòng và cột cho giỏ hàng
-					int rowCount = dtm_CTDD.getRowCount();
-					ArrayList<CTDonDatHang> listCTDonDatHang=new ArrayList<>();
+					
+					//ArrayList<CTDonDatHang> listCTDonDatHang=new ArrayList<CTDonDatHang>();
 					//public HoaDon(String maHD, Date ngayLap,Time gioLap,double tongTien,double tienKhachDua)
 					HoaDon h=new HoaDon();
 					//Khai báo Date
@@ -922,41 +931,80 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 			        k.setSdt(sdt);
 			        k.setGioiTinh(gioiTinh_Boolean(gioiTinh));
 			        String maKH=sqlDonDatHang_BUS.getMaKH(k);
+			        //System.out.println(sqlHoaDon_BUS.getMaHD_MoiNhat());
+			        
+			        //tính tiền thối
+			        double tienThoi=tienKhanhDua_Double-tongTien_Double;
+			        sqlHoaDon_BUS.themHoaDon(h, maNV, maKH);	        
+			        lbl_txt_TienThoi.setText(Double.toString(tienThoi));
+			        //sqlHoaDon_BUS.capNhatDonDatHang(maDDH);
+			       
+			        /*
 			        for (int row = 0; row < rowCount; row++) {
 		                String maSP=dtm_CTDD.getValueAt(row, 0).toString();
 		                String donGia=dtm_CTDD.getValueAt(row, 2).toString();
 		                String soLuongMua=dtm_CTDD.getValueAt(row, 3).toString();
 		                String thanhTien=dtm_CTDD.getValueAt(row, 4).toString();
 		                //CTDonDatHang(double donGia, int soLuong, double thanhTien, String maSP)
-		                CTDonDatHang c=new CTDonDatHang(Double.parseDouble(donGia),Integer.parseInt(soLuongMua),Double.parseDouble(thanhTien),maSP);
-		                listCTDonDatHang.add(c);
-		            }
-			        //tính tiền thối
-			        double tienThoi=tienKhanhDua_Double-tongTien_Double;
-			        sqlHoaDon_BUS.themHoaDon(h, maNV, maKH, listCTDonDatHang);	        
-			        lbl_txt_TienThoi.setText(Double.toString(tienThoi));
-			        //sqlHoaDon_BUS.capNhatDonDatHang(maDDH);
-			        for (int row = 0; row < rowCount; row++)
-			        {
-			        	String maSP=dtm_CTDD.getValueAt(row, 0).toString();
-			        	String soLuongMua=dtm_CTDD.getValueAt(row, 3).toString();
-			        	sqlHoaDon_BUS.capNhatSoLuong(maSP, Integer.parseInt(soLuongMua));
-			        }	           
+		                
+		            }*/
+			        return true;
 				} catch(NumberFormatException e) {
 					UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 					UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
 					JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+					return false;
 				}catch(Exception e)
 				{
 					UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
 					UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
 					JOptionPane.showMessageDialog(null, e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+					return false;
 				}
 			}
 			
-		}	
+		}
+		return false;
 	}
-
+	private void capNhatCT_HoaDon_Va_SoLuong_XuatHoaDon()
+	{
+		 int rowCount = dtm_CTDD.getRowCount();
+		 System.out.println(sqlHoaDon_BUS.get_MaHD_MoiNhat());
+		 ArrayList<CTDonDatHang> listCTDonDatHang =new ArrayList<CTDonDatHang>();
+		
+	     for (int row = 0; row < rowCount; row++)
+	     {
+	    	 String maSP=dtm_CTDD.getValueAt(row, 0).toString();
+             String donGia=dtm_CTDD.getValueAt(row, 2).toString();
+             String soLuongMua=dtm_CTDD.getValueAt(row, 3).toString();
+             String thanhTien=dtm_CTDD.getValueAt(row, 4).toString();
+             sqlHoaDon_BUS.capNhatSoLuong(maSP, Integer.parseInt(soLuongMua));
+             CTDonDatHang c=new CTDonDatHang(Double.parseDouble(donGia),Integer.parseInt(soLuongMua),Double.parseDouble(thanhTien),maSP);
+             listCTDonDatHang.add(c);
+             //tongTien+=Double.parseDouble(thanhTien);
+             sqlCTHoaDon_BUS.them_CTHoaDon_TheoMaHD(c, sqlHoaDon_BUS.get_MaHD_MoiNhat());
+             SanPham s=new SanPham();
+             s.setMaSP(maSP);
+             sqlCTDonDatHang_BUS.xoaCTDonDatHang(s);
+             
+	     }
+	     resetTable_GioHang();
+	     EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						Date currentDate = new Date();
+					    Time currentTime = new Time(currentDate.getTime());
+						Frame_HoaDonXuat frame = new Frame_HoaDonXuat(sqlHoaDon_BUS.get_MaHD_MoiNhat(), maNV, 
+								lbl_txt_HoTenKhachHang.getText(), lbl_txt_SoDienThoai.getText(), LocalDate.now(), 
+								currentTime,Double.parseDouble(txt_SoTienKhachTra.getText()),listCTDonDatHang);
+						frame.setVisible(true);
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getMessage());
+					}
+				}
+		});
+	}
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -1064,8 +1112,8 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 		{
 			if(!isTableEmpty(tbl_DSCTDD))
 			{
-				lapHoaDon();
-				sqlHoaDon_BUS.capNhat_CTHoaDon(sqlHoaDon_BUS.getMaHD_MoiNhat());
+				if(lapHoaDon())
+					capNhatCT_HoaDon_Va_SoLuong_XuatHoaDon();	
 			}
 			else
 			{
@@ -1082,6 +1130,10 @@ public class Panel_LapHoaDon extends JPanel implements ActionListener, MouseList
 				}
 		        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
 			}
+		}
+		if(o.equals(btn_XoaTrang))
+		{
+			xoaTrang();
 		}
 		
 	}

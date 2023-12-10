@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
 
 import connectDB.Connect;
 import customEntities.Custom_ComboBox;
-import dataBase_BUS.KhachHang_BUS;
+
 import entities.DonDatHang;
 import entities.KhachHang;
 import interface_Method_DAO.DonDatHang_Method;
@@ -20,7 +20,7 @@ import interface_Method_DAO.ICombobox_TimKiem_DonDat;
 public class DonDatHang_DAO implements DonDatHang_Method, ICombobox_TimKiem_DonDat
 {
 	private Connect con = new Connect();
-	private KhachHang_BUS sqlKhachHang_BUS=new KhachHang_BUS();
+	//private KhachHang_BUS sqlKhachHang_BUS=new KhachHang_BUS();
 	public DonDatHang_DAO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -511,6 +511,31 @@ public class DonDatHang_DAO implements DonDatHang_Method, ICombobox_TimKiem_DonD
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	
+	@Override
+	public String get_MaDDH_MoiNhat() {
+		String sqlSelect = "SELECT TOP 1 maDDH\r\n"
+				+ "FROM [dbo].[DonDatHang]\r\n"
+				+ "ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) DESC;";		
+	    try {
+	    	String maDDH_LayVe="";
+	    	//PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);
+	        //ResultSet rs = preparedStatement.executeQuery();
+	    	ResultSet rs = con.resultSet(sqlSelect);
+	        while (rs.next()) {
+	            String maDDH=rs.getString("maDDH");
+	            maDDH_LayVe+=maDDH;
+	        }
+	        System.out.println("mã hóa đơn mới nhất: "+maDDH_LayVe);
+	        con.con().close();
+	        //preparedStatement.close();
+	        rs.close();
+	        return maDDH_LayVe;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return null;
+	    }
+	}
 }

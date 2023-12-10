@@ -34,7 +34,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Font;
 
-public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionListener {
+public class Frame_ThongKeDoanhThuTheoNhanVien extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
 	private JTextField txt_SoHoaDon;
@@ -66,16 +66,22 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 	private Component lbl_SLSPB;
 	private JLabel lbl_LoiNhuan;
 	private JPanel pn_Show;
-	private Panel_ThongKeDoanhThuTheoHoaDon pn_Parent;
+	private Panel_ThongKeDoanhThuTheoNhanVien pn_Parent;
 	private JLabel lbl_ShowName;
+	private JLabel lbl_ShowName_1;
 	private Custom_Button btn_XuatPDF;
+	private JLabel lbl_NhanVien;
+	private JTextField txt_NhanVien;
+	private JTextField txt_NhanVienTong;
+	private JLabel lbl_NhanVienTong;
+	
 
 	/**
 	 * Create the frame.
 	 */
-	public Frame_ThongKeDoanhThuTheoHoaDon(Panel_ThongKeDoanhThuTheoHoaDon pnParent) {
-		pn_Parent = (Panel_ThongKeDoanhThuTheoHoaDon) pnParent;
-		setTitle("RisingStar - THỐNG KÊ THEO HÓA ĐƠN");
+	public Frame_ThongKeDoanhThuTheoNhanVien(Panel_ThongKeDoanhThuTheoNhanVien pnParent) {
+		pn_Parent = (Panel_ThongKeDoanhThuTheoNhanVien) pnParent;
+		setTitle("RisingStar - THỐNG KÊ THEO NHÂN VIÊN");
 		setIconImage(new CustomIcon("src/main/images/view_image/Logo.png").getImage());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocation(500, 0);
@@ -102,7 +108,7 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 		lbl_Hotline.setHorizontalAlignment(SwingConstants.CENTER);
 		pn_CuaHang.add(lbl_Hotline, "cell 0 1 2 1,growx,aligny center");
 
-		lbl_Title_Main = new JLabel("THỐNG KÊ THEO HÓA ĐƠN");
+		lbl_Title_Main = new JLabel("THỐNG KÊ THEO NHÂN VIÊN");
 		lbl_Title_Main.setFont(new Font("Tahoma", Font.BOLD, 17));
 		lbl_Title_Main.setHorizontalAlignment(SwingConstants.CENTER);
 		pn_CuaHang.add(lbl_Title_Main, "cell 0 2 2 1,growx");
@@ -113,7 +119,7 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 
 		pn_ThongTin = new JPanel();
 		pn_Center.add(pn_ThongTin, BorderLayout.NORTH);
-		pn_ThongTin.setLayout(new MigLayout("", "[][grow][][grow]", "[][][][][][]"));
+		pn_ThongTin.setLayout(new MigLayout("", "[][grow][][grow]", "[][][][][][][]"));
 
 		lbl_LoaiThoiGian = new JLabel("Loại thời gian");
 		pn_ThongTin.add(lbl_LoaiThoiGian, "cell 0 0,alignx trailing");
@@ -206,12 +212,32 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 		pn_ThongTin.add(txt_LoiNhuan, "cell 3 4,growx");
 		
 		btn_XuatPDF = new Custom_Button();
-		btn_XuatPDF.setText("Xuất pdf");
 		btn_XuatPDF.setBorder(BorderFactory.createLineBorder(Color.CYAN));
+		btn_XuatPDF.setText("Xuất pdf");
 		btn_XuatPDF.setPreferredSize(new Dimension(100, 40));
 		btn_XuatPDF.addActionListener(this);
-		pn_ThongTin.add(btn_XuatPDF, "cell 0 5");
-		lbl_ShowName = new JLabel("Biểu đồ thể hiện doanh thu - chi - lợi nhuận từ hóa đơn");
+		
+		lbl_NhanVien = new JLabel("Số lượng nhân viên");
+		pn_ThongTin.add(lbl_NhanVien, "cell 0 5,alignx trailing");
+		
+		txt_NhanVien = new JTextField();
+		txt_NhanVien.setText((String) null);
+		txt_NhanVien.setEditable(false);
+		txt_NhanVien.setColumns(10);
+		txt_NhanVien.setCaretColor(UIManager.getColor("Button.background"));
+		pn_ThongTin.add(txt_NhanVien, "cell 1 5,growx");
+		
+		lbl_NhanVienTong = new JLabel("Tổng nhân viên hiện có");
+		pn_ThongTin.add(lbl_NhanVienTong, "cell 2 5,alignx trailing");
+		
+		txt_NhanVienTong = new JTextField();
+		txt_NhanVienTong.setText((String) null);
+		txt_NhanVienTong.setEditable(false);
+		txt_NhanVienTong.setColumns(10);
+		txt_NhanVienTong.setCaretColor(UIManager.getColor("Button.background"));
+		pn_ThongTin.add(txt_NhanVienTong, "cell 3 5,growx");
+		pn_ThongTin.add(btn_XuatPDF, "cell 0 6");
+		lbl_ShowName = new JLabel("Biểu đồ");
 		lbl_ShowName.setFont(new Font("Tahoma", Font.BOLD, 14));
 		pn_Center.add(lbl_ShowName, BorderLayout.SOUTH);
 		lbl_ShowName.setHorizontalAlignment(SwingConstants.CENTER);
@@ -241,6 +267,22 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
     		loaiThoiGian = "Theo năm";
     		break;
 		}
+		String loc = "";
+	    if (pn_Parent.getCbo_Loc().getSelectedItem()==null||pn_Parent.getCbo_Loc().getSelectedItem().equals("All employees")){
+	    	loc = "Tất cả nhân viên";
+	    }
+	    if (loc.equals("Tất cả nhân viên")) {
+	    	System.out.println("a");
+	    	lbl_NhanVien.setText("Lượng nhân viên theo thời gian");
+	    	txt_NhanVien.setText(pn_Parent.getTxt_Read_NVLoc().getText());
+	    	lbl_ShowName.setText("Biểu đồ thống kê doanh thu - chi - lợi theo top 10 nhân viên");
+	    }
+	    else {
+	    	lbl_NhanVien.setText("Mã nhân viên");
+	    	txt_NhanVien.setText(loc);
+	    	lbl_ShowName.setText("Biểu đồ thống kê doanh thu - chi - lợi theo nhân viên");
+	    }
+	    txt_NhanVienTong.setText(pn_Parent.getTxt_Read_NVTong().getText());
 		txt_LoaiThoiGian.setText(loaiThoiGian);
 		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
         LocalDateTime now = LocalDateTime.now();
@@ -257,7 +299,7 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 		txt_Chi.setText(pn_Parent.getTxt_read_Chi().getText());
 		txt_LoiNhuan.setText(pn_Parent.getTxt_read_LoiNhuan().getText());
 		//pn_ThongTin.setPreferredSize(new Dimension(600,200));
-		pn_Show.setPreferredSize(new Dimension(1280,325));
+		pn_Show.setPreferredSize(new Dimension(1280,300));
 		
 		pn_Show.add(new JLabel("a"));
 		pn_Show.repaint();
@@ -269,7 +311,7 @@ public class Frame_ThongKeDoanhThuTheoHoaDon extends JFrame implements ActionLis
 		Object o = e.getSource();
 		if(o.equals(btn_XuatPDF)) {
 			btn_XuatPDF.setVisible(false);
-			XuatFile.saveToPDF(this, "Thống kê doanh thu theo hóa đơn");
+			XuatFile.saveToPDF(this, "Thống kê doanh thu theo nhân viên");
 			btn_XuatPDF.setVisible(true);
 		}
 	}

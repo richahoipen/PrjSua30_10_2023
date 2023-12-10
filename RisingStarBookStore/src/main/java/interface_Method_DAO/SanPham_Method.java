@@ -30,5 +30,6 @@ public interface SanPham_Method
 	//xuất đơn đặt
 	public boolean xuatDanhSachSanPham_DonDat(DefaultTableModel dtm_SP);
 	public boolean xuatDanhSachSanPham_LapHoaDon(DefaultTableModel dtm_SP);
+	public String getTenSP_TheoMa(String maSP);
 	
 }

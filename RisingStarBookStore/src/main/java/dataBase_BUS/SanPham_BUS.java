@@ -122,6 +122,12 @@ public class SanPham_BUS implements SanPham_Method
 		// TODO Auto-generated method stub
 		return sqlSanPham_DAO.xuatDanhSachSanPham_LapHoaDon(dtm_SP);
 	}
+
+	@Override
+	public String getTenSP_TheoMa(String maSP) {
+		// TODO Auto-generated method stub
+		return sqlSanPham_DAO.getTenSP_TheoMa(maSP);
+	}
 	
 
 }

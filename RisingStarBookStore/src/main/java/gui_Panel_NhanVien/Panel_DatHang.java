@@ -57,7 +57,9 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
@@ -602,10 +604,31 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
     	}
     	else
     	{
+    		/*
+    		 * String maDDH="DDH50";
+					String maNV="NV1";
+					String tenKH="Văn Đại";
+					String sdt="0923646567";
+					String ngayDat="11/12/2023";
+					String ngayHetHan="26/12/2023";
+					Date currentDate = new Date();
+			        Time currentTime = new Time(currentDate.getTime());
+			        ArrayList<CTDonDatHang> listCTDonDatHang =new ArrayList<CTDonDatHang>();
+			        listCTDonDatHang.add(new CTDonDatHang(200000, 12, 13142, "SP1"));
+					Frame_DonDatXuat frame = new Frame_DonDatXuat(maDDH, maNV, tenKH, sdt, ngayDat, ngayHetHan, currentTime,listCTDonDatHang);
+					frame.setVisible(true);
+    		 */
     		try
     		{
+    			//String tenKH=lbl_txt_HoTenKhachHang.getText();
     			String sdt=lbl_txt_SoDienThoai.getText();
         		String gioiTinh=lbl_txt_GioiTinh.getText();
+        		int rowCount = dtm_CTDD.getRowCount();
+	       		ArrayList<CTDonDatHang> listCTDonDatHang =new ArrayList<CTDonDatHang>();
+        		//Giờ hiện tại
+	       		Date currentDate = new Date();
+		        Time currentTime = new Time(currentDate.getTime());
+        		
         		KhachHang k=new KhachHang();
         		k.setTenKH(tenKH);
         		k.setGioiTinh(gioiTinh_Boolean(gioiTinh));
@@ -614,18 +637,32 @@ public class Panel_DatHang extends JPanel implements ActionListener, MouseListen
             	java.sql.Date sqlNgayHienTai = new java.sql.Date(ngayHienTai.getTime());
             	DonDatHang d=new DonDatHang();
             	d.setNgayDat(sqlNgayHienTai);
+            	//
+            	for (int row = 0; row < rowCount; row++)
+       	     	{
+       	    	 	String maSP=dtm_CTDD.getValueAt(row, 0).toString();
+                    String donGia=dtm_CTDD.getValueAt(row, 2).toString();
+                    String soLuongMua=dtm_CTDD.getValueAt(row, 3).toString();
+                    String thanhTien=dtm_CTDD.getValueAt(row, 4).toString();
+                    CTDonDatHang c=new CTDonDatHang(Double.parseDouble(donGia),Integer.parseInt(soLuongMua),Double.parseDouble(thanhTien),maSP);
+                    listCTDonDatHang.add(c);
+       	     	}
             	//System.out.println(sqlDonDatHang_BUS.getMaKH(k));
             	sqlDonDatHang_BUS.themDonDatHang(d,sqlDonDatHang_BUS.getMaKH(k),maNV);
+            	System.out.println(sqlDonDatHang_BUS.get_MaDDH_MoiNhat());
             	resetTable_GioHang();
-            	resetSearch();
+            	resetSearch();  
+            	//Khai báo row
+            	Frame_DonDatXuat frame = new Frame_DonDatXuat(sqlDonDatHang_BUS.get_MaDDH_MoiNhat(), maNV, tenKH, sdt, d.getNgayDatToString(),d.getNgayHetHanToString(), currentTime,listCTDonDatHang);
+				frame.setVisible(true);
+        		//Duyệt bảng
+            	
     		}catch(Exception e)
     		{
     			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
     	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
     	        JOptionPane.showMessageDialog(null,e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     		}
-    		
-    		
     	}
     }
 	@Override

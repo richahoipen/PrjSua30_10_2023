@@ -2,6 +2,9 @@
 --KhachHang
 --l?c KhachHang tang d?n theo maKH
 use RisingStar
+SELECT maKH
+FROM [dbo].[KhachHang]
+ORDER BY CAST(SUBSTRING(maKH, 3, LEN(maKH)) AS INT) ASC;
 --Lấy full dữ liệu
 SELECT *
 FROM KhachHang
