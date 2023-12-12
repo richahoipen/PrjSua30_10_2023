@@ -2,6 +2,7 @@ package gui_Panel_Setting;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.SystemColor;
@@ -14,6 +15,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -25,6 +27,7 @@ import com.raven.model.SettingModel;
 
 import customEntities.CustomIcon;
 import customEntities.Custom_Button;
+import dataBase_BUS.NhanVien_BUS;
 import gui_DangNhap.Frame_DangNhap;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
@@ -48,10 +51,14 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
 	private ButtonGroup btngNgonNgu;
 	private ButtonGroup btngPhongCach;
 	private Frame_Chinh frame_Chinh;
-	
+	private String maNV;
 	private SettingModel settingModel;
+	//sqlNhanVien_BUS.getTenNV(maNV)
+	private NhanVien_BUS sqlNhanVien_BUS=new NhanVien_BUS();
     // End of variables declaration//GEN-END:variables
-    public Panel_Setting(Frame_Chinh frame) {
+    public Panel_Setting(Frame_Chinh frame,String maNV) {
+    	//set Ten
+    	setmaNV(maNV);
     	frame_Chinh = frame;
         setOpaque(false);
         pnNguoiDung = new JPanel();
@@ -185,7 +192,7 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
         lblChucVu = new JLabel();
         lblChucVu.setFont(new Font("SansSerif", Font.BOLD, 14));
         
-        lblHoTen = new JLabel("Lương Quốc Thái");
+        lblHoTen = new JLabel(sqlNhanVien_BUS.getTenNV(maNV));
         lblHoTen.setFont(new Font("SansSerif", Font.PLAIN, 12));
         
         btnDangXuat = new Custom_Button();
@@ -245,8 +252,37 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
         pnNguoiDung.setLayout(gl_pnNguoiDung);
         setLayout(groupLayout);
         setting();
+        addAction();
     }
+    private void addAction()
+    {
+    	btnDangXuat.addActionListener(this);
+    	btnDoiMatKhau.addActionListener(this);
+    }
+    private void dangXuat()
+    {
+    	int response = JOptionPane.showConfirmDialog(null, "Bạn có muốn đăng xuất không ?\nDo you want to logout ?", "Ask", JOptionPane.YES_NO_OPTION);
 
+        if (response == JOptionPane.YES_OPTION) {
+            // Xử lý khi người dùng chọn "Yes"
+        	frame_Chinh.setVisible(false);
+        	EventQueue.invokeLater(new Runnable() {
+    			public void run() {
+    				try {
+    					Frame_DangNhap frame = new Frame_DangNhap();
+    					frame.setVisible(true);
+    					
+    				} catch (Exception e) {
+    					e.printStackTrace();
+    				}
+    			}
+    		});
+            
+        } else {
+            // Xử lý khi người dùng chọn "No" hoặc đóng hộp thoại
+            System.out.println("Không lưu thay đổi.");
+        }
+    }
     private void showMessage(String message) {
         Message obj = new Message(Frame_Chinh.getFrames()[0], true);
         obj.showMessage(message);
@@ -318,8 +354,23 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		Object o = e.getSource();
-		
-		
+		if(o.equals(btnDangXuat))
+		{
+			dangXuat();
+		}
+		if(o.equals(btnDoiMatKhau))
+		{
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {		
+						Frame_DoiMatKhau frame = new Frame_DoiMatKhau(maNV);
+						frame.setVisible(true);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
 		if (!o.equals(btnLuuCaiDat)) return;
 		if(rdbtnTiengAnh.isSelected()) {
 			settingModel.setNgonNgu("English");
@@ -347,6 +398,14 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
 		frame_Chinh = new Frame_Chinh(maNV);
 		frame_Chinh.setSettingModel(settingModel);
 		frame_Chinh.setVisible(true);
+		
+		
+	}
+	public String getmaNV() {
+		return maNV;
+	}
+	public void setmaNV(String maNV) {
+		this.maNV = maNV;
 	}
 }
 

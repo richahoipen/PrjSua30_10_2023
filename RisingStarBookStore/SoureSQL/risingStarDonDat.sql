@@ -8,6 +8,7 @@ FROM [dbo].[SanPham]
 --DonDatHang
 SELECT *
 FROM [dbo].[DonDatHang]
+ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;
 --HoaDon
 Select*from [dbo].[HoaDon]
 --public CTDonDatHang(double donGia, int soLuong, double thanhTien) 

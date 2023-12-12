@@ -15,6 +15,8 @@ import dataBase_BUS.CTDonDatHang_BUS;
 import dataBase_BUS.CTHoaDon_BUS;
 import dataBase_BUS.DonDatHang_BUS;
 import dataBase_BUS.HoaDon_BUS;
+import entities.DonDatHang;
+import entities.HoaDon;
 import customEntities.CustomTable;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
@@ -53,6 +55,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -67,8 +70,8 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
 	private Custom_JLabel picture_Logo;
 	private JLabel lbl_Title_TK_HD,lbl_Title_DSHD,lbl_Title_DSCTHD;
 	private JLabel lbl_MaHD,lbl_HoTenNhanVien,lbl_TongTien,lbl_NgayLap,lbl_HoTenKhachHang,lbl_SoDienThoaiKhach;
-	private Custom_ComboBox cbo_MaHD,cbo_TenKH;
-	private Custom_ComboBox cbo_TenNV,cbo_TongTien,cbo_Ngay,cbo_Thang,cbo_Nam,cbo_SoDienThoai;
+	private Custom_ComboBox cbo_MaHD,cbo_TongTien;
+	private Custom_ComboBox cbo_TenNV,cbo_HoTenKH,cbo_Ngay,cbo_Thang,cbo_Nam,cbo_SoDienThoai;
 	private JFormattedTextField ftf_NgaySinh;
 	private BufferedImage bfi_ChonNgay;
 	private Custom_Button btn_TimKiem,btn_XoaTrang;
@@ -188,19 +191,19 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
 		cbo_Nam.redraw_Custom_Combobox();
 		cbo_Nam.setRadius(0);
 		
-		cbo_TenKH = new Custom_ComboBox();
-		cbo_TenKH.setForeground(Color.black);
-		cbo_TenKH.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		cbo_TenKH.setColor_Foreground(Color.black);
-		cbo_TenKH.setColor_Background(Custom_ColorPicker.lightgrey_D9D9D9);
-		cbo_TenKH.setColor_Hightlight(Custom_ColorPicker.lightgrey_D9D9D9);
-		cbo_TenKH.setColor_Over(Custom_ColorPicker.snowwhite_F2F0EB);
-		cbo_TenKH.redraw_Custom_Combobox();
-		cbo_TenKH.setRadius(0);
-		
 		cbo_TongTien = new Custom_ComboBox();
 		cbo_TongTien.setForeground(Color.black);
 		cbo_TongTien.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		cbo_TongTien.setColor_Foreground(Color.black);
+		cbo_TongTien.setColor_Background(Custom_ColorPicker.lightgrey_D9D9D9);
+		cbo_TongTien.setColor_Hightlight(Custom_ColorPicker.lightgrey_D9D9D9);
+		cbo_TongTien.setColor_Over(Custom_ColorPicker.snowwhite_F2F0EB);
+		cbo_TongTien.redraw_Custom_Combobox();
+		cbo_TongTien.setRadius(0);
+		
+		cbo_HoTenKH = new Custom_ComboBox();
+		cbo_HoTenKH.setForeground(Color.black);
+		cbo_HoTenKH.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		
 		cbo_SoDienThoai = new Custom_ComboBox();
 		cbo_SoDienThoai.setForeground(Color.black);
@@ -324,7 +327,7 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
         							.addComponent(lbl_TongTien)))
         					.addPreferredGap(ComponentPlacement.RELATED)
         					.addGroup(gl_pn_QL_NV.createParallelGroup(Alignment.LEADING)
-        						.addComponent(cbo_TenKH, GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+        						.addComponent(cbo_TongTien, GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
         						.addGroup(gl_pn_QL_NV.createSequentialGroup()
         							.addComponent(cbo_Ngay, GroupLayout.PREFERRED_SIZE, 51, Short.MAX_VALUE)
         							.addPreferredGap(ComponentPlacement.RELATED)
@@ -337,7 +340,7 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
         						.addComponent(lbl_SoDienThoaiKhach, GroupLayout.PREFERRED_SIZE, 125, Short.MAX_VALUE))
         					.addPreferredGap(ComponentPlacement.RELATED)
         					.addGroup(gl_pn_QL_NV.createParallelGroup(Alignment.TRAILING)
-        						.addComponent(cbo_TongTien, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+        						.addComponent(cbo_HoTenKH, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
         						.addComponent(cbo_SoDienThoai, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))))
         			.addGap(18))
         );
@@ -351,13 +354,13 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
         				.addComponent(cbo_Ngay, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
         				.addComponent(cbo_Thang, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
         				.addComponent(cbo_Nam, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(cbo_TongTien, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(cbo_HoTenKH, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
         				.addComponent(lbl_MaHD)
         				.addComponent(lbl_HoTenKhachHang, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addGroup(gl_pn_QL_NV.createParallelGroup(Alignment.LEADING)
         				.addGroup(gl_pn_QL_NV.createParallelGroup(Alignment.LEADING)
-        					.addComponent(cbo_TenKH, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+        					.addComponent(cbo_TongTien, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
         					.addComponent(lbl_TongTien, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
         					.addComponent(cbo_TenNV, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
         					.addComponent(cbo_SoDienThoai, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
@@ -371,7 +374,7 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
         );
         gl_pn_QL_NV.linkSize(SwingConstants.VERTICAL, new Component[] {btn_TimKiem, btn_XoaTrang});
         gl_pn_QL_NV.linkSize(SwingConstants.VERTICAL, new Component[] {lbl_TongTien, lbl_NgayLap, lbl_HoTenKhachHang, lbl_SoDienThoaiKhach});
-        gl_pn_QL_NV.linkSize(SwingConstants.VERTICAL, new Component[] {cbo_MaHD, cbo_TenNV, cbo_Ngay, cbo_Thang, cbo_Nam, cbo_TenKH, cbo_TongTien, cbo_SoDienThoai});
+        gl_pn_QL_NV.linkSize(SwingConstants.VERTICAL, new Component[] {cbo_MaHD, cbo_TenNV, cbo_Ngay, cbo_Thang, cbo_Nam, cbo_TongTien, cbo_HoTenKH, cbo_SoDienThoai});
         gl_pn_QL_NV.linkSize(SwingConstants.HORIZONTAL, new Component[] {btn_TimKiem, btn_XoaTrang});
         pn_QL_NV.setLayout(gl_pn_QL_NV);
         setting();
@@ -384,10 +387,15 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
     	btn_TimKiem.addActionListener(this);
     	tbl_DSHD.addMouseListener(this);
     	resetTable_HD();
+    	addComboBox();
     }
     private void addComboBox()
     {
-    	
+    	sqlCTHoaDon_BUS.dayComboBox_MaHD(cbo_MaHD);
+    	sqlCTHoaDon_BUS.dayComboBox_HoTenKhachHang(cbo_HoTenKH);
+    	sqlCTHoaDon_BUS.dayComboBox_SoDienThoai(cbo_SoDienThoai);
+    	sqlCTHoaDon_BUS.dayComboBox_TongTien(cbo_TongTien);
+    	sqlCTHoaDon_BUS.dayComboBox_HoTenNhanVien(cbo_TenNV);
     }
     private void resetTable_HD()
     {
@@ -399,10 +407,10 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
     	
     	cbo_TenNV.setSelectedItem(null);
     	cbo_MaHD.setSelectedItem(null);
-    	cbo_TenKH.setSelectedItem(null);
+    	cbo_TongTien.setSelectedItem(null);
     	//cbo_TenNVNhanVien.setSelectedItem("");
     	cbo_SoDienThoai.setSelectedItem(null);
-    	cbo_TongTien.setSelectedItem(null);
+    	cbo_HoTenKH.setSelectedItem(null);
     	cbo_Ngay.setSelectedItem(null);
     	cbo_Thang.setSelectedItem(null);
     	cbo_Nam.setSelectedItem(null);
@@ -506,6 +514,19 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
 		//
 		try
 		{
+			cbo_MaHD.setSelectedItem(maHD);
+			cbo_TenNV.setSelectedItem(tenNV);
+			cbo_TongTien.setSelectedItem(tenKH);
+			cbo_SoDienThoai.setSelectedItem(sdt);
+			cbo_HoTenKH.setSelectedItem(tongTien);
+			Date ngayLap=sqlHoaDon_BUS.getNgayLap(maHD);
+			java.sql.Date sqlDateNgayLap = new java.sql.Date(ngayLap.getTime());
+			HoaDon h=new HoaDon();
+			h.setNgayLap(sqlDateNgayLap);
+			LocalDate ngayLap_LocalDate=h.getNgayLapLocalDate();
+			cbo_Ngay.setSelectedItem(ngayLap_LocalDate.getDayOfMonth());
+			cbo_Thang.setSelectedItem(ngayLap_LocalDate.getMonthValue());
+			cbo_Nam.setSelectedItem(ngayLap_LocalDate.getYear());
 			dtm_CTHD.setRowCount(0);
 			sqlCTHoaDon_BUS.xuat_CTHoaDon_TheoMa(maHD, dtm_CTHD);
 		}catch(DateTimeException dx)

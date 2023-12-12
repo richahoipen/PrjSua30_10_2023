@@ -1,6 +1,7 @@
 package dataBase_DAO;
 
 import java.awt.Font;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -52,6 +53,46 @@ public class TaiKhoan_DAO implements TaiKhoan_Method
 			
 		}
 	}
+
+	@Override
+	public boolean capNhat_MatKhau(String maNV, String matKhau) {
+	    String sql_Update = "update [dbo].[TaiKhoan] set matKhau=? where maNV=?";
+	    try {
+	        PreparedStatement preparedStatement_Update = con.con().prepareStatement(sql_Update);
+	        preparedStatement_Update.setString(1, matKhau);
+	        preparedStatement_Update.setNString(2, maNV);
+	        
+	        int rowsAffected = preparedStatement_Update.executeUpdate();
+	        if (rowsAffected > 0) {
+	            // Thông báo sau khi cập nhật thành công
+	            UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+	            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+	            JOptionPane.showMessageDialog(null, "Đổi thành công.\nChange password success.\n", "Thông báo, Notify", JOptionPane.INFORMATION_MESSAGE);
+	            
+	            con.con().close();
+	            con.stmt().close();
+	            preparedStatement_Update.close();
+	            return true;
+	        } else {
+	            // Thông báo nếu không có hàng nào được cập nhật
+	            UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+	            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+	            JOptionPane.showMessageDialog(null, "Không có dữ liệu nào được cập nhật.\nNo data updated.", "Thông báo, Notify", JOptionPane.INFORMATION_MESSAGE);
+	            
+	            con.con().close();
+	            con.stmt().close();
+	            preparedStatement_Update.close();
+	            return false;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+	        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+	        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+	}
+
 
 	
 	

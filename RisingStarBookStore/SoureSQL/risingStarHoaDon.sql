@@ -107,3 +107,18 @@ ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) DESC;
 
 select tenSP from [dbo].[SanPham]
 where maSP=N'SP1';
+--lấy danh sách hóa đơn
+SELECT HoaDon.maHD, HoaDon.ngayLap, HoaDon.tongTien,
+       KhachHang.tenKH, KhachHang.sdt,
+       NhanVien.tenNV
+FROM HoaDon
+JOIN NhanVien ON HoaDon.maNV = NhanVien.maNV
+JOIN KhachHang ON HoaDon.maKH = KhachHang.maKH
+ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) ASC;
+
+SELECT HoaDon.ngayLap
+FROM HoaDon
+JOIN NhanVien ON HoaDon.maNV = NhanVien.maNV
+JOIN KhachHang ON HoaDon.maKH = KhachHang.maKH
+where maHD=N'HD1';
+SELECT * FROM [dbo].[TaiKhoan]

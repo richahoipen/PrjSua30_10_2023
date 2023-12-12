@@ -22,4 +22,5 @@ public interface DonDatHang_Method {
 	public String get_MaDDH_MoiNhat();
 	//public DonDatHang(String maDDH, Date ngayDat,boolean daLapHoaDon)
 	public boolean tim_DonDatHang(DonDatHang d,String tenNV,KhachHang k,int ngay,int thang,int nam,DefaultTableModel dtm_DD);
+	
 }

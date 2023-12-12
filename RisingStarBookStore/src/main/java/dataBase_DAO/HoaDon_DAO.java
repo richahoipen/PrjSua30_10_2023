@@ -13,7 +13,6 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 import connectDB.Connect;
-import entities.DonDatHang;
 import entities.HoaDon;
 
 import interface_Method_DAO.HoaDon_Method;
@@ -307,5 +306,38 @@ ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maKH)) AS INT) DESC;
 			return false;
 		}
 	}
+	@Override
+	public Date getNgayLap(String maHD) {
+		String sqlSelect = "SELECT HoaDon.ngayLap\r\n"
+				+ "FROM HoaDon\r\n"
+				+ "JOIN NhanVien ON HoaDon.maNV = NhanVien.maNV\r\n"
+				+ "JOIN KhachHang ON HoaDon.maKH = KhachHang.maKH\r\n"
+				+ "where maHD=N'"+maHD+"';";
+		Date ngayLap_Return=null;
+		try {
+			ResultSet rs = con.resultSet(sqlSelect);
+			// NhanVien(String maNV, String tenNV, String sdt, String gioiTinh, String
+			// diaChi, Date ngaySinh, String chucVu,
+			// String cMND, String caLam)
+			
+			while (rs.next()) {			
+				Date ngayLap=rs.getDate("ngayLap");
+				ngayLap_Return=ngayLap;
+			}
+			
+			con.con().close();
+			con.stmt().close();
+			rs.close();
+			return ngayLap_Return;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 28));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return null;
+			
+		}
+	}
+	
 	
 }

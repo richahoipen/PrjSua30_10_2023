@@ -16,5 +16,10 @@ public class TaiKhoan_BUS implements TaiKhoan_Method
 		return sqlTaiKhoan_DAO.getTaiKhoan(chucVu);
 	}
 
+	@Override
+	public boolean capNhat_MatKhau(String maNV, String matKhau) {
+		// TODO Auto-generated method stub
+		return sqlTaiKhoan_DAO.capNhat_MatKhau(maNV, matKhau);
+	}
 	
 }

@@ -3,6 +3,8 @@ package interface_Method_DAO;
 
 
 
+import java.sql.Date;
+
 import javax.swing.table.DefaultTableModel;
 
 import entities.HoaDon;
@@ -16,4 +18,5 @@ public interface HoaDon_Method {
 	public boolean capNhatDonDatHang(String maDDH);
 	public String get_MaHD_MoiNhat();
 	public HoaDon get_HoaDon(String maHD);
+	public Date getNgayLap(String maHD);
 }

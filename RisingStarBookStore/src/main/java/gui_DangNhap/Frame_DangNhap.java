@@ -39,7 +39,8 @@ public class Frame_DangNhap extends JFrame implements ActionListener
 	private JComboBox cbo_ChucVu;
 	private Custom_Button btn_DangNhap;
 	private TaiKhoan_BUS sqlTaiKhoan_BUS=new TaiKhoan_BUS();
-
+	//private NhanVien_BUS sqlNhanVien_BUS=new NhanVien_BUS();
+	
 	/**
 	 * Launch the application.
 	 */
@@ -47,6 +48,7 @@ public class Frame_DangNhap extends JFrame implements ActionListener
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					Frame_DangNhap frame = new Frame_DangNhap();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -60,6 +62,7 @@ public class Frame_DangNhap extends JFrame implements ActionListener
 	 * Create the frame.
 	 */
 	public Frame_DangNhap() {
+		
 		setTitle("Rising Star - Đăng nhập");
 		setIconImage(new CustomIcon("src/main/images/view_image/Logo.png").getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -205,6 +208,7 @@ public class Frame_DangNhap extends JFrame implements ActionListener
 		}
 	}
 
+	
 	
 
 	

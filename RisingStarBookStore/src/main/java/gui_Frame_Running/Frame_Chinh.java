@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -53,6 +54,7 @@ import com.raven.swing.icon.IconFontSwing;
 
 import customEntities.CustomIcon;
 import customEntities.Custom_ColorPicker;
+import dataBase_BUS.NhanVien_BUS;
 import gui_Dialog.Message;
 import gui_Panel_Setting.*;
 import gui_Panel_DonDat.Panel_TimKiemDonDat;
@@ -91,6 +93,7 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 	private Message m;
 	private Frame_Chinh frame_Chinh = this;
 	private SettingModel settingModel;
+	//private NhanVien_BUS sqlNhanVien_BUS=new NhanVien_BUS();
 	public SettingModel getSettingModel() {
 		return settingModel;
 	}
@@ -163,6 +166,9 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 		setting();
 	}
 	
+	public Frame_Chinh() throws HeadlessException {
+		super();
+	}
 	private void initComponents(String maNV) {
 		//  Init google icon font
         IconFontSwing.register(GoogleMaterialDesignIcons.getIconFont());
@@ -247,7 +253,7 @@ public class Frame_Chinh extends JFrame implements ActionListener, WindowListene
 						main.showForm(new Panel_TimKiemNhaCungCap());
 				}
 				if (menuIndex == 7) {
-					main.showForm(new Panel_Setting(frame_Chinh));
+					main.showForm(new Panel_Setting(frame_Chinh,maNV));
 				}
 			}
 		});

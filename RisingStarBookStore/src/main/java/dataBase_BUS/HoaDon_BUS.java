@@ -2,6 +2,8 @@ package dataBase_BUS;
 
 
 
+import java.sql.Date;
+
 import javax.swing.table.DefaultTableModel;
 
 import dataBase_DAO.HoaDon_DAO;
@@ -64,6 +66,12 @@ public class HoaDon_BUS implements HoaDon_Method
 	public boolean xuat_DanhSach_HoaDon(DefaultTableModel dtm_HD) {
 		// TODO Auto-generated method stub
 		return sqlHoaDon_DAO.xuat_DanhSach_HoaDon(dtm_HD);
+	}
+
+	@Override
+	public Date getNgayLap(String maHD) {
+		// TODO Auto-generated method stub
+		return sqlHoaDon_DAO.getNgayLap(maHD);
 	}
 	
 }
