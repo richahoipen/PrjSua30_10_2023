@@ -17,6 +17,9 @@ import dataBase_BUS.DonDatHang_BUS;
 import dataBase_BUS.HoaDon_BUS;
 import entities.DonDatHang;
 import entities.HoaDon;
+import entities.HoaDon_TimKiem;
+import entities.KhachHang;
+import entities.NhanVien;
 import customEntities.CustomTable;
 import gui_Dialog.Message;
 import gui_Frame_Running.Frame_Chinh;
@@ -55,7 +58,10 @@ import java.io.File;
 import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -388,6 +394,7 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
     	tbl_DSHD.addMouseListener(this);
     	resetTable_HD();
     	addComboBox();
+    	checkTable();
     }
     private void addComboBox()
     {
@@ -415,7 +422,213 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
     	cbo_Thang.setSelectedItem(null);
     	cbo_Nam.setSelectedItem(null);
     	dtm_CTHD.setRowCount(0);
+    	resetTable_HD();
     	
+    }
+    private void checkTable()
+    {
+    	if(isTableEmpty(tbl_DSHD))
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+            String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Không thể tìm thấy.";
+    			loaiCanhBao = "Cảnh báo";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Can't find.";
+    			loaiCanhBao = "Warning";
+    		}
+            JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.WARNING_MESSAGE);
+    	}
+    }
+    private boolean isTableEmpty(CustomTable tbl_DSSP) {
+        return tbl_DSSP.getModel().getRowCount() == 0;
+    }
+    private void timKiem()
+    {
+    	LocalDate ngayHienTai=LocalDate.now();
+		String maHD=(String) cbo_MaHD.getSelectedItem();
+		String tenNV=(String) cbo_TenNV.getSelectedItem();
+		String tenKH=(String) cbo_HoTenKH.getSelectedItem();
+		String ngay=(String) cbo_Ngay.getSelectedItem();
+		String thang=(String) cbo_Thang.getSelectedItem();
+		String nam=(String) cbo_Nam.getSelectedItem();
+		String sdt=(String) cbo_SoDienThoai.getSelectedItem();
+		String tongTien=(String) cbo_TongTien.getSelectedItem();
+		
+		if(Objects.isNull(maHD))
+			maHD="";
+		if(Objects.isNull(tenNV))
+			tenNV="";
+		if(Objects.isNull(tenKH))
+			tenKH="";
+		if(Objects.isNull(ngay))
+			ngay=Integer.toString(ngayHienTai.getDayOfMonth());
+		if(Objects.isNull(thang))
+			thang=Integer.toString(ngayHienTai.getMonthValue());
+		if(Objects.isNull(nam))
+			nam=Integer.toString(ngayHienTai.getYear());
+		if(Objects.isNull(sdt))
+			sdt="";
+		if(Objects.isNull(tongTien))
+			tongTien="0";
+		System.out.println(maHD+" "+tenNV+" "+" "+tenKH+" "+ngay+" "+thang+" "+nam+" "+sdt+" "+tongTien);
+		try {
+		    ArrayList<HoaDon_TimKiem> listHD = sqlHoaDon_BUS.listHoaDon_TimKiem();
+		    
+		    dtm_HD.setRowCount(0); // Xóa dữ liệu cũ
+		    
+		    for (HoaDon_TimKiem hd_tk : listHD) {
+		    	System.out.println(hd_tk.toString());
+		    	/*
+		        if ((maHD.isEmpty() || hd_tk.getMaHD().equalsIgnoreCase(maHD))
+		                || (tenNV.isEmpty() || hd_tk.getTenNV().equalsIgnoreCase(tenNV))
+		                || (tenKH.isEmpty() || hd_tk.getTenKH().equalsIgnoreCase(tenKH))
+		                || (ngay.isEmpty() || hd_tk.getNgayLapLocalDate().getDayOfMonth() == Integer.parseInt(ngay))
+		                || (thang.isEmpty() || hd_tk.getNgayLapLocalDate().getMonthValue() == Integer.parseInt(thang))
+		                || (nam.isEmpty() || hd_tk.getNgayLapLocalDate().getYear() == Integer.parseInt(nam))
+		                || (sdt.isEmpty() || hd_tk.getSdt().equalsIgnoreCase(sdt))
+		                || (tongTien.isEmpty() || hd_tk.getTongTien() == Double.parseDouble(tongTien))) */
+		    	if(hd_tk.getMaHD().equalsIgnoreCase(maHD))
+		        {
+		            String[] row = {hd_tk.getMaHD(), hd_tk.getTenNV(), hd_tk.getTenKH(), hd_tk.getSdt(), hd_tk.getNgayLapToString(), Double.toString(hd_tk.getTongTien())};
+		            System.out.println(Arrays.toString(row));
+		            dtm_HD.addRow(row);
+		        }
+		    }
+		    for (HoaDon_TimKiem hd_tk : listHD) {
+		    	System.out.println(hd_tk.toString());
+		    	/*
+		        if ((maHD.isEmpty() || hd_tk.getMaHD().equalsIgnoreCase(maHD))
+		                || (tenNV.isEmpty() || hd_tk.getTenNV().equalsIgnoreCase(tenNV))
+		                || (tenKH.isEmpty() || hd_tk.getTenKH().equalsIgnoreCase(tenKH))
+		                || (ngay.isEmpty() || hd_tk.getNgayLapLocalDate().getDayOfMonth() == Integer.parseInt(ngay))
+		                || (thang.isEmpty() || hd_tk.getNgayLapLocalDate().getMonthValue() == Integer.parseInt(thang))
+		                || (nam.isEmpty() || hd_tk.getNgayLapLocalDate().getYear() == Integer.parseInt(nam))
+		                || (sdt.isEmpty() || hd_tk.getSdt().equalsIgnoreCase(sdt))
+		                || (tongTien.isEmpty() || hd_tk.getTongTien() == Double.parseDouble(tongTien))) */
+		    	if(hd_tk.getTenNV().equalsIgnoreCase(tenNV))
+		        {
+		            String[] row = {hd_tk.getMaHD(), hd_tk.getTenNV(), hd_tk.getTenKH(), hd_tk.getSdt(), hd_tk.getNgayLapToString(), Double.toString(hd_tk.getTongTien())};
+		            System.out.println(Arrays.toString(row));
+		            dtm_HD.addRow(row);
+		        }
+		    }
+		    for (HoaDon_TimKiem hd_tk : listHD) {
+		    	System.out.println(hd_tk.toString());
+		    	/*
+		        if ((maHD.isEmpty() || hd_tk.getMaHD().equalsIgnoreCase(maHD))
+		                || (tenNV.isEmpty() || hd_tk.getTenNV().equalsIgnoreCase(tenNV))
+		                || (tenKH.isEmpty() || hd_tk.getTenKH().equalsIgnoreCase(tenKH))
+		                || (ngay.isEmpty() || hd_tk.getNgayLapLocalDate().getDayOfMonth() == Integer.parseInt(ngay))
+		                || (thang.isEmpty() || hd_tk.getNgayLapLocalDate().getMonthValue() == Integer.parseInt(thang))
+		                || (nam.isEmpty() || hd_tk.getNgayLapLocalDate().getYear() == Integer.parseInt(nam))
+		                || (sdt.isEmpty() || hd_tk.getSdt().equalsIgnoreCase(sdt))
+		                || (tongTien.isEmpty() || hd_tk.getTongTien() == Double.parseDouble(tongTien))) */
+		    	if(hd_tk.getTenKH().equalsIgnoreCase(tenKH))
+		        {
+		            String[] row = {hd_tk.getMaHD(), hd_tk.getTenNV(), hd_tk.getTenKH(), hd_tk.getSdt(), hd_tk.getNgayLapToString(), Double.toString(hd_tk.getTongTien())};
+		            System.out.println(Arrays.toString(row));
+		            dtm_HD.addRow(row);
+		        }
+		    }
+		    for (HoaDon_TimKiem hd_tk : listHD) {
+		    	System.out.println(hd_tk.toString());
+		    	/*
+		        if ((maHD.isEmpty() || hd_tk.getMaHD().equalsIgnoreCase(maHD))
+		                || (tenNV.isEmpty() || hd_tk.getTenNV().equalsIgnoreCase(tenNV))
+		                || (tenKH.isEmpty() || hd_tk.getTenKH().equalsIgnoreCase(tenKH))
+		                || (ngay.isEmpty() || hd_tk.getNgayLapLocalDate().getDayOfMonth() == Integer.parseInt(ngay))
+		                || (thang.isEmpty() || hd_tk.getNgayLapLocalDate().getMonthValue() == Integer.parseInt(thang))
+		                || (nam.isEmpty() || hd_tk.getNgayLapLocalDate().getYear() == Integer.parseInt(nam))
+		                || (sdt.isEmpty() || hd_tk.getSdt().equalsIgnoreCase(sdt))
+		                || (tongTien.isEmpty() || hd_tk.getTongTien() == Double.parseDouble(tongTien))) */
+		    	if(hd_tk.getNgayLapLocalDate().getDayOfMonth() == Integer.parseInt(ngay))
+		        {
+		            String[] row = {hd_tk.getMaHD(), hd_tk.getTenNV(), hd_tk.getTenKH(), hd_tk.getSdt(), hd_tk.getNgayLapToString(), Double.toString(hd_tk.getTongTien())};
+		            System.out.println(Arrays.toString(row));
+		            dtm_HD.addRow(row);
+		        }
+		    }
+		    for (HoaDon_TimKiem hd_tk : listHD) {
+		    	System.out.println(hd_tk.toString());
+		    	/*
+		        if ((maHD.isEmpty() || hd_tk.getMaHD().equalsIgnoreCase(maHD))
+		                || (tenNV.isEmpty() || hd_tk.getTenNV().equalsIgnoreCase(tenNV))
+		                || (tenKH.isEmpty() || hd_tk.getTenKH().equalsIgnoreCase(tenKH))
+		                || (ngay.isEmpty() || hd_tk.getNgayLapLocalDate().getDayOfMonth() == Integer.parseInt(ngay))
+		                || (thang.isEmpty() || hd_tk.getNgayLapLocalDate().getMonthValue() == Integer.parseInt(thang))
+		                || (nam.isEmpty() || hd_tk.getNgayLapLocalDate().getYear() == Integer.parseInt(nam))
+		                || (sdt.isEmpty() || hd_tk.getSdt().equalsIgnoreCase(sdt))
+		                || (tongTien.isEmpty() || hd_tk.getTongTien() == Double.parseDouble(tongTien))) */
+		    	if(hd_tk.getNgayLapLocalDate().getMonthValue() == Integer.parseInt(thang))
+		        {
+		            String[] row = {hd_tk.getMaHD(), hd_tk.getTenNV(), hd_tk.getTenKH(), hd_tk.getSdt(), hd_tk.getNgayLapToString(), Double.toString(hd_tk.getTongTien())};
+		            System.out.println(Arrays.toString(row));
+		            dtm_HD.addRow(row);
+		        }
+		    }
+		    for (HoaDon_TimKiem hd_tk : listHD) {
+		    	System.out.println(hd_tk.toString());
+		    	/*
+		        if ((maHD.isEmpty() || hd_tk.getMaHD().equalsIgnoreCase(maHD))
+		                || (tenNV.isEmpty() || hd_tk.getTenNV().equalsIgnoreCase(tenNV))
+		                || (tenKH.isEmpty() || hd_tk.getTenKH().equalsIgnoreCase(tenKH))
+		                || (ngay.isEmpty() || hd_tk.getNgayLapLocalDate().getDayOfMonth() == Integer.parseInt(ngay))
+		                || (thang.isEmpty() || hd_tk.getNgayLapLocalDate().getMonthValue() == Integer.parseInt(thang))
+		                || (nam.isEmpty() || hd_tk.getNgayLapLocalDate().getYear() == Integer.parseInt(nam))
+		                || (sdt.isEmpty() || hd_tk.getSdt().equalsIgnoreCase(sdt))
+		                || (tongTien.isEmpty() || hd_tk.getTongTien() == Double.parseDouble(tongTien))) */
+		    	if(hd_tk.getNgayLapLocalDate().getYear() == Integer.parseInt(nam))
+		        {
+		            String[] row = {hd_tk.getMaHD(), hd_tk.getTenNV(), hd_tk.getTenKH(), hd_tk.getSdt(), hd_tk.getNgayLapToString(), Double.toString(hd_tk.getTongTien())};
+		            System.out.println(Arrays.toString(row));
+		            dtm_HD.addRow(row);
+		        }
+		    }
+		    for (HoaDon_TimKiem hd_tk : listHD) {
+		    	System.out.println(hd_tk.toString());
+		    	/*
+		        if ((maHD.isEmpty() || hd_tk.getMaHD().equalsIgnoreCase(maHD))
+		                || (tenNV.isEmpty() || hd_tk.getTenNV().equalsIgnoreCase(tenNV))
+		                || (tenKH.isEmpty() || hd_tk.getTenKH().equalsIgnoreCase(tenKH))
+		                || (ngay.isEmpty() || hd_tk.getNgayLapLocalDate().getDayOfMonth() == Integer.parseInt(ngay))
+		                || (thang.isEmpty() || hd_tk.getNgayLapLocalDate().getMonthValue() == Integer.parseInt(thang))
+		                || (nam.isEmpty() || hd_tk.getNgayLapLocalDate().getYear() == Integer.parseInt(nam))
+		                || (sdt.isEmpty() || hd_tk.getSdt().equalsIgnoreCase(sdt))
+		                || (tongTien.isEmpty() || hd_tk.getTongTien() == Double.parseDouble(tongTien))) */
+		    	if(hd_tk.getSdt().equalsIgnoreCase(sdt))
+		        {
+		            String[] row = {hd_tk.getMaHD(), hd_tk.getTenNV(), hd_tk.getTenKH(), hd_tk.getSdt(), hd_tk.getNgayLapToString(), Double.toString(hd_tk.getTongTien())};
+		            System.out.println(Arrays.toString(row));
+		            dtm_HD.addRow(row);
+		        }
+		    }
+		    for (HoaDon_TimKiem hd_tk : listHD) {
+		    	System.out.println(hd_tk.toString());
+		    	/*
+		        if ((maHD.isEmpty() || hd_tk.getMaHD().equalsIgnoreCase(maHD))
+		                || (tenNV.isEmpty() || hd_tk.getTenNV().equalsIgnoreCase(tenNV))
+		                || (tenKH.isEmpty() || hd_tk.getTenKH().equalsIgnoreCase(tenKH))
+		                || (ngay.isEmpty() || hd_tk.getNgayLapLocalDate().getDayOfMonth() == Integer.parseInt(ngay))
+		                || (thang.isEmpty() || hd_tk.getNgayLapLocalDate().getMonthValue() == Integer.parseInt(thang))
+		                || (nam.isEmpty() || hd_tk.getNgayLapLocalDate().getYear() == Integer.parseInt(nam))
+		                || (sdt.isEmpty() || hd_tk.getSdt().equalsIgnoreCase(sdt))
+		                || (tongTien.isEmpty() || hd_tk.getTongTien() == Double.parseDouble(tongTien))) */
+		    	if(hd_tk.getTongTien() == Double.parseDouble(tongTien))
+		        {
+		            String[] row = {hd_tk.getMaHD(), hd_tk.getTenNV(), hd_tk.getTenKH(), hd_tk.getSdt(), hd_tk.getNgayLapToString(), Double.toString(hd_tk.getTongTien())};
+		            System.out.println(Arrays.toString(row));
+		            dtm_HD.addRow(row);
+		        }
+		    }
+		} catch (NumberFormatException e) {
+		    JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		} catch (Exception e) {
+		    JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}		
     }
     private void setting() {
     	settingModel = new SettingModel();
@@ -498,6 +711,10 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
 		{
 			xoaTrang();
 		}
+		if(o.equals(btn_TimKiem))
+		{
+			timKiem();
+		}
 	}
 
 
@@ -516,9 +733,9 @@ public class Panel_TimKiemHoaDon extends JPanel implements ActionListener, Mouse
 		{
 			cbo_MaHD.setSelectedItem(maHD);
 			cbo_TenNV.setSelectedItem(tenNV);
-			cbo_TongTien.setSelectedItem(tenKH);
+			cbo_TongTien.setSelectedItem(tongTien);
 			cbo_SoDienThoai.setSelectedItem(sdt);
-			cbo_HoTenKH.setSelectedItem(tongTien);
+			cbo_HoTenKH.setSelectedItem(tenKH);
 			Date ngayLap=sqlHoaDon_BUS.getNgayLap(maHD);
 			java.sql.Date sqlDateNgayLap = new java.sql.Date(ngayLap.getTime());
 			HoaDon h=new HoaDon();

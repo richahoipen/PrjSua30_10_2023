@@ -372,19 +372,22 @@ public class Frame_DonDatXuat extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		Object o = e.getSource();
-		if(o == btn_GuiSMS) {
+		//String sdt=txt_SoDienThoai.getText();
+		if(o == btn_GuiSMS) 
+		{
 			btn_GuiSMS.setVisible(false);
-			String content = "";
-			// Tạo nội dung thông báo
-			content = "Xin chào " + txt_KhachHang.getText() + ",\n" +
-			          "Đơn hàng của bạn với số đơn đặt " + txt_SoDonDat.getText() + " đã được đặt thành công.\n" +
-			          "Thời gian thanh toán: " + txt_ThoiGianThanhToan.getText() + "\n" +
-			          "Hãy lưu ý ngày hết hạn: " + txt_NgayHetHan.getText() + "\n" +
-			          "Tổng cộng: " + txt_TongCong.getText() + "\n" +
-			          "Cảm ơn bạn đã mua hàng từ chúng tôi!";
 
-			// Gửi thông báo
-			MessageSMS.sendMessage(content);
+			String content = "";
+				// Tạo nội dung thông báo
+			content = "Xin chào " + txt_KhachHang.getText() + ",\n" +
+				          "Đơn hàng của bạn với số đơn đặt " + txt_SoDonDat.getText() + " đã được đặt thành công.\n" +
+				          "Thời gian thanh toán: " + txt_ThoiGianThanhToan.getText() + "\n" +
+				          "Hãy lưu ý ngày hết hạn: " + txt_NgayHetHan.getText() + "\n" +
+				          "Tổng cộng: " + txt_TongCong.getText() + "\n" +
+				          "Cảm ơn bạn đã mua hàng từ chúng tôi!";
+
+				// Gửi thông báo
+				MessageSMS.sendMessage(content);
 			btn_GuiSMS.setVisible(true);
 		}
 	}

@@ -44,21 +44,27 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
 	private JLabel lbl_Title_CaiDatNgonNgu;
 	private JPanel pnCaiDatGiaoDien;
 	private JLabel lbl_Title_CaiDatGiaoDien;
-	private JRadioButton rdbtnTiengViet,rdbtnTiengAnh,rdbtnTrangSang,rdbtnCheDoToi,rdbtnTuoiTre;
+	private JRadioButton rdbtnTiengViet,rdbtnTiengAnh,rdbtnTrangSang,rdbtnCheDoToi;
 	private JLabel lblLWhiteBright;
 	private JLabel lblDark;
-	private JLabel lblYoung;
 	private ButtonGroup btngNgonNgu;
 	private ButtonGroup btngPhongCach;
 	private Frame_Chinh frame_Chinh;
-	private String maNV;
+	private String maNV, chucVu;
+	public String getChucVu() {
+		return chucVu;
+	}
+	public void setChucVu(String chucVu) {
+		this.chucVu = chucVu;
+	}
 	private SettingModel settingModel;
 	//sqlNhanVien_BUS.getTenNV(maNV)
 	private NhanVien_BUS sqlNhanVien_BUS=new NhanVien_BUS();
     // End of variables declaration//GEN-END:variables
-    public Panel_Setting(Frame_Chinh frame,String maNV) {
+    public Panel_Setting(Frame_Chinh frame,String maNV,String chucVu) {
     	//set Ten
     	setmaNV(maNV);
+    	setChucVu(chucVu);
     	frame_Chinh = frame;
         setOpaque(false);
         pnNguoiDung = new JPanel();
@@ -84,15 +90,10 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
         rdbtnCheDoToi = new JRadioButton();
         rdbtnCheDoToi.setFont(new Font("SansSerif", Font.PLAIN, 14));
         
-        rdbtnTuoiTre = new JRadioButton();
-        rdbtnTuoiTre.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        
         lblLWhiteBright = new JLabel();
         lblLWhiteBright.setIcon(new CustomIcon("src/main/images/view_image/WhiteBright.png",105,68));
         lblDark = new JLabel();
         lblDark.setIcon(new CustomIcon("src/main/images/view_image/Dark.png",105,68));
-        lblYoung = new JLabel();
-        lblYoung.setIcon(new CustomIcon("src/main/images/view_image/Young.png",105,68));
         GroupLayout gl_pnCaiDatGiaoDien = new GroupLayout(pnCaiDatGiaoDien);
         gl_pnCaiDatGiaoDien.setHorizontalGroup(
         	gl_pnCaiDatGiaoDien.createParallelGroup(Alignment.LEADING)
@@ -106,13 +107,9 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
         					.addPreferredGap(ComponentPlacement.UNRELATED)
         					.addGroup(gl_pnCaiDatGiaoDien.createParallelGroup(Alignment.LEADING)
         						.addComponent(rdbtnCheDoToi, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
-        						.addComponent(lblDark, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE))
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addGroup(gl_pnCaiDatGiaoDien.createParallelGroup(Alignment.LEADING)
-        						.addComponent(lblYoung, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
-        						.addComponent(rdbtnTuoiTre, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)))
+        						.addComponent(lblDark, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)))
         				.addComponent(lbl_Title_CaiDatGiaoDien, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE))
-        			.addGap(322))
+        			.addGap(544))
         );
         gl_pnCaiDatGiaoDien.setVerticalGroup(
         	gl_pnCaiDatGiaoDien.createParallelGroup(Alignment.LEADING)
@@ -120,12 +117,8 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
         			.addContainerGap()
         			.addComponent(lbl_Title_CaiDatGiaoDien, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
         			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addGroup(gl_pnCaiDatGiaoDien.createParallelGroup(Alignment.TRAILING, false)
-        				.addGroup(Alignment.LEADING, gl_pnCaiDatGiaoDien.createSequentialGroup()
-        					.addComponent(rdbtnTuoiTre, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-        					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(lblYoung, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        				.addGroup(Alignment.LEADING, gl_pnCaiDatGiaoDien.createSequentialGroup()
+        			.addGroup(gl_pnCaiDatGiaoDien.createParallelGroup(Alignment.LEADING, false)
+        				.addGroup(gl_pnCaiDatGiaoDien.createSequentialGroup()
         					.addComponent(rdbtnCheDoToi, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
         					.addPreferredGap(ComponentPlacement.RELATED)
         					.addComponent(lblDark, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -135,8 +128,8 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
         					.addComponent(lblLWhiteBright, GroupLayout.PREFERRED_SIZE, 131, GroupLayout.PREFERRED_SIZE)))
         			.addGap(11))
         );
-        gl_pnCaiDatGiaoDien.linkSize(SwingConstants.VERTICAL, new Component[] {rdbtnTrangSang, rdbtnCheDoToi, rdbtnTuoiTre});
-        gl_pnCaiDatGiaoDien.linkSize(SwingConstants.HORIZONTAL, new Component[] {rdbtnTrangSang, rdbtnCheDoToi, rdbtnTuoiTre, lblLWhiteBright, lblDark, lblYoung});
+        gl_pnCaiDatGiaoDien.linkSize(SwingConstants.VERTICAL, new Component[] {rdbtnCheDoToi, rdbtnTrangSang});
+        gl_pnCaiDatGiaoDien.linkSize(SwingConstants.HORIZONTAL, new Component[] {rdbtnCheDoToi, lblLWhiteBright, lblDark, rdbtnTrangSang});
         pnCaiDatGiaoDien.setLayout(gl_pnCaiDatGiaoDien);
         GroupLayout groupLayout = new GroupLayout(this);
         groupLayout.setHorizontalGroup(
@@ -167,6 +160,7 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
         lbl_Title_CaiDatNgonNgu.setFont(new Font("SansSerif", Font.BOLD, 12));
         
         rdbtnTiengViet = new JRadioButton();
+        rdbtnTiengViet.setText("Tiếng việt");
         rdbtnTiengViet.setFont(new Font("SansSerif", Font.PLAIN, 14));
         
         rdbtnTiengAnh = new JRadioButton("Tiếng Anh");
@@ -179,7 +173,6 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
         btngPhongCach = new ButtonGroup();
         btngPhongCach.add(rdbtnTrangSang);
         btngPhongCach.add(rdbtnCheDoToi);
-        btngPhongCach.add(rdbtnTuoiTre);
         
         pnCaiDatNgonNgu.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         pnCaiDatNgonNgu.add(lbl_Title_CaiDatNgonNgu);
@@ -292,7 +285,7 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
     	if(settingModel.getNgonNgu().equals("Vietnamese")) {
     		lbl_Title_NguoiDung.setText("Người dùng");
     		lbl_Title_CaiDatNgonNgu.setText("Cài đặt ngôn ngữ");
-    		lblChucVu.setText("Người quản lý");
+    		lblChucVu.setText(chucVu);
     		btnDangXuat.setText("Đăng xuất");
     		btnDoiMatKhau.setText("Đổi mật khẩu");
     		btnLuuCaiDat.setText("Lưu cài đặt");
@@ -301,7 +294,6 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
     		lbl_Title_CaiDatGiaoDien.setText("Cài đặt giao diện");
     		rdbtnTrangSang.setText("Trắng sáng");
     		rdbtnCheDoToi.setText("Chế độ tối");
-    		rdbtnTuoiTre.setText("Tươi trẻ");
     	}
     	if(settingModel.getNgonNgu().equals("English")) {
     		lbl_Title_NguoiDung.setText("User");
@@ -315,7 +307,6 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
     		lbl_Title_CaiDatGiaoDien.setText("UI setting");
     		rdbtnTrangSang.setText("White bright");
     		rdbtnCheDoToi.setText("Dark mode");
-    		rdbtnTuoiTre.setText("Youth");
     	}	
     }
 	
@@ -331,9 +322,6 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
     	}
     	if(settingModel.getPhongCach().equals("Darkmode")) {
     		rdbtnCheDoToi.setSelected(true);
-    	}
-    	if(settingModel.getPhongCach().equals("Youth")) {
-    		rdbtnTuoiTre.setSelected(true);
     	}
     }
     @SuppressWarnings("unchecked")
@@ -363,7 +351,7 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
 			EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					try {		
-						Frame_DoiMatKhau frame = new Frame_DoiMatKhau(maNV);
+						Frame_DoiMatKhau frame = new Frame_DoiMatKhau(maNV,chucVu);
 						frame.setVisible(true);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -384,9 +372,6 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
 		if(rdbtnCheDoToi.isSelected()) {
 			settingModel.setPhongCach("Darkmode");
 		}
-		if(rdbtnTuoiTre.isSelected()) {
-			settingModel.setPhongCach("Youth");
-		}
 		try {
 			settingModel.writeTo() ;
 		} catch (IOException e1) {
@@ -394,8 +379,9 @@ public class Panel_Setting extends javax.swing.JPanel implements ActionListener{
 			e1.printStackTrace();
 		}
 		String maNV = frame_Chinh.getMaNV();
+		String chucVu = frame_Chinh.getChucVu();
 		frame_Chinh.dispose();
-		frame_Chinh = new Frame_Chinh(maNV);
+		frame_Chinh = new Frame_Chinh(maNV,chucVu);
 		frame_Chinh.setSettingModel(settingModel);
 		frame_Chinh.setVisible(true);
 		

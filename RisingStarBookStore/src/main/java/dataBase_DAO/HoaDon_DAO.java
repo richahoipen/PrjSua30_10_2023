@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
-
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -14,7 +14,8 @@ import javax.swing.table.DefaultTableModel;
 
 import connectDB.Connect;
 import entities.HoaDon;
-
+import entities.HoaDon_TimKiem;
+import entities.KhachHang;
 import interface_Method_DAO.HoaDon_Method;
 
 public class HoaDon_DAO implements HoaDon_Method
@@ -336,6 +337,104 @@ ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maKH)) AS INT) DESC;
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			return null;
 			
+		}
+	}
+	@Override
+	public boolean tim_HoaDon(HoaDon h_CanTim, String tenNV_CanTim, KhachHang k, int ngay, int thang, int nam,
+			DefaultTableModel dtm_HD) {
+		/*
+		String sqlSelect="SELECT HoaDon.maHD, HoaDon.ngayLap, HoaDon.tongTien,\r\n"
+				+ "       KhachHang.tenKH, KhachHang.sdt,\r\n"
+				+ "       NhanVien.tenNV\r\n"
+				+ "FROM HoaDon\r\n"
+				+ "JOIN NhanVien ON HoaDon.maNV = NhanVien.maNV\r\n"
+				+ "JOIN KhachHang ON HoaDon.maKH = KhachHang.maKH\r\n"
+				+ "WHERE\r\n"
+				+ "    HoaDon.maHD=? or\r\n"
+				+ "	NhanVien.tenNV=? or\r\n"
+				+ "	KhachHang.tenKH=? or\r\n"
+				+ "	KhachHang.sdt=? or\r\n"
+				+ "	HoaDon.tongTien=? or\r\n"
+				+ "	DAY(HoaDon.ngayLap)=? or\r\n"
+				+ "	MONTH(HoaDon.ngayLap)=? or\r\n"
+				+ "	YEAR(HoaDon.ngayLap)=? \r\n"			
+				+ "ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) ASC;";
+				
+		try {
+			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);
+	        //preparedStatement.setNString(1, maNV);
+			preparedStatement.setNString(1, h_CanTim.getMaHD());
+			preparedStatement.setNString(2, tenNV_CanTim);
+			preparedStatement.setNString(3, k.getTenKH());
+			preparedStatement.setNString(4, k.getSdt());
+			preparedStatement.setDouble(5, h_CanTim.getTongTien());
+			preparedStatement.setInt(6, ngay);
+			preparedStatement.setInt(7, thang);
+			preparedStatement.setInt(8, nam);
+			ResultSet rs = preparedStatement.executeQuery();
+			while(rs.next())
+			{
+				String maHD=rs.getNString("maHD");
+				String tenNV=rs.getNString("tenNV");
+				String tenKH=rs.getNString("tenKH");
+				String sdt=rs.getNString("sdt");
+				Date ngayLap=rs.getDate("ngayLap");
+				double tongTien=rs.getDouble("tongTien");	
+				HoaDon h=new HoaDon();
+				h.setNgayLap(ngayLap);
+				String[] row= {maHD,tenNV,tenKH,sdt,h.getNgayLapToString(),Double.toString(tongTien)};
+				dtm_HD.addRow(row);
+			}	
+			System.out.println("Tìm kiếm hóa đơn thành công.");
+			con.con().close();
+			con.stmt().close();
+			rs.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}*/
+		return true;
+	}
+	@Override
+	public ArrayList<HoaDon_TimKiem> listHoaDon_TimKiem() {
+		String sqlSelect ="SELECT HoaDon.maHD, HoaDon.ngayLap, HoaDon.tongTien,\r\n"
+				+ "       KhachHang.tenKH, KhachHang.sdt,\r\n"
+				+ "       NhanVien.tenNV\r\n"
+				+ "		FROM HoaDon\r\n"
+				+ "		JOIN NhanVien ON HoaDon.maNV = NhanVien.maNV\r\n"
+				+ "		JOIN KhachHang ON HoaDon.maKH = KhachHang.maKH\r\n"
+				+ "		ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) ASC;";
+		ArrayList<HoaDon_TimKiem> listHD=new ArrayList<HoaDon_TimKiem>();
+		try {
+			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);
+	        //preparedStatement.setNString(1, maNV);
+	        
+			ResultSet rs = preparedStatement.executeQuery();
+			while(rs.next())
+			{
+				String maHD=rs.getNString("maHD");
+				String tenNV=rs.getNString("tenNV");
+				String tenKH=rs.getNString("tenKH");
+				String sdt=rs.getNString("sdt");
+				Date ngayLap=rs.getDate("ngayLap");
+				double tongTien=rs.getDouble("tongTien");	
+				HoaDon_TimKiem h=new HoaDon_TimKiem(maHD, tenKH, tenNV, ngayLap, tongTien, sdt);
+				listHD.add(h);
+			}	
+			con.con().close();
+			con.stmt().close();
+			rs.close();
+			return listHD;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return null;
 		}
 	}
 	

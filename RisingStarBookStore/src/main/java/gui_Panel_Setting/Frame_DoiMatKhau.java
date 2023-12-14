@@ -50,7 +50,7 @@ public class Frame_DoiMatKhau extends JFrame implements ActionListener, WindowLi
 	private Container lbl_MKMoi1;
 	private Container lbl_MKMoi2;
 	private NhanVien_BUS sqlNhanVien_BUS = new NhanVien_BUS();
-	private String maNV;
+	private String maNV, chucVu;
 
 	/**
 	 * Launch the application.
@@ -60,7 +60,8 @@ public class Frame_DoiMatKhau extends JFrame implements ActionListener, WindowLi
 			public void run() {
 				try {
 					String maNV = "NV1";
-					Frame_DoiMatKhau frame = new Frame_DoiMatKhau(maNV);
+					String chucVu="Nhân viên";
+					Frame_DoiMatKhau frame = new Frame_DoiMatKhau(maNV,chucVu);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -72,9 +73,10 @@ public class Frame_DoiMatKhau extends JFrame implements ActionListener, WindowLi
 	/**
 	 * Create the frame.
 	 */
-	public Frame_DoiMatKhau(String maNV) {
+	public Frame_DoiMatKhau(String maNV,String chucVu) {
 		// set
 		setMaNV(maNV);
+		setChucVu(chucVu);
 		setTitle("Rising Star - Đổi mật khẩu");
 		setIconImage(new CustomIcon("src/main/images/view_image/Logo.png").getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -139,8 +141,8 @@ public class Frame_DoiMatKhau extends JFrame implements ActionListener, WindowLi
 		addWindowListener(this);
 	}
 
-	public void load_Frame_Chinh(String maNV) {
-		Frame_Chinh frame = new Frame_Chinh(maNV);
+	public void load_Frame_Chinh(String maNV,String chucVu) {
+		Frame_Chinh frame = new Frame_Chinh(maNV,chucVu);
 		frame.setTitle("Rising Star: Quản lý mua bán sách tại hiệu sách tư nhân. ");
 		frame.setIconImage(new CustomIcon("src/main/images/view_image/Logo.png").getImage());
 		frame.setVisible(true);
@@ -270,6 +272,14 @@ public class Frame_DoiMatKhau extends JFrame implements ActionListener, WindowLi
 	public void windowDeactivated(WindowEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public String getChucVu() {
+		return chucVu;
+	}
+
+	public void setChucVu(String chucVu) {
+		this.chucVu = chucVu;
 	}
 
 }

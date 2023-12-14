@@ -158,3 +158,26 @@ ORDER BY CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;
 SELECT SUM(thanhTien) AS tongTien
 FROM CTDonDatHang
 GROUP BY maDDH;
+--Tìm kiếm đơn đặt
+SELECT
+    DDH.maDDH,
+    KH.tenKH,
+    KH.sdt,
+    DDH.ngayDat,
+    NV.tenNV
+FROM
+    DonDatHang DDH
+JOIN
+    KhachHang KH ON DDH.maKH = KH.maKH
+JOIN
+    NhanVien NV ON DDH.maNV = NV.maNV
+WHERE
+    DDH.maDDH=? or
+	NV.tenNV=? or
+	KH.tenKH=? or
+	KH.sdt=? or
+	DAY(DDH.ngayDat)=? or
+	MONTH(DDH.ngayDat)=? or
+	YEAR(DDH.ngayDat)=? 
+ORDER BY
+    CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;

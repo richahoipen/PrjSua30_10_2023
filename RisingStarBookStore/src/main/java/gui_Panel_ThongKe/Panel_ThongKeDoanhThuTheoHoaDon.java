@@ -41,6 +41,7 @@ import customEntities.Custom_ColorPicker;
 import customEntities.Custom_ComboBox;
 import customEntities.Custom_Function;
 import customEntities.XuatFile;
+import dataBase_DAO.XuLi_ThongKe_DAO;
 import gui_Panel.barchart.BarChart;
 import gui_Panel.barchart.ModelChart;
 import gui_Panel.lineChart.LineChart;
@@ -55,7 +56,8 @@ import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
-public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionListener{
+public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionListener
+{
 	private JPanel panel = new JPanel();
     private JPanel pn_TieuDe = new JPanel();
     private JLabel lbl_Title_BaoCaoDoanhThu = new JLabel();
@@ -99,6 +101,7 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
 	private final JLabel lbl_SLKhach = new JLabel("Lượng khách");
 	private final JLabel lbl_SLSPB = new JLabel("Lượng sản phảm bán được");
 	private final JLabel lbl_ShowName = new JLabel("          ");
+	private XuLi_ThongKe_DAO xuLi_ThongKe_DAO=new XuLi_ThongKe_DAO();
 	
     /**
 	 * @return the panel
@@ -789,7 +792,7 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
 	    for (int i = 0; i < rowCount; i++) {
     		invoiceQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 2).toString());
     		customerQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 3).toString());
-    		ProductsSoldQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 4).toString());
+    		ProductsSoldQuantity += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 4).toString());
     		revenue += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 5).toString());
     		expenditure += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 6).toString());
 	    }
@@ -800,13 +803,14 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
 	    txt_read_SoLuongKhach.setText(customerQuantity + "");
 	    txt_read_SoLuongSanPhamBanDuoc.setText(ProductsSoldQuantity + "");
 	}
-
+	//Xử lí table
 	private void tinhBang() {
         tbl_ChiTiet = new CustomTable();
         tbl_ChiTiet.setModel(dtm_ChiTiet);
         dtm_ChiTiet.setRowCount(0);
         scr_ChiTiet = new JScrollPane(tbl_ChiTiet);
         setNgayBatDau();
+        String loaiThoiGian = (String) cbo_LoaiThoiGian.getSelectedItem();
         long daycount = 1,weekcount = 1,monthcount=1,quartercount=1,yearcount =1;
 		LocalDate ngayBatDau = dcr_NgayBatDau.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy ngày từ JDateChooser, chuyển đổi sang LocalDate
 		LocalDate ngayKetThuc = dcr_NgayKetThuc.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy ngày từ JDateChooser, chuyển đổi sang LocalDate
@@ -815,7 +819,7 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
 		monthcount = ChronoUnit.MONTHS.between(ngayBatDau, ngayKetThuc)+1;
 		quartercount =(long) ChronoUnit.MONTHS.between(ngayBatDau, ngayKetThuc)/4+1;
 		yearcount = ChronoUnit.YEARS.between(ngayBatDau, ngayKetThuc)+1;
-		String loaiThoiGian = (String) cbo_LoaiThoiGian.getSelectedItem();
+		
         if(loaiThoiGian.equals("By day")||loaiThoiGian.equals("Theo ngày")) {
         	if(loaiThoiGian.equals("By day")) {
         		tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Date");
@@ -823,19 +827,23 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
         	if(loaiThoiGian.equals("Theo ngày")) {
         		tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Ngày");
         	}
-        	for (int i = 0; i < daycount; i++) {
-    		String ngay = LocalDate.now().minusDays(i).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            String luongHoaDon = i+"";
-            String luongKhach = i+"";
-            String luongSanPhamBan = i+"";
-            int thu = i * 100;
-            int chi = (i+1) * 100 - (100 - i);
-            int loiNhuan = thu - chi;
-            Object[] row = { ngay,luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu,chi,loiNhuan};
-        	dtm_ChiTiet.addRow(row);
+        	//Theo NGÀY
+	        for (int i = 0; i < daycount; i++) {
+	        	
+	        	LocalDate ngay_LD=LocalDate.now().minusDays(i);
+	    		String ngay = ngay_LD.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+	            int luongHoaDon = xuLi_ThongKe_DAO.getLuong_HoaDon_TheoNgay(ngay_LD);
+	            int luongKhach = xuLi_ThongKe_DAO.getLuong_Khach_TheoNgay(ngay_LD);
+	            int luongSanPhamBan = xuLi_ThongKe_DAO.getLuong_SanPham_TheoNgay(ngay_LD);
+	            double thu = xuLi_ThongKe_DAO.getLuong_TongTien_TheoNgay(ngay_LD);
+	            double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+	            double loiNhuan = thu - chi;
+	            Object[] row = { ngay,Integer.toString(luongHoaDon),Integer.toString(luongKhach), Integer.toString(luongSanPhamBan),Double.toString(thu),Double.toString(chi),loiNhuan};
+	        	dtm_ChiTiet.addRow(row);
         	}
             
         }
+        //THEO TUẦN
         if (loaiThoiGian.equals("By week") || loaiThoiGian.equals("Theo tuần")) {
         	String weekString = null,yearString = null;
             if(loaiThoiGian.equals("By week")) {
@@ -853,14 +861,14 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
                 int weekOfYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
                 int year = date.getYear();
                 String week = weekString + weekOfYear + yearString + year;
-                String luongHoaDon = i+"";
-                String luongKhach = i+"";
-                String luongSanPhamBan = i+"";
-                int thu = i * 100;
-                int chi = (i+1) * 100 - (100 - i);
-                int loiNhuan = (thu - chi);
-                Object[] row = { week, luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu, chi, loiNhuan };
-                dtm_ChiTiet.addRow(row);
+                int luongHoaDon = xuLi_ThongKe_DAO.getLuong_HoaDon_Theo_Tuan(weekOfYear, year);
+	            int luongKhach = xuLi_ThongKe_DAO.getLuong_Khach_Theo_Tuan(weekOfYear, year);
+	            int luongSanPhamBan = xuLi_ThongKe_DAO.getLuong_SanPham_Theo_Tuan(weekOfYear, year);
+	            double thu = xuLi_ThongKe_DAO.getLuong_TongTien_Theo_Tuan(weekOfYear, year);
+	            double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+	            double loiNhuan = thu - chi;
+	            Object[] row = { week,Integer.toString(luongHoaDon),Integer.toString(luongKhach), Integer.toString(luongSanPhamBan),Double.toString(thu),Double.toString(chi),loiNhuan};
+	        	dtm_ChiTiet.addRow(row);
             }
         }
         if (loaiThoiGian.equals("By month") || loaiThoiGian.equals("Theo tháng")) {
@@ -972,6 +980,7 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
         this.revalidate();
         this.repaint();
 	}
+	//Xử lí biểu đồ
 	public JPanel tinhBieuDo() {
 		long daycount = 1,weekcount = 1,monthcount=1,quartercount=1,yearcount =1;
 		long maxcount = 12;
@@ -994,20 +1003,26 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
         lineChart.addLegend(lbl_LoiNhuan.getText(), Custom_ColorPicker.blue_4B70F5,Custom_ColorPicker.blue_4B70F5);
 		String loaiThoiGian = (String) cbo_LoaiThoiGian.getSelectedItem();
 		Random rand = new Random();
+		//Xử lí ngày tuần đơn giản
 		if(loaiThoiGian.equals("By day")||loaiThoiGian.equals("Theo ngày")) {
 			if(daycount<=maxcount) {
 				for (int i = 0; i < daycount; i++) {
-		            barChart.addData(new ModelChart(ngayBatDau.plusDays(i).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), new double[]{i+200, i+200, 20*(i+1)}));
+					LocalDate ngay_LD=LocalDate.now().minusDays(i);
+					double thu = xuLi_ThongKe_DAO.getLuong_TongTien_TheoNgay(ngay_LD);
+		            double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+		            double loiNhuan = thu - chi;
+		            barChart.addData(new ModelChart(ngayBatDau.plusDays(i).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), new double[]{thu,chi,loiNhuan}));
 		        }
 				barChart.start();
 				return barChart;
 			}
 			else {
 		        for (int i = 0; i < daycount; i++) {
-		        	int a = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến a
-		        	int b = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến b
-		            int c = a-b; // lợi nhuận = doanh thu - chi
-		            lineChart.addData(new gui_Panel.lineChart.ModelChart(String.format(ngayBatDau.plusDays(i).format(DateTimeFormatter.ofPattern("dd-MM")), i+1), new double[]{a,b,c}));
+		        	LocalDate ngay_LD=LocalDate.now().minusDays(i);
+					double thu = xuLi_ThongKe_DAO.getLuong_TongTien_TheoNgay(ngay_LD);
+		            double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+		            double loiNhuan = thu - chi;
+		            lineChart.addData(new gui_Panel.lineChart.ModelChart(String.format(ngayBatDau.plusDays(i).format(DateTimeFormatter.ofPattern("dd-MM")), i+1), new double[]{thu,chi,loiNhuan}));
 		        }
 		        lineChart.start();
 		        return lineChart;
@@ -1020,25 +1035,29 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
 		        	LocalDate date = ngayBatDau.plusWeeks(i);
 		        	int weekOfYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
 		            int year = date.getYear();
-		            barChart.addData(new ModelChart("Tuần " + weekOfYear + "/" + year, new double[]{i+200, i+200, 20*(i+1)}));
+		            double thu = xuLi_ThongKe_DAO.getLuong_TongTien_Theo_Tuan(weekOfYear, year);
+		            double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+		            double loiNhuan = thu - chi;
+		            barChart.addData(new ModelChart("Tuần " + weekOfYear + "/" + year, new double[]{thu,chi,loiNhuan}));
 		        }
 		        barChart.start();
 		        return barChart;
 		    }
 		    else {
-		        for (int i = 0; i < weekcount; i++) {
-		            int a = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến a
-		            int b = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến b
-		            int c = a-b; // lợi nhuận = doanh thu - chi
+		        for (int i = 0; i < weekcount; i++) {	            
 		            LocalDate date = ngayBatDau.plusWeeks(i);
 		            int weekOfYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
 		            int year = date.getYear();
-		            lineChart.addData(new gui_Panel.lineChart.ModelChart((weekOfYear) + "/" + year, new double[]{a,b,c}));
+		            double thu = xuLi_ThongKe_DAO.getLuong_TongTien_Theo_Tuan(weekOfYear, year);
+		            double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+		            double loiNhuan = thu - chi;
+		            lineChart.addData(new gui_Panel.lineChart.ModelChart((weekOfYear) + "/" + year, new double[]{thu,chi,loiNhuan}));
 		        }
 		        lineChart.start();
 		        return lineChart;
 		    }
 		} 
+		//Tháng và quý và năm thì chịu :((((
 		if (loaiThoiGian.equals("By month") || loaiThoiGian.equals("Theo tháng")) {
 		    if (monthcount <= maxcount) {
 		        for (int i = 0; i < monthcount; i++) {
@@ -1233,6 +1252,7 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
         JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
         return false;
     }
+	//Xử lí nút
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -1256,6 +1276,7 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
 			Frame_ThongKeDoanhThuTheoHoaDon frameXuatPDF = new Frame_ThongKeDoanhThuTheoHoaDon(this);
 			frameXuatPDF.setVisible(true);
 		}
+		
 	}
 	
 	
@@ -1327,10 +1348,30 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
 	}
 	private void settingButton() {
 		// TODO Auto-generated method stub
+		String phongCach = settingModel.getPhongCach();
 		for (Component component : pn_Control_Show.getComponents()) {
 		    if (component instanceof Custom_Button) {
 		        Custom_Button button = (Custom_Button) component;
-
+		        if(phongCach.equals("Whitebright")) {
+		        	button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+			        button.setColor_Foreground(new Custom_ColorPicker("31004a").toColor());
+			        button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+			        button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+			        button.setColor_Over(new Custom_ColorPicker("e5c3c6").toColor());
+			        button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+			        button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+			        button.setColor_Clicked_Background(Color.WHITE);
+		        }
+		        if(phongCach.equals("Darkmode")) {
+		        	button.setColor_Foreground(Color.WHITE);
+		        	button.setColor_Background(new Custom_ColorPicker("526D82").toColor());
+		        	button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+		        	button.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+		        	button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+		        	button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+		        	button.setColor_Clicked_Background(Color.WHITE);
+		        }
+		       
 		        FontMetrics fm = button.getFontMetrics(button.getFont());
 		        int textWidth = fm.stringWidth(button.getText());
 		        int textHeight = fm.getHeight();
@@ -1347,7 +1388,25 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
 		for (Component component : pn_Control_Main.getComponents()) {
 		    if (component instanceof Custom_Button) {
 		        Custom_Button button = (Custom_Button) component;
-
+		        if(phongCach.equals("Whitebright")) {
+		        	button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+			        button.setColor_Foreground(new Custom_ColorPicker("31004a").toColor());
+			        button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+			        button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+			        button.setColor_Over(new Custom_ColorPicker("e5c3c6").toColor());
+			        button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+			        button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+button.setColor_Clicked_Background(Color.WHITE);
+		        }
+		        if(phongCach.equals("Darkmode")) {
+		        	button.setColor_Foreground(Color.WHITE);
+		        	button.setColor_Background(new Custom_ColorPicker("526D82").toColor());
+		        	button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+		        	button.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+		        	button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+		        	button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+		        	button.setColor_Clicked_Background(Color.WHITE);
+		        }
 		        FontMetrics fm = button.getFontMetrics(button.getFont());
 		        int textWidth = fm.stringWidth(button.getText());
 		        int textHeight = fm.getHeight();
@@ -1364,5 +1423,27 @@ public class Panel_ThongKeDoanhThuTheoHoaDon extends JPanel implements ActionLis
 	}
 	private void settingCombobox() {
 		// TODO Auto-generated method stub
+		String phongCach = settingModel.getPhongCach();
+		for (Component component : pn_Control.getComponents()) {
+		    if (component instanceof Custom_ComboBox) {
+		    	Custom_ComboBox custom_ComboBox = (Custom_ComboBox) component;
+		    	if(phongCach.equals("Whitebright")) {
+            		custom_ComboBox.setColor_Foreground(new Custom_ColorPicker("31004a").toColor());
+            		custom_ComboBox.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+            		custom_ComboBox.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+            		custom_ComboBox.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+            		custom_ComboBox.setColor_Border(new Custom_ColorPicker("000000").toColor());
+            		custom_ComboBox.redraw_Custom_Combobox();
+		        }
+		        if(phongCach.equals("Darkmode")) {
+            		custom_ComboBox.setColor_Foreground(Color.WHITE);
+            		custom_ComboBox.setColor_Background(new Custom_ColorPicker("323232").toColor());
+            		custom_ComboBox.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+            		custom_ComboBox.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+            		custom_ComboBox.setColor_Border(new Custom_ColorPicker("000000").toColor());
+            		custom_ComboBox.redraw_Custom_Combobox();
+		        }
+		    }
+		}
 	}
 }

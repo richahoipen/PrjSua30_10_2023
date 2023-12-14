@@ -13,6 +13,7 @@ import customEntities.Custom_ComboBox;
 import dataBase_BUS.CTDonDatHang_BUS;
 import dataBase_BUS.DonDatHang_BUS;
 import entities.DonDatHang;
+import entities.KhachHang;
 import entities.NhanVien;
 import customEntities.CustomTable;
 import gui_Dialog.Message;
@@ -54,6 +55,7 @@ import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -211,7 +213,7 @@ public class Panel_TimKiemDonDat extends JPanel implements ActionListener, Mouse
 		
 		dtm_CTDD = new DefaultTableModel(new String[] {"Mã sản phẩm","Tên sản phẩm","Đơn giá","Số lượng mua","Thành tiền"},0);
 		
-		dtm_DD = new DefaultTableModel(new String[] {"Mã đơn đặt","Tên khách hàng","SĐT khách hàng","Ngày đặt","Tên nhân viên","Tổng tiền"},0);
+		dtm_DD = new DefaultTableModel(new String[] {"Mã đơn đặt","Họ tên nhân viên","Họ tên khách hàng","SĐT khách","Ngày lập","Tổng tiền"},0);
 		
 			
 		tbl_DSDD = new CustomTable();
@@ -390,6 +392,7 @@ public class Panel_TimKiemDonDat extends JPanel implements ActionListener, Mouse
     	tbl_DSDD.addMouseListener(this);
     	addComboBox();
     	resetTable_DD();
+    	checkTable();
     }
     private void addComboBox()
     {
@@ -425,10 +428,10 @@ public class Panel_TimKiemDonDat extends JPanel implements ActionListener, Mouse
 	public void mouseClicked(MouseEvent e) {
 		int row=tbl_DSDD.getSelectedRow();
 		String maDDH=tbl_DSDD.getValueAt(row, 0).toString();
-		String tenKH=tbl_DSDD.getValueAt(row, 1).toString();
-		String sdt=tbl_DSDD.getValueAt(row, 2).toString();
+		String tenNV=tbl_DSDD.getValueAt(row, 1).toString();
+		String tenKH=tbl_DSDD.getValueAt(row, 2).toString();
+		String sdt=tbl_DSDD.getValueAt(row, 3).toString();
 		//
-		String tenNV=tbl_DSDD.getValueAt(row, 4).toString();
 		String tongTien=tbl_DSDD.getValueAt(row, 5).toString();
 		try
 		{
@@ -488,8 +491,67 @@ public class Panel_TimKiemDonDat extends JPanel implements ActionListener, Mouse
 		// TODO Auto-generated method stub
 		
 	}
-
-
+	private void checkTable()
+    {
+    	if(isTableEmpty(tbl_DSDD))
+    	{
+    		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+            String canhBao = null,loaiCanhBao = null;
+    		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+    			canhBao = "Không thể tìm thấy.";
+    			loaiCanhBao = "Cảnh báo";
+    		}
+    		if (settingModel.getNgonNgu().equals("English")) {
+    			canhBao = "Can't find.";
+    			loaiCanhBao = "Warning";
+    		}
+            JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.WARNING_MESSAGE);
+    	}
+    }
+    private boolean isTableEmpty(CustomTable tbl_DSSP) {
+        return tbl_DSSP.getModel().getRowCount() == 0;
+    }
+	private void timKiem()
+	{
+		LocalDate ngayHienTai=LocalDate.now();
+		String maDDH=(String) cbo_MaDD.getSelectedItem();
+		String tenNV=(String) cbo_HoTenNhanVien.getSelectedItem();
+		String tenKH=(String) cbo_HoTenKhachHang.getSelectedItem();
+		String ngay=(String) cbo_Ngay.getSelectedItem();
+		String thang=(String) cbo_Thang.getSelectedItem();
+		String nam=(String) cbo_Nam.getSelectedItem();
+		String sdt=(String) cbo_SoDienThoai.getSelectedItem();
+		if(Objects.isNull(maDDH))
+			maDDH="";
+		if(Objects.isNull(tenNV))
+			tenNV="";
+		if(Objects.isNull(tenKH))
+			tenKH="";
+		if(Objects.isNull(ngay))
+			ngay=Integer.toString(ngayHienTai.getDayOfMonth());
+		if(Objects.isNull(thang))
+			thang=Integer.toString(ngayHienTai.getMonthValue());
+		if(Objects.isNull(nam))
+			nam=Integer.toString(ngayHienTai.getYear());
+		if(Objects.isNull(sdt))
+			sdt="";
+		//Gán entities
+		DonDatHang d=new DonDatHang();
+		d.setMaDDH(maDDH);
+		KhachHang k=new KhachHang();
+		k.setTenKH(tenKH);
+		k.setSdt(sdt);
+		try
+		{
+			dtm_DD.setRowCount(0);
+			sqlDonDatHang_BUS.tim_DonDatHang(d, tenNV, k,Integer.parseInt(ngay), Integer.parseInt(thang),Integer.parseInt(ngay), dtm_DD);
+		}catch(NumberFormatException e)
+		{
+			JOptionPane.showMessageDialog(null,e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -498,6 +560,10 @@ public class Panel_TimKiemDonDat extends JPanel implements ActionListener, Mouse
 		if(o.equals(btn_XoaTrang))
 		{
 			xoaTrang();
+		}
+		if(o.equals(btn_TimKiem))
+		{
+			timKiem();
 		}
 	}
 	private void setting() {
@@ -530,7 +596,7 @@ public class Panel_TimKiemDonDat extends JPanel implements ActionListener, Mouse
     		tbl_DSDD.getColumnModel().getColumn(2).setHeaderValue("Họ tên khách hàng");
     		tbl_DSDD.getColumnModel().getColumn(3).setHeaderValue("SĐT khách");
     		tbl_DSDD.getColumnModel().getColumn(4).setHeaderValue("Ngày lập");
-    		tbl_DSDD.getColumnModel().getColumn(4).setHeaderValue("Tổng tiền");
+    		tbl_DSDD.getColumnModel().getColumn(5).setHeaderValue("Tổng tiền");
     		lbl_Title_DSCTDD.setText("Danh sách chi tiết đơn đặt");
     		tbl_DSCTDD.getColumnModel().getColumn(0).setHeaderValue("Mã sản phẩm");
     		tbl_DSCTDD.getColumnModel().getColumn(1).setHeaderValue("Tên sản phẩm");

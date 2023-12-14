@@ -3,12 +3,15 @@ package dataBase_BUS;
 
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
 
 import dataBase_DAO.HoaDon_DAO;
 
 import entities.HoaDon;
+import entities.HoaDon_TimKiem;
+import entities.KhachHang;
 import interface_Method_DAO.HoaDon_Method;
 
 public class HoaDon_BUS implements HoaDon_Method
@@ -72,6 +75,19 @@ public class HoaDon_BUS implements HoaDon_Method
 	public Date getNgayLap(String maHD) {
 		// TODO Auto-generated method stub
 		return sqlHoaDon_DAO.getNgayLap(maHD);
+	}
+
+	@Override
+	public boolean tim_HoaDon(HoaDon h, String tenNV, KhachHang k, int ngay, int thang, int nam,
+			DefaultTableModel dtm_HD) {
+		// TODO Auto-generated method stub
+		return sqlHoaDon_DAO.tim_HoaDon(h, tenNV, k, ngay, thang, nam, dtm_HD);
+	}
+
+	@Override
+	public ArrayList<HoaDon_TimKiem> listHoaDon_TimKiem() {
+		// TODO Auto-generated method stub
+		return sqlHoaDon_DAO.listHoaDon_TimKiem();
 	}
 	
 }

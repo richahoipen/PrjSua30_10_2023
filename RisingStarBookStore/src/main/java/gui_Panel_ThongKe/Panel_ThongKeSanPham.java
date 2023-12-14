@@ -19,6 +19,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.IsoFields;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -42,6 +43,9 @@ import customEntities.Custom_ColorPicker;
 import customEntities.Custom_ComboBox;
 import customEntities.Custom_Function;
 import customEntities.XuatFile;
+import dataBase_BUS.SanPham_BUS;
+import dataBase_DAO.XuLi_ThongKe_DAO;
+import entities.SanPham;
 import gui_Panel.barchart.BarChart;
 import gui_Panel.barchart.ModelChart;
 import gui_Panel.lineChart.LineChart;
@@ -106,7 +110,9 @@ public class Panel_ThongKeSanPham extends JPanel implements ActionListener{
 	private final JTextField txt_Read_SLLoaiSPTong = new JTextField();
 	private final JLabel lbl_Read_Loc = new JLabel("Lọc theo");
 	private final JTextField txt_Read_Loc = new JTextField();
-	
+	private XuLi_ThongKe_DAO xuLi_ThongKe_DAO=new XuLi_ThongKe_DAO();
+	private ArrayList<SanPham> listSP=xuLi_ThongKe_DAO.getListSanPham();
+	private SanPham_BUS sqlSanPhamBUS=new SanPham_BUS();
     /**
 	 * @return the panel
 	 */
@@ -948,7 +954,7 @@ public class Panel_ThongKeSanPham extends JPanel implements ActionListener{
 	    	
     		inventoryQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 2).toString());
     		ProductsSoldQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 3).toString());
-    		revenue += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 4).toString());
+    		revenue += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 4).toString());
     		expenditure += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 5).toString());
     	}
 	    if(loc.equals("Tất cả sản phẩm")||loc.equals("All products")) {
@@ -965,7 +971,7 @@ public class Panel_ThongKeSanPham extends JPanel implements ActionListener{
 	    txt_Read_SLLoaiSPTong.setText("");
 	    txt_Read_Loc.setText(loc);
 	}
-
+	//Xử lí bảng
 	private void tinhBang() {
         tbl_ChiTiet = new CustomTable();
         tbl_ChiTiet.setModel(dtm_ChiTiet);
@@ -986,16 +992,17 @@ public class Panel_ThongKeSanPham extends JPanel implements ActionListener{
 		Random rand = new Random();
 		if(loc.equals("Tất cả sản phẩm")||loc.equals("All products")) {
 			
-	        for (int i = 0; i < 20; i++) {
-	            String maNhanVien = "NV" + (i+1);
-	            String tenNhanVien = "Product"+ (i+1);
-	            int luongHoaDon = rand.nextInt(50);
-	            int luongKhach = rand.nextInt(100);
-	            int luongSanPhamBanDuoc = rand.nextInt(200);
-	            int thu = rand.nextInt(7000);
-	            int chi = rand.nextInt(5000);
-	            int loiNhuan = thu - chi;
-	            dtm_ChiTiet.addRow(new Object[]{maNhanVien, tenNhanVien, luongHoaDon, luongKhach, luongSanPhamBanDuoc, thu, chi, loiNhuan});
+	        //String maSP_Xet=(String) cbo_Loc.getSelectedItem();
+			for(SanPham s:listSP)
+	        {
+			    String maSanPham = s.getMaSP();
+			    String tenSanPham = s.getTenSP();
+			    int soLuongCon=s.getSoLuong();
+			    int soLuongBan=s.getSoLuongBan();
+			    double thu=xuLi_ThongKe_DAO.getTongTien_HoaDon_Theo_MaSP(maSanPham);
+			    double chi=xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+			    double loiNhuan=thu-chi;
+			    dtm_ChiTiet.addRow(new Object[]{maSanPham, tenSanPham, soLuongCon,soLuongBan,thu,chi,loiNhuan});     
 	        }
 		}
 		else {
@@ -1008,15 +1015,15 @@ public class Panel_ThongKeSanPham extends JPanel implements ActionListener{
         		tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Ngày");
         	}
         	for (int i = 0; i < daycount; i++) {
-    		String ngay = LocalDate.now().minusDays(i).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            String luongHoaDon = i+"";
-            String luongKhach = i+"";
-            String luongSanPhamBan = i+"";
-            int thu = i * 100;
-            int chi = (i+1) * 100 - (100 - i);
-            int loiNhuan = thu - chi;
-            Object[] row = { ngay,luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu,chi,loiNhuan};
-        	dtm_ChiTiet.addRow(row);
+	    		String ngay = LocalDate.now().minusDays(i).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+	            String luongHoaDon = i+"";
+	            String luongKhach = i+"";
+	            String luongSanPhamBan = i+"";
+	            int thu = i * 100;
+	            int chi = (i+1) * 100 - (100 - i);
+	            int loiNhuan = thu - chi;
+	            Object[] row = { ngay,luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu,chi,loiNhuan};
+	        	dtm_ChiTiet.addRow(row);
         	}
             
         }
@@ -1185,12 +1192,25 @@ public class Panel_ThongKeSanPham extends JPanel implements ActionListener{
 	        if(ngonNgu.equals("Vietnamese"))
 	        	lbl_ShowName.setText("Biểu đồ thống kê doanh thu theo top 10 sản phẩm");
 	        //Nhật ở đây NumberOfProduct là số lượng sản phẩm thực hiện giao dịch, tui để 10 để test, ông thanh thành list.length
+	        /*
 	        int NumberOfProduct = 2;
 	        
 	        int result = (10 <= NumberOfProduct) ? 10 : NumberOfProduct;
 	        for (int i = 0; i < result; i++) {
 	            barChart.addData(new ModelChart("SP1 - Thái Gõ", new double[]{i+200, i+200, 20*(i+1)}));
+	        }*/
+	        for(SanPham s:listSP)
+	        {
+			    String maSanPham = s.getMaSP();
+			    //String tenSanPham = s.getTenSP();
+			    //int soLuongCon=s.getSoLuong();
+			    //int soLuongBan=s.getSoLuongBan();
+			    double thu=xuLi_ThongKe_DAO.getTongTien_HoaDon_Theo_MaSP(maSanPham);
+			    double chi=xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+			    double loiNhuan=thu-chi;
+			    barChart.addData(new ModelChart(s.getMaSP()+" "+s.getTenSP(), new double[]{thu,chi,loiNhuan}));
 	        }
+	        
 			barChart.start();
 			return barChart;
 		}
@@ -1548,16 +1568,34 @@ public class Panel_ThongKeSanPham extends JPanel implements ActionListener{
 	    }
 	    
 	    //Nhật xóa các dòng dưới này
-	    cbo_Loc.addItem("SP1");
-	    cbo_Loc.addItem("SP2");
-	    cbo_Loc.addItem("SP3");
+	    sqlSanPhamBUS.dayCombobox_maSP(cbo_Loc);
 	}
 	private void settingButton() {
 		// TODO Auto-generated method stub
+		String phongCach = settingModel.getPhongCach();
 		for (Component component : pn_Control_Show.getComponents()) {
 		    if (component instanceof Custom_Button) {
 		        Custom_Button button = (Custom_Button) component;
-
+		        if(phongCach.equals("Whitebright")) {
+		        	button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+			        button.setColor_Foreground(new Custom_ColorPicker("31004a").toColor());
+			        button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+			        button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+			        button.setColor_Over(new Custom_ColorPicker("e5c3c6").toColor());
+			        button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+			        button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+			        button.setColor_Clicked_Background(Color.WHITE);
+		        }
+		        if(phongCach.equals("Darkmode")) {
+		        	button.setColor_Foreground(Color.WHITE);
+		        	button.setColor_Background(new Custom_ColorPicker("526D82").toColor());
+		        	button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+		        	button.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+		        	button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+		        	button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+		        	button.setColor_Clicked_Background(Color.WHITE);
+		        }
+		       
 		        FontMetrics fm = button.getFontMetrics(button.getFont());
 		        int textWidth = fm.stringWidth(button.getText());
 		        int textHeight = fm.getHeight();
@@ -1574,7 +1612,25 @@ public class Panel_ThongKeSanPham extends JPanel implements ActionListener{
 		for (Component component : pn_Control_Main.getComponents()) {
 		    if (component instanceof Custom_Button) {
 		        Custom_Button button = (Custom_Button) component;
-
+		        if(phongCach.equals("Whitebright")) {
+		        	button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+			        button.setColor_Foreground(new Custom_ColorPicker("31004a").toColor());
+			        button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+			        button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+			        button.setColor_Over(new Custom_ColorPicker("e5c3c6").toColor());
+			        button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+			        button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+button.setColor_Clicked_Background(Color.WHITE);
+		        }
+		        if(phongCach.equals("Darkmode")) {
+		        	button.setColor_Foreground(Color.WHITE);
+		        	button.setColor_Background(new Custom_ColorPicker("526D82").toColor());
+		        	button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+		        	button.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+		        	button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+		        	button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+		        	button.setColor_Clicked_Background(Color.WHITE);
+		        }
 		        FontMetrics fm = button.getFontMetrics(button.getFont());
 		        int textWidth = fm.stringWidth(button.getText());
 		        int textHeight = fm.getHeight();
@@ -1591,5 +1647,27 @@ public class Panel_ThongKeSanPham extends JPanel implements ActionListener{
 	}
 	private void settingCombobox() {
 		// TODO Auto-generated method stub
+		String phongCach = settingModel.getPhongCach();
+		for (Component component : pn_Control.getComponents()) {
+		    if (component instanceof Custom_ComboBox) {
+		    	Custom_ComboBox custom_ComboBox = (Custom_ComboBox) component;
+		    	if(phongCach.equals("Whitebright")) {
+            		custom_ComboBox.setColor_Foreground(new Custom_ColorPicker("31004a").toColor());
+            		custom_ComboBox.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+            		custom_ComboBox.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+            		custom_ComboBox.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+            		custom_ComboBox.setColor_Border(new Custom_ColorPicker("000000").toColor());
+            		custom_ComboBox.redraw_Custom_Combobox();
+		        }
+		        if(phongCach.equals("Darkmode")) {
+            		custom_ComboBox.setColor_Foreground(Color.WHITE);
+            		custom_ComboBox.setColor_Background(new Custom_ColorPicker("323232").toColor());
+            		custom_ComboBox.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+            		custom_ComboBox.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+            		custom_ComboBox.setColor_Border(new Custom_ColorPicker("000000").toColor());
+            		custom_ComboBox.redraw_Custom_Combobox();
+		        }
+		    }
+		}
 	}
 }

@@ -19,6 +19,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.IsoFields;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -42,6 +43,9 @@ import customEntities.Custom_ColorPicker;
 import customEntities.Custom_ComboBox;
 import customEntities.Custom_Function;
 import customEntities.XuatFile;
+import dataBase_BUS.NhanVien_BUS;
+import dataBase_DAO.XuLi_ThongKe_DAO;
+import entities.NhanVien;
 import gui_Panel.barchart.BarChart;
 import gui_Panel.barchart.ModelChart;
 import gui_Panel.lineChart.LineChart;
@@ -56,40 +60,40 @@ import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
-public class Panel_ThongKeDoanhThuTheoNhanVien extends JPanel implements ActionListener{
+public class Panel_ThongKeDoanhThuTheoNhanVien extends JPanel implements ActionListener {
 	private JPanel panel = new JPanel();
-    private JPanel pn_TieuDe = new JPanel();
-    private JLabel lbl_Title_BaoCaoDoanhThu = new JLabel();
-    private JPanel pn_Control = new JPanel();
-    private JLabel lbl_LoaiThoiGian = new JLabel("Loại thời gian");
-    private Custom_ComboBox cbo_LoaiThoiGian = new Custom_ComboBox();
-    private JLabel lbl_ThoiGianBatDau = new JLabel("Thời gian bắt đầu");
-    private JLabel lbl_ThoiGianKetThuc = new JLabel("Thời gian kết thúc");
-    private JPanel pn_Control_Main = new JPanel();
-    private Custom_Button btn_TimKiem = new Custom_Button();
-    private Custom_Button btn_XuatExcel = new Custom_Button();
-    private Custom_Button btn_XuatPDF = new Custom_Button();
-    private JPanel pn_Control_Show = new JPanel();
-    private Custom_Button btn_BieuDo = new Custom_Button();
-    private Custom_Button btn_HienThi = new Custom_Button();
-    private JPanel pn_Info = new JPanel();
-    private JLabel lbl_DoanhThu = new JLabel("Doanh Thu");
-    private JTextField txt_read_DoanhThu = new JTextField();
-    private JLabel lbl_Chi = new JLabel("Chi");
-    private JTextField txt_read_Chi = new JTextField();
-    private JLabel lbl_LoiNhuan = new JLabel("Lợi nhuận");
-    private JTextField txt_read_LoiNhuan = new JTextField();
-    private JLabel lbl_SLHoaDon = new JLabel("Lượng hóa đơn");
-    private JTextField txt_read_SoLuongHoaDon = new JTextField();
-    private JPanel pn_Show = new JPanel();
-    private LineChart lineChart = new LineChart();
-    private BarChart barChart = new BarChart();
-    private DefaultTableModel dtm_ChiTiet;
-    private CustomTable tbl_ChiTiet;
-    private JScrollPane scr_ChiTiet;
-    private SettingModel settingModel;
-    private JLabel lbl_Control_Main = new JLabel("Thao tác:");
-    private JLabel lbl_Control_Show = new JLabel("Nội dung");
+	private JPanel pn_TieuDe = new JPanel();
+	private JLabel lbl_Title_BaoCaoDoanhThu = new JLabel();
+	private JPanel pn_Control = new JPanel();
+	private JLabel lbl_LoaiThoiGian = new JLabel("Loại thời gian");
+	private Custom_ComboBox cbo_LoaiThoiGian = new Custom_ComboBox();
+	private JLabel lbl_ThoiGianBatDau = new JLabel("Thời gian bắt đầu");
+	private JLabel lbl_ThoiGianKetThuc = new JLabel("Thời gian kết thúc");
+	private JPanel pn_Control_Main = new JPanel();
+	private Custom_Button btn_TimKiem = new Custom_Button();
+	private Custom_Button btn_XuatExcel = new Custom_Button();
+	private Custom_Button btn_XuatPDF = new Custom_Button();
+	private JPanel pn_Control_Show = new JPanel();
+	private Custom_Button btn_BieuDo = new Custom_Button();
+	private Custom_Button btn_HienThi = new Custom_Button();
+	private JPanel pn_Info = new JPanel();
+	private JLabel lbl_DoanhThu = new JLabel("Doanh Thu");
+	private JTextField txt_read_DoanhThu = new JTextField();
+	private JLabel lbl_Chi = new JLabel("Chi");
+	private JTextField txt_read_Chi = new JTextField();
+	private JLabel lbl_LoiNhuan = new JLabel("Lợi nhuận");
+	private JTextField txt_read_LoiNhuan = new JTextField();
+	private JLabel lbl_SLHoaDon = new JLabel("Lượng hóa đơn");
+	private JTextField txt_read_SoLuongHoaDon = new JTextField();
+	private JPanel pn_Show = new JPanel();
+	private LineChart lineChart = new LineChart();
+	private BarChart barChart = new BarChart();
+	private DefaultTableModel dtm_ChiTiet;
+	private CustomTable tbl_ChiTiet;
+	private JScrollPane scr_ChiTiet;
+	private SettingModel settingModel;
+	private JLabel lbl_Control_Main = new JLabel("Thao tác:");
+	private JLabel lbl_Control_Show = new JLabel("Nội dung");
 	private JDateChooser dcr_NgayBatDau;
 	private JFormattedTextField ftf_NgayBatDau;
 	private BufferedImage bfi_ChonNgay;
@@ -108,8 +112,11 @@ public class Panel_ThongKeDoanhThuTheoNhanVien extends JPanel implements ActionL
 	private final JLabel lbl_Read_NVLoc = new JLabel("Lượng nhân viên theo thời gian");
 	private final JLabel lbl_Read_NVTong = new JLabel("Lượng nhân tổng");
 	private final JTextField txt_Read_NVTong = new JTextField();
-	
-    /**
+	private XuLi_ThongKe_DAO xuLi_ThongKe_DAO = new XuLi_ThongKe_DAO();
+	private ArrayList<NhanVien> listNV = xuLi_ThongKe_DAO.getListNhanVien();
+	private NhanVien_BUS sqlNhanVien_BUS = new NhanVien_BUS();
+
+	/**
 	 * @return the panel
 	 */
 	public JPanel getPanel() {
@@ -751,14 +758,14 @@ public class Panel_ThongKeDoanhThuTheoNhanVien extends JPanel implements ActionL
 	 */
 	public Panel_ThongKeDoanhThuTheoNhanVien() {
 		lbl_Title_BaoCaoDoanhThu.setFont(new Font("Times New Roman", Font.BOLD, 30));
-        setLayout(new BorderLayout(0, 0));
+		setLayout(new BorderLayout(0, 0));
 		add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
-        pn_TieuDe.setBackground(new Color(240, 240, 240));
-        panel.add(pn_TieuDe, BorderLayout.NORTH);
-        pn_TieuDe.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        pn_TieuDe.add(lbl_Title_BaoCaoDoanhThu);
-        panel.add(pn_Control, BorderLayout.CENTER);
+		pn_TieuDe.setBackground(new Color(240, 240, 240));
+		panel.add(pn_TieuDe, BorderLayout.NORTH);
+		pn_TieuDe.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		pn_TieuDe.add(lbl_Title_BaoCaoDoanhThu);
+		panel.add(pn_Control, BorderLayout.CENTER);
 		try {
 			bfi_ChonNgay = ImageIO.read(new File("src\\main\\images\\view_image\\Calendar.png"));
 		} catch (IOException e) {
@@ -766,115 +773,116 @@ public class Panel_ThongKeDoanhThuTheoNhanVien extends JPanel implements ActionL
 			e.printStackTrace();
 		}
 		bfi_ChonNgay = Custom_Function.resize(bfi_ChonNgay, 20, 20);
-		
+
 		pn_Control.setLayout(new MigLayout("", "[grow][grow][grow][grow]", "[][][grow][][grow]"));
 		pn_Control.add(lbl_LoaiThoiGian, "cell 0 0,alignx left");
 		pn_Control.add(cbo_LoaiThoiGian, "cell 1 0,growx, width 50%");
 		lbl_Loc.setHorizontalAlignment(SwingConstants.LEFT);
-		
+
 		pn_Control.add(lbl_Loc, "cell 2 0,alignx left");
-		
+
 		pn_Control.add(cbo_Loc, "cell 3 0,growx");
 		pn_Control.add(lbl_ThoiGianBatDau, "cell 0 1,alignx left");
-		dcr_NgayBatDau = new JDateChooser ();
-		
-		dcr_NgayBatDau.setIcon (new ImageIcon(bfi_ChonNgay));
+		dcr_NgayBatDau = new JDateChooser();
+
+		dcr_NgayBatDau.setIcon(new ImageIcon(bfi_ChonNgay));
 		ftf_NgayBatDau = (JFormattedTextField) dcr_NgayBatDau.getComponent(1);
 		ftf_NgayBatDau.setHorizontalAlignment(SwingConstants.RIGHT);
-		dcr_NgayBatDau.getJCalendar().setPreferredSize (new Dimension ((int) 400,(int) 200));
+		dcr_NgayBatDau.getJCalendar().setPreferredSize(new Dimension((int) 400, (int) 200));
 		dcr_NgayBatDau.setDateFormatString("dd-MM-yyyy");
 		pn_Control.add(dcr_NgayBatDau, "cell 1 1,growx,width 50%");
 		pn_Control.add(lbl_ThoiGianKetThuc, "cell 2 1,alignx left");
-		dcr_NgayKetThuc = new JDateChooser ();
-		
-		dcr_NgayKetThuc.setIcon (new ImageIcon(bfi_ChonNgay));
+		dcr_NgayKetThuc = new JDateChooser();
+
+		dcr_NgayKetThuc.setIcon(new ImageIcon(bfi_ChonNgay));
 		ftf_NgayKetThuc = (JFormattedTextField) dcr_NgayKetThuc.getComponent(1);
 		ftf_NgayKetThuc.setHorizontalAlignment(SwingConstants.RIGHT);
-		dcr_NgayKetThuc.getJCalendar().setPreferredSize (new Dimension ((int) 400,(int) 200));
+		dcr_NgayKetThuc.getJCalendar().setPreferredSize(new Dimension((int) 400, (int) 200));
 		dcr_NgayKetThuc.setDateFormatString("dd-MM-yyyy");
-		
+
 		pn_Control.add(dcr_NgayKetThuc, "cell 3 1,growx,width 50%");
 		pn_Control.add(pn_Control_Main, "flowx,cell 0 2 2 1,growx");
 
-        
-        pn_Control_Main.add(lbl_Control_Main);
-        btn_TimKiem.setText("Tìm kiếm");
-        pn_Control_Main.add(btn_TimKiem);
-        btn_XuatExcel.setText("Xuất Excel");
-        pn_Control_Main.add(btn_XuatExcel);
-        btn_XuatPDF.setText("In báo cáo");
-        pn_Control_Main.add(btn_XuatPDF);
-        lbl_ShowName.setFont(new Font("Tahoma", Font.BOLD, 14));
-        
-        pn_Control.add(lbl_ShowName, "cell 0 3 6 1,alignx center");
-        pn_Control.add(pn_Control_Show, "cell 2 2 2 1,growx");
-        
-        pn_Control_Show.add(lbl_Control_Show);
-        btn_BieuDo.setText("Biểu đồ");
-        pn_Control_Show.add(btn_BieuDo);
-        btn_HienThi.setText("Hiển thị chi tiết");
-        pn_Control_Show.add(btn_HienThi);
-        add(pn_Info, BorderLayout.SOUTH);
-        pn_Info.setLayout(new MigLayout("", "[52px][grow][][grow][][grow]", "[][][14px]"));
-        
-        pn_Info.add(lbl_Read_Loc, "cell 0 0,alignx trailing");
-        txt_Read_Loc.setColumns(10);
-        
-        pn_Info.add(txt_Read_Loc, "cell 1 0,growx");
-        
-        pn_Info.add(lbl_Read_NVLoc, "cell 2 0,alignx trailing");
-        txt_Read_NVLoc.setText("0");
-        txt_Read_NVLoc.setColumns(10);
-        
-        pn_Info.add(txt_Read_NVLoc, "cell 3 0,growx");
-        
-        pn_Info.add(lbl_Read_NVTong, "cell 4 0,alignx trailing");
-        txt_Read_NVTong.setText("0");
-        txt_Read_NVTong.setColumns(10);
-        
-        pn_Info.add(txt_Read_NVTong, "cell 5 0,growx");
-        pn_Info.add(lbl_SLHoaDon, "cell 0 1,alignx trailing");
-        txt_read_SoLuongHoaDon.setColumns(10);
-        pn_Info.add(txt_read_SoLuongHoaDon, "cell 1 1,growx");
-        
-        pn_Info.add(lbl_SLKhach, "cell 2 1,alignx trailing");
-        txt_read_SoLuongKhach.setText("0");
-        txt_read_SoLuongKhach.setColumns(10);
-        
-        pn_Info.add(txt_read_SoLuongKhach, "cell 3 1,growx");
-        
-        pn_Info.add(lbl_SLSPB, "cell 4 1,alignx trailing");
-        txt_read_SoLuongSanPhamBanDuoc.setText("0");
-        txt_read_SoLuongSanPhamBanDuoc.setColumns(10);
-        
-        pn_Info.add(txt_read_SoLuongSanPhamBanDuoc, "cell 5 1,growx");
-        pn_Info.add(lbl_DoanhThu, "cell 0 2,alignx trailing");
-        txt_read_DoanhThu.setColumns(10);
-        pn_Info.add(txt_read_DoanhThu, "cell 1 2,growx");
-        pn_Info.add(lbl_Chi, "cell 2 2,alignx trailing");
-        txt_read_Chi.setColumns(10);
-        pn_Info.add(txt_read_Chi, "cell 3 2,growx");
-        pn_Info.add(lbl_LoiNhuan, "cell 4 2,alignx trailing");
-        txt_read_LoiNhuan.setColumns(10);
-        pn_Info.add(txt_read_LoiNhuan, "cell 5 2,growx");
-        
-        add(pn_Show, BorderLayout.CENTER);
-        dtm_ChiTiet = new DefaultTableModel(new String[]{"Mã nhân viên","Tên nhân viên","Lượng hóa đơn","Lượng khách","Lượng sản phẩm bán được","Thu","Chi","Lợi nhuận"},0);
-        setEditableToFalseTextfield();
-        addAction();
-        loadInfoText();
-        setting();
+		pn_Control_Main.add(lbl_Control_Main);
+		btn_TimKiem.setText("Tìm kiếm");
+		pn_Control_Main.add(btn_TimKiem);
+		btn_XuatExcel.setText("Xuất Excel");
+		pn_Control_Main.add(btn_XuatExcel);
+		btn_XuatPDF.setText("In báo cáo");
+		pn_Control_Main.add(btn_XuatPDF);
+		lbl_ShowName.setFont(new Font("Tahoma", Font.BOLD, 14));
+
+		pn_Control.add(lbl_ShowName, "cell 0 3 6 1,alignx center");
+		pn_Control.add(pn_Control_Show, "cell 2 2 2 1,growx");
+
+		pn_Control_Show.add(lbl_Control_Show);
+		btn_BieuDo.setText("Biểu đồ");
+		pn_Control_Show.add(btn_BieuDo);
+		btn_HienThi.setText("Hiển thị chi tiết");
+		pn_Control_Show.add(btn_HienThi);
+		add(pn_Info, BorderLayout.SOUTH);
+		pn_Info.setLayout(new MigLayout("", "[52px][grow][][grow][][grow]", "[][][14px]"));
+
+		pn_Info.add(lbl_Read_Loc, "cell 0 0,alignx trailing");
+		txt_Read_Loc.setColumns(10);
+
+		pn_Info.add(txt_Read_Loc, "cell 1 0,growx");
+
+		pn_Info.add(lbl_Read_NVLoc, "cell 2 0,alignx trailing");
+		txt_Read_NVLoc.setText("0");
+		txt_Read_NVLoc.setColumns(10);
+
+		pn_Info.add(txt_Read_NVLoc, "cell 3 0,growx");
+
+		pn_Info.add(lbl_Read_NVTong, "cell 4 0,alignx trailing");
+		txt_Read_NVTong.setText("0");
+		txt_Read_NVTong.setColumns(10);
+
+		pn_Info.add(txt_Read_NVTong, "cell 5 0,growx");
+		pn_Info.add(lbl_SLHoaDon, "cell 0 1,alignx trailing");
+		txt_read_SoLuongHoaDon.setColumns(10);
+		pn_Info.add(txt_read_SoLuongHoaDon, "cell 1 1,growx");
+
+		pn_Info.add(lbl_SLKhach, "cell 2 1,alignx trailing");
+		txt_read_SoLuongKhach.setText("0");
+		txt_read_SoLuongKhach.setColumns(10);
+
+		pn_Info.add(txt_read_SoLuongKhach, "cell 3 1,growx");
+
+		pn_Info.add(lbl_SLSPB, "cell 4 1,alignx trailing");
+		txt_read_SoLuongSanPhamBanDuoc.setText("0");
+		txt_read_SoLuongSanPhamBanDuoc.setColumns(10);
+
+		pn_Info.add(txt_read_SoLuongSanPhamBanDuoc, "cell 5 1,growx");
+		pn_Info.add(lbl_DoanhThu, "cell 0 2,alignx trailing");
+		txt_read_DoanhThu.setColumns(10);
+		pn_Info.add(txt_read_DoanhThu, "cell 1 2,growx");
+		pn_Info.add(lbl_Chi, "cell 2 2,alignx trailing");
+		txt_read_Chi.setColumns(10);
+		pn_Info.add(txt_read_Chi, "cell 3 2,growx");
+		pn_Info.add(lbl_LoiNhuan, "cell 4 2,alignx trailing");
+		txt_read_LoiNhuan.setColumns(10);
+		pn_Info.add(txt_read_LoiNhuan, "cell 5 2,growx");
+
+		add(pn_Show, BorderLayout.CENTER);
+		dtm_ChiTiet = new DefaultTableModel(new String[] { "Mã nhân viên", "Tên nhân viên", "Lượng hóa đơn",
+				"Lượng khách", "Lượng sản phẩm bán được", "Thu", "Chi", "Lợi nhuận" }, 0);
+		setEditableToFalseTextfield();
+		addAction();
+		loadInfoText();
+		setting();
 	}
-	
+
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
 		Panel_ThongKeDoanhThuTheoNhanVien panel_ThongKeDoanhThu = new Panel_ThongKeDoanhThuTheoNhanVien();
 		frame.getContentPane().add(panel_ThongKeDoanhThu);
-        // Thiết lập các thuộc tính cho JFrame
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1280, 700);
-        frame.setVisible(true);
-    }
+		// Thiết lập các thuộc tính cho JFrame
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(1280, 700);
+		frame.setVisible(true);
+	}
+
 	private void addAction() {
 		btn_BieuDo.addActionListener(this);
 		btn_HienThi.addActionListener(this);
@@ -882,256 +890,309 @@ public class Panel_ThongKeDoanhThuTheoNhanVien extends JPanel implements ActionL
 		btn_TimKiem.addActionListener(this);
 		btn_XuatExcel.addActionListener(this);
 	}
+
 	private void setEditableToFalseTextfield() {
 		for (Component component : pn_Info.getComponents()) {
-	        if (component instanceof JTextField) {
-	        	((JTextField)component).setEditable(false);
-	        	((JTextField)component).setCaretColor(component.getBackground());
-	        }
-	    }
+			if (component instanceof JTextField) {
+				((JTextField) component).setEditable(false);
+				((JTextField) component).setCaretColor(component.getBackground());
+			}
+		}
 	}
+
 	private void loadInfoText() {
 		tinhBang();
-	    double revenue = 0, expenditure = 0;
-	    int rowCount = dtm_ChiTiet.getRowCount();
-	    int invoiceQuantity = 0, customerQuantity = 0, ProductsSoldQuantity = 0;
-	    String loc = "";
-	    if (cbo_Loc.getSelectedItem()==null){
-	    	String ngonNgu = settingModel.getNgonNgu(); 
-	    	if(ngonNgu.equals("Vietnamese"))
-	    		loc = "Tất cả nhân viên";
-	    	if(ngonNgu.equals("English"))
-	    		loc = "All employees";	    
-	    } 
-	    else loc = cbo_Loc.getSelectedItem().toString();
-	    for (int i = 0; i < rowCount; i++) {
-	    	invoiceQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 2).toString());
-    		customerQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 3).toString());
-    		ProductsSoldQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 4).toString());
-    		revenue += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 5).toString());
-    		expenditure += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 6).toString());
-    	}
-	    if(loc.equals("Tất cả nhân viên")||loc.equals("All employees")) {
-    		txt_Read_NVLoc.setText(rowCount+"");
-    	} else {
-    		txt_Read_NVLoc.setText("1");
-    	}
-	    txt_read_DoanhThu.setText(revenue + "");
-	    txt_read_Chi.setText(expenditure + "");
-	    txt_read_LoiNhuan.setText(revenue - expenditure + "");
-	    txt_read_SoLuongHoaDon.setText(invoiceQuantity + "");
-	    txt_read_SoLuongKhach.setText(customerQuantity + "");
-	    txt_read_SoLuongSanPhamBanDuoc.setText(ProductsSoldQuantity + "");
-	    //Nhật lo số lượng tổng nhé, dsnvToanbo.getlength
-	    txt_Read_NVTong.setText("");
-	    txt_Read_Loc.setText(loc);
-	    
+		double revenue = 0, expenditure = 0;
+		int rowCount = dtm_ChiTiet.getRowCount();
+		int invoiceQuantity = 0, customerQuantity = 0, ProductsSoldQuantity = 0;
+		String loc = "";
+		if (cbo_Loc.getSelectedItem() == null) {
+			String ngonNgu = settingModel.getNgonNgu();
+			if (ngonNgu.equals("Vietnamese"))
+				loc = "Tất cả nhân viên";
+			if (ngonNgu.equals("English"))
+				loc = "All employees";
+		} else
+			loc = cbo_Loc.getSelectedItem().toString();
+		for (int i = 0; i < rowCount; i++) {
+			invoiceQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 2).toString());
+			customerQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 3).toString());
+			ProductsSoldQuantity += Integer.parseInt(dtm_ChiTiet.getValueAt(i, 4).toString());
+			revenue += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 5).toString());
+			expenditure += Double.parseDouble(dtm_ChiTiet.getValueAt(i, 6).toString());
+		}
+		if (loc.equals("Tất cả nhân viên") || loc.equals("All employees")) {
+			txt_Read_NVLoc.setText(rowCount + "");
+		} else {
+			txt_Read_NVLoc.setText("1");
+		}
+		txt_read_DoanhThu.setText(revenue + "");
+		txt_read_Chi.setText(expenditure + "");
+		txt_read_LoiNhuan.setText(revenue - expenditure + "");
+		txt_read_SoLuongHoaDon.setText(invoiceQuantity + "");
+		txt_read_SoLuongKhach.setText(customerQuantity + "");
+		txt_read_SoLuongSanPhamBanDuoc.setText(ProductsSoldQuantity + "");
+		// Nhật lo số lượng tổng nhé, dsnvToanbo.getlength
+		txt_Read_NVTong.setText("");
+		txt_Read_Loc.setText(loc);
+
 	}
 
 	private void tinhBang() {
-        tbl_ChiTiet = new CustomTable();
-        tbl_ChiTiet.setModel(dtm_ChiTiet);
-        dtm_ChiTiet.setRowCount(0);
-        scr_ChiTiet = new JScrollPane(tbl_ChiTiet);
-        setDefaultValue();
-        long daycount = 1,weekcount = 1,monthcount=1,quartercount=1,yearcount =1;
-		LocalDate ngayBatDau = dcr_NgayBatDau.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy ngày từ JDateChooser, chuyển đổi sang LocalDate
-		LocalDate ngayKetThuc = dcr_NgayKetThuc.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy ngày từ JDateChooser, chuyển đổi sang LocalDate
-		daycount = ChronoUnit.DAYS.between(ngayBatDau, ngayKetThuc)+1;
-		weekcount = ChronoUnit.WEEKS.between(ngayBatDau, ngayKetThuc)+1;
-		monthcount = ChronoUnit.MONTHS.between(ngayBatDau, ngayKetThuc)+1;
-		quartercount =(long) ChronoUnit.MONTHS.between(ngayBatDau, ngayKetThuc)/4+1;
-		yearcount = ChronoUnit.YEARS.between(ngayBatDau, ngayKetThuc)+1;
+		tbl_ChiTiet = new CustomTable();
+		tbl_ChiTiet.setModel(dtm_ChiTiet);
+		dtm_ChiTiet.setRowCount(0);
+		scr_ChiTiet = new JScrollPane(tbl_ChiTiet);
+		setDefaultValue();
+		long daycount = 1, weekcount = 1, monthcount = 1, quartercount = 1, yearcount = 1;
+		LocalDate ngayBatDau = dcr_NgayBatDau.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy
+																													// ngày
+																													// từ
+																													// JDateChooser,
+																													// chuyển
+																													// đổi
+																													// sang
+																													// LocalDate
+		LocalDate ngayKetThuc = dcr_NgayKetThuc.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy
+																													// ngày
+																													// từ
+																													// JDateChooser,
+																													// chuyển
+																													// đổi
+																													// sang
+																													// LocalDate
+		daycount = ChronoUnit.DAYS.between(ngayBatDau, ngayKetThuc) + 1;
+		weekcount = ChronoUnit.WEEKS.between(ngayBatDau, ngayKetThuc) + 1;
+		monthcount = ChronoUnit.MONTHS.between(ngayBatDau, ngayKetThuc) + 1;
+		quartercount = (long) ChronoUnit.MONTHS.between(ngayBatDau, ngayKetThuc) / 4 + 1;
+		yearcount = ChronoUnit.YEARS.between(ngayBatDau, ngayKetThuc) + 1;
 		String loaiThoiGian = (String) cbo_LoaiThoiGian.getSelectedItem();
 		String ngonNgu = settingModel.getNgonNgu();
 		String loc = "";
-		if(ngonNgu.equals("Vietnamese")) {
-			loc = (cbo_Loc.getSelectedItem()!=null) ? cbo_Loc.getSelectedItem().toString() : "Tất cả nhân viên";
+		if (ngonNgu.equals("Vietnamese")) {
+			loc = (cbo_Loc.getSelectedItem() != null) ? cbo_Loc.getSelectedItem().toString() : "Tất cả nhân viên";
 		}
-		if(ngonNgu.equals("English")) {
-			loc = (cbo_Loc.getSelectedItem()!=null) ? cbo_Loc.getSelectedItem().toString() : "All employee";
+		if (ngonNgu.equals("English")) {
+			loc = (cbo_Loc.getSelectedItem() != null) ? cbo_Loc.getSelectedItem().toString() : "All employee";
 		}
-		
+
 		Random rand = new Random();
-		if(loc.equals("Tất cả nhân viên")||loc.equals("All employees")) {
-			
-	        for (int i = 0; i < 20; i++) {
-	            String maNhanVien = "NV" + (i+1);
-	            String tenNhanVien = "Employee"+ (i+1);
-	            int luongHoaDon = rand.nextInt(50);
-	            int luongKhach = rand.nextInt(100);
-	            int luongSanPhamBanDuoc = rand.nextInt(200);
-	            int thu = rand.nextInt(7000);
-	            int chi = rand.nextInt(5000);
-	            int loiNhuan = thu - chi;
-	            dtm_ChiTiet.addRow(new Object[]{maNhanVien, tenNhanVien, luongHoaDon, luongKhach, luongSanPhamBanDuoc, thu, chi, loiNhuan});
-	        }
-		}
-		else {
+		// Xử lí bảng bảng Xu_Li_ThongKe
+		if (loc.equals("Tất cả nhân viên") || loc.equals("All employees")) {
+
+			for (NhanVien n : listNV) {
+				String maNhanVien = n.getMaNV();
+				String tenNhanVien = n.getTenNV();
+				int luongHoaDon = xuLi_ThongKe_DAO.getLuong_HoaDon_TheoNV(maNhanVien);
+				int luongKhach = xuLi_ThongKe_DAO.getLuong_Khach_TheoNV(maNhanVien);
+				int luongSanPhamBanDuoc = xuLi_ThongKe_DAO.getLuong_SanPham_TheoNV(maNhanVien);
+				double thu = xuLi_ThongKe_DAO.getLuong_TongTien_TheoNV(maNhanVien);
+				double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+				double loiNhuan = thu - chi;
+				dtm_ChiTiet.addRow(new Object[] { maNhanVien, tenNhanVien, luongHoaDon, luongKhach, luongSanPhamBanDuoc,
+						thu, chi, loiNhuan });
+			}
+		} else {
 			tbl_ChiTiet.removeColumn(tbl_ChiTiet.getColumnModel().getColumn(1));
-			if(loaiThoiGian.equals("By day")||loaiThoiGian.equals("Theo ngày")) {
-        	if(loaiThoiGian.equals("By day")) {
-        		tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Date");
-        	}
-        	if(loaiThoiGian.equals("Theo ngày")) {
-        		tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Ngày");
-        	}
-        	for (int i = 0; i < daycount; i++) {
-    		String ngay = LocalDate.now().minusDays(i).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            String luongHoaDon = i+"";
-            String luongKhach = i+"";
-            String luongSanPhamBan = i+"";
-            int thu = i * 100;
-            int chi = (i+1) * 100 - (100 - i);
-            int loiNhuan = thu - chi;
-            Object[] row = { ngay,luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu,chi,loiNhuan};
-        	dtm_ChiTiet.addRow(row);
-        	}
-            
-        }
-        if (loaiThoiGian.equals("By week") || loaiThoiGian.equals("Theo tuần")) {
-        	String weekString = null,yearString = null;
-            if(loaiThoiGian.equals("By week")) {
-            	weekString = "Week ";
-            	yearString = " year ";
-                tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Week");
-            }
-            if(loaiThoiGian.equals("Theo tuần")) {
-            	weekString = "Tuần ";
-            	yearString = " năm ";
-                tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Tuần");
-            }
-            for (int i = 0; i < weekcount; i++) {
-                LocalDate date = ngayBatDau.plusWeeks(i);
-                int weekOfYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
-                int year = date.getYear();
-                String week = weekString + weekOfYear + yearString + year;
-                String luongHoaDon = i+"";
-                String luongKhach = i+"";
-                String luongSanPhamBan = i+"";
-                int thu = i * 100;
-                int chi = (i+1) * 100 - (100 - i);
-                int loiNhuan = (thu - chi);
-                Object[] row = { week, luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu, chi, loiNhuan };
-                dtm_ChiTiet.addRow(row);
-            }
-        }
-        if (loaiThoiGian.equals("By month") || loaiThoiGian.equals("Theo tháng")) {
-            String monthString = null, yearString = null;
-            if(loaiThoiGian.equals("By month")) {
-                monthString = "Month ";
-                yearString = " year ";
-                tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Month");
-            }
-            if(loaiThoiGian.equals("Theo tháng")) {
-                monthString = "Tháng ";
-                yearString = " năm ";
-                tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Tháng");
-            }
-            for (int i = 0; i < monthcount; i++) {
-                LocalDate date = ngayBatDau.plusMonths(i);
-                int monthOfYear = date.getMonthValue();
-                int year = date.getYear();
-                String month = monthString + monthOfYear + yearString + year;
-                String luongHoaDon = i+"";
-                String luongKhach = i+"";
-                String luongSanPhamBan = i+"";
-                int thu = i * 100;
-                int chi = (i+1) * 100 - (100 - i);
-                int loiNhuan = thu - chi;
-                Object[] row = { month, luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu, chi, loiNhuan };
-                dtm_ChiTiet.addRow(row);
-            }
-        }
+			if (loaiThoiGian.equals("By day") || loaiThoiGian.equals("Theo ngày")) {
+				if (loaiThoiGian.equals("By day")) {
+					tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Date");
+				}
+				if (loaiThoiGian.equals("Theo ngày")) {
+					tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Ngày");
+				}
+				String maNV_Xet = (String) cbo_Loc.getSelectedItem();
+				for (NhanVien n : listNV) {
+					if (n.getMaNV().equalsIgnoreCase(maNV_Xet)) {
+						for (int i = 0; i < daycount; i++) {
+							LocalDate ngay_LD = LocalDate.now().minusDays(i);
+							String ngay = ngay_LD.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+							int luongHoaDon = xuLi_ThongKe_DAO.getLuong_HoaDon_Theo_Ngay_NV(ngay_LD, n.getMaNV());
+							int luongKhach = xuLi_ThongKe_DAO.getLuong_Khach_Theo_Ngay_NV(ngay_LD, n.getMaNV());
+							int luongSanPhamBan = xuLi_ThongKe_DAO.getLuong_SanPham_Theo_Ngay_NV(ngay_LD, n.getMaNV());
+							double thu = xuLi_ThongKe_DAO.getLuong_TongTien_Theo_Ngay_NV(ngay_LD, n.getMaNV());
+							double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+							double loiNhuan = thu - chi;
+							Object[] row = { ngay, luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu, chi,
+									loiNhuan };
+							dtm_ChiTiet.addRow(row);
+						}
+					}
+					break;
+				}
 
-        if (loaiThoiGian.equals("By quarter") || loaiThoiGian.equals("Theo quý")) {
-            String quarterString = null, yearString = null;
-            if(loaiThoiGian.equals("By quarter")) {
-                quarterString = "Quarter ";
-                yearString = " year ";
-                tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Quarter");
-            }
-            if(loaiThoiGian.equals("Theo quý")) {
-                quarterString = "Quý ";
-                yearString = " năm ";
-                tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Quý");
-            }
-            for (int i = 0; i < quartercount; i++) {
-                LocalDate date = ngayBatDau.plusMonths(i*3);
-                int quarterOfYear = (date.getMonthValue()-1)/3 + 1;
-                int year = date.getYear();
-                String quarter = quarterString + quarterOfYear + yearString + year;
-                String luongHoaDon = i+"";
-                String luongKhach = i+"";
-                String luongSanPhamBan = i+"";
-                int thu = i * 100;
-                int chi = (i+1) * 100 - (100 - i);
-                int loiNhuan = thu - chi;
-                Object[] row = { quarter, luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu, chi, loiNhuan };
-                dtm_ChiTiet.addRow(row);
-            }
-        }
+			}
+			if (loaiThoiGian.equals("By week") || loaiThoiGian.equals("Theo tuần")) {
+				String weekString = null, yearString = null;
+				if (loaiThoiGian.equals("By week")) {
+					weekString = "Week ";
+					yearString = " year ";
+					tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Week");
+				}
+				if (loaiThoiGian.equals("Theo tuần")) {
+					weekString = "Tuần ";
+					yearString = " năm ";
+					tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Tuần");
+				}
+				String maNV_Xet = (String) cbo_Loc.getSelectedItem();
+				for (NhanVien n : listNV) {
+					if (n.getMaNV().equalsIgnoreCase(maNV_Xet)) {
+						for (int i = 0; i < weekcount; i++) {
 
-        if (loaiThoiGian.equals("By year") || loaiThoiGian.equals("Theo năm")) {
-            String yearString = null;
-            if(loaiThoiGian.equals("By year")) {
-                yearString = "Year ";
-                tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Year");
-            }
-            if(loaiThoiGian.equals("Theo năm")) {
-                yearString = "Năm ";
-                tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Năm");
-            }
-            for (int i = 0; i < yearcount; i++) {
-                LocalDate date = ngayBatDau.plusYears(i);
-                int year = date.getYear();
-                String yearValue = yearString + year;
-                String luongHoaDon = i+"";
-                String luongKhach = i+"";
-                String luongSanPhamBan = i+"";
-                int thu = i * 100;
-                int chi = (i+1) * 100 - (100 - i);
-                int loiNhuan = thu - chi;
-                Object[] row = { yearValue, luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu, chi, loiNhuan };
-                dtm_ChiTiet.addRow(row);
-            }
-        }
-        }
+							LocalDate date = ngayBatDau.plusWeeks(i);
+							int weekOfYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+							int year = date.getYear();
+							String week = weekString + weekOfYear + yearString + year;
+							int luongHoaDon = xuLi_ThongKe_DAO.getLuong_HoaDon_Theo_Tuan_NV(weekOfYear, year,
+									n.getMaNV());
+							int luongKhach = xuLi_ThongKe_DAO.getLuong_Khach_Theo_Tuan_NV(weekOfYear, year,
+									n.getMaNV());
+							int luongSanPhamBan = xuLi_ThongKe_DAO.getLuong_SanPham_Theo_Tuan_NV(weekOfYear, year,
+									n.getMaNV());
+							double thu = xuLi_ThongKe_DAO.getLuong_TongTien_Theo_Tuan_NV(weekOfYear, year, n.getMaNV());
+							double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+							double loiNhuan = (thu - chi);
+							Object[] row = { week, luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu, chi,
+									loiNhuan };
+							dtm_ChiTiet.addRow(row);
+						}
+					}
+					break;
+				}
+
+			}
+			if (loaiThoiGian.equals("By month") || loaiThoiGian.equals("Theo tháng")) {
+				String monthString = null, yearString = null;
+				if (loaiThoiGian.equals("By month")) {
+					monthString = "Month ";
+					yearString = " year ";
+					tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Month");
+				}
+				if (loaiThoiGian.equals("Theo tháng")) {
+					monthString = "Tháng ";
+					yearString = " năm ";
+					tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Tháng");
+				}
+				for (int i = 0; i < monthcount; i++) {
+					LocalDate date = ngayBatDau.plusMonths(i);
+					int monthOfYear = date.getMonthValue();
+					int year = date.getYear();
+					String month = monthString + monthOfYear + yearString + year;
+					String luongHoaDon = i + "";
+					String luongKhach = i + "";
+					String luongSanPhamBan = i + "";
+					int thu = i * 100;
+					int chi = (i + 1) * 100 - (100 - i);
+					int loiNhuan = thu - chi;
+					Object[] row = { month, luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu, chi, loiNhuan };
+					dtm_ChiTiet.addRow(row);
+				}
+			}
+
+			if (loaiThoiGian.equals("By quarter") || loaiThoiGian.equals("Theo quý")) {
+				String quarterString = null, yearString = null;
+				if (loaiThoiGian.equals("By quarter")) {
+					quarterString = "Quarter ";
+					yearString = " year ";
+					tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Quarter");
+				}
+				if (loaiThoiGian.equals("Theo quý")) {
+					quarterString = "Quý ";
+					yearString = " năm ";
+					tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Quý");
+				}
+				for (int i = 0; i < quartercount; i++) {
+					LocalDate date = ngayBatDau.plusMonths(i * 3);
+					int quarterOfYear = (date.getMonthValue() - 1) / 3 + 1;
+					int year = date.getYear();
+					String quarter = quarterString + quarterOfYear + yearString + year;
+					String luongHoaDon = i + "";
+					String luongKhach = i + "";
+					String luongSanPhamBan = i + "";
+					int thu = i * 100;
+					int chi = (i + 1) * 100 - (100 - i);
+					int loiNhuan = thu - chi;
+					Object[] row = { quarter, luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu, chi,
+							loiNhuan };
+					dtm_ChiTiet.addRow(row);
+				}
+			}
+
+			if (loaiThoiGian.equals("By year") || loaiThoiGian.equals("Theo năm")) {
+				String yearString = null;
+				if (loaiThoiGian.equals("By year")) {
+					yearString = "Year ";
+					tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Year");
+				}
+				if (loaiThoiGian.equals("Theo năm")) {
+					yearString = "Năm ";
+					tbl_ChiTiet.getColumnModel().getColumn(0).setHeaderValue("Năm");
+				}
+				for (int i = 0; i < yearcount; i++) {
+					LocalDate date = ngayBatDau.plusYears(i);
+					int year = date.getYear();
+					String yearValue = yearString + year;
+					String luongHoaDon = i + "";
+					String luongKhach = i + "";
+					String luongSanPhamBan = i + "";
+					int thu = i * 100;
+					int chi = (i + 1) * 100 - (100 - i);
+					int loiNhuan = thu - chi;
+					Object[] row = { yearValue, luongHoaDon, luongKhach, luongKhach, luongSanPhamBan, thu, chi,
+							loiNhuan };
+					dtm_ChiTiet.addRow(row);
+				}
+			}
+		}
 	}
-	
+
 	private void hienChiTiet() {
 		String ngonNgu = settingModel.getNgonNgu();
-        if(ngonNgu.equals("English"))
-        	lbl_ShowName.setText("Detailed table of revenue statistics from employee");
-        if(ngonNgu.equals("Vietnamese"))
-        	lbl_ShowName.setText("Bảng chi tiết thống kê doanh thu từ nhân viên");
+		if (ngonNgu.equals("English"))
+			lbl_ShowName.setText("Detailed table of revenue statistics from employee");
+		if (ngonNgu.equals("Vietnamese"))
+			lbl_ShowName.setText("Bảng chi tiết thống kê doanh thu từ nhân viên");
 		JPanel pn_Temp = new JPanel(new BorderLayout());
-        tbl_ChiTiet = new CustomTable();
-        tinhBang();
-        tbl_ChiTiet.setModel(dtm_ChiTiet);
-        scr_ChiTiet = new JScrollPane(tbl_ChiTiet);
-        
-        
-        pn_Temp.add(scr_ChiTiet, BorderLayout.CENTER);
-        // Xóa component cũ khỏi container
-        this.remove(pn_Show);
+		tbl_ChiTiet = new CustomTable();
+		tinhBang();
+		tbl_ChiTiet.setModel(dtm_ChiTiet);
+		scr_ChiTiet = new JScrollPane(tbl_ChiTiet);
 
-        // Cập nhật tham chiếu và thêm component mới vào container
-        pn_Show = pn_Temp;
-        this.add(pn_Show, BorderLayout.CENTER);
+		pn_Temp.add(scr_ChiTiet, BorderLayout.CENTER);
+		// Xóa component cũ khỏi container
+		this.remove(pn_Show);
 
-        // Yêu cầu Swing cập nhật giao diện người dùng
-        this.revalidate();
-        this.repaint();
+		// Cập nhật tham chiếu và thêm component mới vào container
+		pn_Show = pn_Temp;
+		this.add(pn_Show, BorderLayout.CENTER);
+
+		// Yêu cầu Swing cập nhật giao diện người dùng
+		this.revalidate();
+		this.repaint();
 	}
+
 	public JPanel tinhBieuDo() {
-		long daycount = 1,weekcount = 1,monthcount=1,quartercount=1,yearcount =1;
+		long daycount = 1, weekcount = 1, monthcount = 1, quartercount = 1, yearcount = 1;
 		long maxcount = 2;
 		setDefaultValue();
-		LocalDate ngayBatDau = dcr_NgayBatDau.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy ngày từ JDateChooser, chuyển đổi sang LocalDate
-		LocalDate ngayKetThuc = dcr_NgayKetThuc.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy ngày từ JDateChooser, chuyển đổi sang LocalDate
-		daycount = ChronoUnit.DAYS.between(ngayBatDau, ngayKetThuc)+1;
-		weekcount = (daycount + 6) / 7; // Chia số ngày cho 7 và làm tròn lên		
+		LocalDate ngayBatDau = dcr_NgayBatDau.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy
+																													// ngày
+																													// từ
+																													// JDateChooser,
+																													// chuyển
+																													// đổi
+																													// sang
+																													// LocalDate
+		LocalDate ngayKetThuc = dcr_NgayKetThuc.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Lấy
+																													// ngày
+																													// từ
+																													// JDateChooser,
+																													// chuyển
+																													// đổi
+																													// sang
+																													// LocalDate
+		daycount = ChronoUnit.DAYS.between(ngayBatDau, ngayKetThuc) + 1;
+		weekcount = (daycount + 6) / 7; // Chia số ngày cho 7 và làm tròn lên
 		monthcount = (daycount + 29) / 30; // Chia số ngày cho 30 và làm tròn lên
 		quartercount = (daycount + 89) / 90; // Chia số ngày cho 90 và làm tròn lên
 		yearcount = (daycount + 364) / 365; // Chia số ngày cho 365 và làm tròn lên
@@ -1141,166 +1202,280 @@ public class Panel_ThongKeDoanhThuTheoNhanVien extends JPanel implements ActionL
 		barChart.addLegend(lbl_Chi.getText(), Custom_ColorPicker.lightred_FF6666);
 		barChart.addLegend(lbl_LoiNhuan.getText(), Custom_ColorPicker.blue_4B70F5);
 		lineChart = new LineChart();
-		lineChart.addLegend(lbl_DoanhThu.getText(), Custom_ColorPicker.lime_BFFF00,Custom_ColorPicker.lime_BFFF00);
-        lineChart.addLegend(lbl_Chi.getText(), Custom_ColorPicker.lightred_FF6666,Custom_ColorPicker.lightred_FF6666);
-        lineChart.addLegend(lbl_LoiNhuan.getText(), Custom_ColorPicker.blue_4B70F5,Custom_ColorPicker.blue_4B70F5);
+		lineChart.addLegend(lbl_DoanhThu.getText(), Custom_ColorPicker.lime_BFFF00, Custom_ColorPicker.lime_BFFF00);
+		lineChart.addLegend(lbl_Chi.getText(), Custom_ColorPicker.lightred_FF6666, Custom_ColorPicker.lightred_FF6666);
+		lineChart.addLegend(lbl_LoiNhuan.getText(), Custom_ColorPicker.blue_4B70F5, Custom_ColorPicker.blue_4B70F5);
 		String loaiThoiGian = (String) cbo_LoaiThoiGian.getSelectedItem();
 		Random rand = new Random();
 		String loc = cbo_Loc.getSelectedItem().toString();
 		String ngonNgu = settingModel.getNgonNgu();
-		if(loc.equals("Tất cả nhân viên")||loc.equals("All employees")) {
-	        if(ngonNgu.equals("English"))
-	        	lbl_ShowName.setText("Chart of revenue statistics by top 10 employees");
-	        if(ngonNgu.equals("Vietnamese"))
-	        	lbl_ShowName.setText("Biểu đồ thống kê doanh thu theo top 10 nhân viên");
-	        //Nhật ở đây NumberOfEmployee là số lượng nhân viên thực hiện giao dịch, tui để 10 để test, ông thanh thành list.length
-	        int NumberOfEmployee = 2;
-	        
-	        int result = (10 <= NumberOfEmployee) ? 10 : NumberOfEmployee;
-	        for (int i = 0; i < result; i++) {
-	            barChart.addData(new ModelChart("NV1 - Thái Gõ", new double[]{i+200, i+200, 20*(i+1)}));
-	        }
+		if (loc.equals("Tất cả nhân viên") || loc.equals("All employees")) {
+			if (ngonNgu.equals("English"))
+				lbl_ShowName.setText("Chart of revenue statistics by top 10 employees");
+			if (ngonNgu.equals("Vietnamese"))
+				lbl_ShowName.setText("Biểu đồ thống kê doanh thu theo top 10 nhân viên");
+			// Nhật ở đây NumberOfEmployee là số lượng nhân viên thực hiện giao dịch, tui để
+			// 10 để test, ông thanh thành list.length
+			/*
+			 * int NumberOfEmployee = 2; //Xử lí ở đây nữa dùng mảng NhanVien
+			 * ArrayList<NhanVien> int result = (10 <= NumberOfEmployee) ? 10 :
+			 * NumberOfEmployee; for (int i = 0; i < result; i++) { barChart.addData(new
+			 * ModelChart("NV1 - Thái Gõ", new double[]{i+200, i+200, 20*(i+1)})); }
+			 */
+			for (NhanVien n : listNV) {
+				double thu = xuLi_ThongKe_DAO.getLuong_TongTien_TheoNV(n.getMaNV());
+				double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+				double loiNhuan = thu - chi;
+				barChart.addData(
+						new ModelChart(n.getMaNV() + " - " + n.getTenNV(), new double[] { thu, chi, loiNhuan }));
+			}
 			barChart.start();
 			return barChart;
-		}
-		else {
-			if(ngonNgu.equals("English"))
-	        	lbl_ShowName.setText("Statistics chart of revenue by employees");
-	        if(ngonNgu.equals("Vietnamese"))
-	        	lbl_ShowName.setText("Biểu đồ thống kê doanh thu theo nhân viên");
-			if(loaiThoiGian.equals("By day")||loaiThoiGian.equals("Theo ngày")) {
-			if(daycount<=maxcount) {
-				for (int i = 0; i < daycount; i++) {
-		            barChart.addData(new ModelChart(ngayBatDau.plusDays(i).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), new double[]{i+200, i+200, 20*(i+1)}));
-		        }
-				barChart.start();
-				return barChart;
+		} else {
+			if (ngonNgu.equals("English"))
+				lbl_ShowName.setText("Statistics chart of revenue by employees");
+			if (ngonNgu.equals("Vietnamese"))
+				lbl_ShowName.setText("Biểu đồ thống kê doanh thu theo nhân viên");
+			if (loaiThoiGian.equals("By day") || loaiThoiGian.equals("Theo ngày")) {
+				if (daycount <= maxcount) {
+					String maNV_Xet = (String) cbo_Loc.getSelectedItem();
+					for (NhanVien n : listNV) {
+						if (n.getMaNV().equalsIgnoreCase(maNV_Xet)) {
+							for (int i = 0; i < daycount; i++) {
+								LocalDate ngay_LD = LocalDate.now().minusDays(i);
+								// String ngay = ngay_LD.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+								double thu = xuLi_ThongKe_DAO.getLuong_TongTien_Theo_Ngay_NV(ngay_LD, n.getMaNV());
+								double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+								double loiNhuan = thu - chi;
+								barChart.addData(new ModelChart(
+										ngayBatDau.plusDays(i).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+										new double[] { thu, chi, loiNhuan }));
+
+							}
+						}
+						break;
+					}
+					/*
+					 * for (int i = 0; i < daycount; i++) { barChart.addData(new
+					 * ModelChart(ngayBatDau.plusDays(i).format(DateTimeFormatter.ofPattern(
+					 * "dd-MM-yyyy")), new double[]{i+200, i+200, 20*(i+1)})); }
+					 */
+					barChart.start();
+					return barChart;
+				} else {
+					String maNV_Xet = (String) cbo_Loc.getSelectedItem();
+					for (NhanVien n : listNV) {
+						if (n.getMaNV().equalsIgnoreCase(maNV_Xet)) {
+							for (int i = 0; i < daycount; i++) {
+								LocalDate ngay_LD = LocalDate.now().minusDays(i);
+								// String ngay = ngay_LD.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+								double thu = xuLi_ThongKe_DAO.getLuong_TongTien_Theo_Ngay_NV(ngay_LD, n.getMaNV());
+								double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+								double loiNhuan = thu - chi;
+								lineChart
+										.addData(new gui_Panel.lineChart.ModelChart(
+												String.format(ngayBatDau.plusDays(i)
+														.format(DateTimeFormatter.ofPattern("dd-MM")), i + 1),
+												new double[] { thu, chi, loiNhuan }));
+
+							}
+						}
+						break;
+					}
+					/*
+					 * for (int i = 0; i < daycount; i++) { int a = rand.nextInt(1001); // Gán giá
+					 * trị ngẫu nhiên từ 0 đến 1000 cho biến a int b = rand.nextInt(1001); // Gán
+					 * giá trị ngẫu nhiên từ 0 đến 1000 cho biến b int c = a-b; // lợi nhuận = doanh
+					 * thu - chi lineChart.addData(new
+					 * gui_Panel.lineChart.ModelChart(String.format(ngayBatDau.plusDays(i).format(
+					 * DateTimeFormatter.ofPattern("dd-MM")), i+1), new double[]{a,b,c})); }
+					 */
+					lineChart.start();
+					return lineChart;
+				}
 			}
-			else {
-		        for (int i = 0; i < daycount; i++) {
-		        	int a = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến a
-		        	int b = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến b
-		            int c = a-b; // lợi nhuận = doanh thu - chi
-		            lineChart.addData(new gui_Panel.lineChart.ModelChart(String.format(ngayBatDau.plusDays(i).format(DateTimeFormatter.ofPattern("dd-MM")), i+1), new double[]{a,b,c}));
-		        }
-		        lineChart.start();
-		        return lineChart;
+			/*
+			 * String maNV_Xet=(String) cbo_Loc.getSelectedItem(); for(NhanVien n: listNV) {
+			 * if(n.getMaNV().equalsIgnoreCase(maNV_Xet)) { for (int i = 0; i < weekcount;
+			 * i++) {
+			 * 
+			 * LocalDate date = ngayBatDau.plusWeeks(i); int weekOfYear =
+			 * date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR); int year = date.getYear();
+			 * String week = weekString + weekOfYear + yearString + year; int luongHoaDon =
+			 * xuLi_ThongKe_DAO.getLuong_HoaDon_Theo_Tuan_NV(weekOfYear, year, n.getMaNV());
+			 * int luongKhach = xuLi_ThongKe_DAO.getLuong_Khach_Theo_Tuan_NV(weekOfYear,
+			 * year, n.getMaNV()); int luongSanPhamBan =
+			 * xuLi_ThongKe_DAO.getLuong_SanPham_Theo_Tuan_NV(weekOfYear, year,
+			 * n.getMaNV()); double thu =
+			 * xuLi_ThongKe_DAO.getLuong_TongTien_Theo_Tuan_NV(weekOfYear, year,
+			 * n.getMaNV()); double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+			 * double loiNhuan = (thu - chi); Object[] row = { week, luongHoaDon,
+			 * luongKhach, luongKhach, luongSanPhamBan, thu, chi, loiNhuan };
+			 * dtm_ChiTiet.addRow(row); } } break; }
+			 */
+			if (loaiThoiGian.equals("By week") || loaiThoiGian.equals("Theo tuần")) {
+
+				if (weekcount <= maxcount) {
+					/*
+					 * for (int i = 0; i < weekcount; i++) { LocalDate date =
+					 * ngayBatDau.plusWeeks(i); int weekOfYear =
+					 * date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR); int year = date.getYear();
+					 * barChart.addData(new ModelChart("Tuần " + weekOfYear + "/" + year, new
+					 * double[]{i+200, i+200, 20*(i+1)})); }
+					 */
+					String maNV_Xet = (String) cbo_Loc.getSelectedItem();
+					for (NhanVien n : listNV) {
+						if (n.getMaNV().equalsIgnoreCase(maNV_Xet)) {
+							for (int i = 0; i < weekcount; i++) {
+
+								LocalDate date = ngayBatDau.plusWeeks(i);
+								int weekOfYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+								int year = date.getYear();
+
+								double thu = xuLi_ThongKe_DAO.getLuong_TongTien_Theo_Tuan_NV(weekOfYear, year,
+										n.getMaNV());
+								double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+								double loiNhuan = (thu - chi);
+								barChart.addData(new ModelChart("Tuần " + weekOfYear + "/" + year,
+										new double[] { thu, chi, loiNhuan }));
+							}
+						}
+						break;
+					}
+					barChart.start();
+					return barChart;
+				} else {
+					/*
+					for (int i = 0; i < weekcount; i++) {
+						int a = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến a
+						int b = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến b
+						int c = a - b; // lợi nhuận = doanh thu - chi
+						LocalDate date = ngayBatDau.plusWeeks(i);
+						int weekOfYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+						int year = date.getYear();
+						lineChart.addData(new gui_Panel.lineChart.ModelChart((weekOfYear) + "/" + year,
+								new double[] { a, b, c }));
+					}*/
+					String maNV_Xet = (String) cbo_Loc.getSelectedItem();
+					for (NhanVien n : listNV) {
+						if (n.getMaNV().equalsIgnoreCase(maNV_Xet)) {
+							for (int i = 0; i < weekcount; i++) {
+
+								LocalDate date = ngayBatDau.plusWeeks(i);
+								int weekOfYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+								int year = date.getYear();
+
+								double thu = xuLi_ThongKe_DAO.getLuong_TongTien_Theo_Tuan_NV(weekOfYear, year,
+										n.getMaNV());
+								double chi = xuLi_ThongKe_DAO.getTongTien_Nhap_SanPham();
+								double loiNhuan = (thu - chi);
+								lineChart.addData(new gui_Panel.lineChart.ModelChart((weekOfYear) + "/" + year,
+										new double[] { thu,chi,loiNhuan}));
+							}
+						}
+						break;
+					}
+					lineChart.start();
+					return lineChart;
+				}
 			}
-		}
-		if (loaiThoiGian.equals("By week")||loaiThoiGian.equals("Theo tuần")) {
-			
-		    if(weekcount<=maxcount) {
-		        for (int i = 0; i < weekcount; i++) {
-		        	LocalDate date = ngayBatDau.plusWeeks(i);
-		        	int weekOfYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
-		            int year = date.getYear();
-		            barChart.addData(new ModelChart("Tuần " + weekOfYear + "/" + year, new double[]{i+200, i+200, 20*(i+1)}));
-		        }
-		        barChart.start();
-		        return barChart;
-		    }
-		    else {
-		        for (int i = 0; i < weekcount; i++) {
-		            int a = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến a
-		            int b = rand.nextInt(1001); // Gán giá trị ngẫu nhiên từ 0 đến 1000 cho biến b
-		            int c = a-b; // lợi nhuận = doanh thu - chi
-		            LocalDate date = ngayBatDau.plusWeeks(i);
-		            int weekOfYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
-		            int year = date.getYear();
-		            lineChart.addData(new gui_Panel.lineChart.ModelChart((weekOfYear) + "/" + year, new double[]{a,b,c}));
-		        }
-		        lineChart.start();
-		        return lineChart;
-		    }
-		} 
-		if (loaiThoiGian.equals("By month") || loaiThoiGian.equals("Theo tháng")) {
-		    if (monthcount <= maxcount) {
-		        for (int i = 0; i < monthcount; i++) {
-		        	LocalDate date = ngayBatDau.plusMonths(i);
-		            int monthOfYear = date.getMonthValue();
-		            int year = date.getYear();
-		            barChart.addData(new ModelChart("Tháng " + monthOfYear + "/" + year, new double[]{i+200, i+200, 20*(i+1)}));		        }
-		        barChart.start();
-		        return barChart;
-		    } else {
-		        for (int i = 0; i < monthcount; i++) {
-		            int a = rand.nextInt(1001);
-		            int b = rand.nextInt(1001);
-		            int c = a-b; // lợi nhuận = doanh thu - chi
-		            LocalDate date = ngayBatDau.plusMonths(i);
-		            int monthOfYear = date.getMonthValue();
-		            int year = date.getYear();
-		            lineChart.addData(new gui_Panel.lineChart.ModelChart(monthOfYear + "/" + year, new double[]{a, b, c}));
-		        }
-		        lineChart.start();
-		        return lineChart;
-		    }
-		}
-		if (loaiThoiGian.equals("By quarter") || loaiThoiGian.equals("Theo quý")) {
-		    if (quartercount <= maxcount) {
-		        for (int i = 0; i < quartercount; i++) {
-		            LocalDate date = ngayBatDau.plusMonths(i*3);
-		            int quarterOfYear = (date.getMonthValue()-1)/3 + 1;
-		            int year = date.getYear();
-		            barChart.addData(new ModelChart("Quý " + quarterOfYear + "/" + year, new double[]{i+200, i+200, 20*(i+1)}));
-		        }
-		        barChart.start();
-		        return barChart;
-		    } else {
-		        for (int i = 0; i < quartercount; i++) {
-		            int a = rand.nextInt(1001);
-		            int b = rand.nextInt(1001);
-		            int c = a-b; // lợi nhuận = doanh thu - chi
-		            LocalDate date = ngayBatDau.plusMonths(i*3);
-		            int quarterOfYear = (date.getMonthValue()-1)/3 + 1;
-		            int year = date.getYear();
-		            lineChart.addData(new gui_Panel.lineChart.ModelChart(quarterOfYear + "/" + year, new double[]{a, b, c}));
-		        }
-		        lineChart.start();
-		        return lineChart;
-		    }
-		} else if (loaiThoiGian.equals("By year") || loaiThoiGian.equals("Theo năm")) {
-		    if (yearcount <= maxcount) {
-		        for (int i = 0; i < yearcount; i++) {
-		            LocalDate date = ngayBatDau.plusYears(i);
-		            int year = date.getYear();
-		            barChart.addData(new ModelChart("Năm " + year, new double[]{i+200, i+200, 20*(i+1)}));
-		        }
-		        barChart.start();
-		        return barChart;
-		    } else {
-		        for (int i = 0; i < yearcount; i++) {
-		            int a = rand.nextInt(1001);
-		            int b = rand.nextInt(1001);
-		            int c = a-b; // lợi nhuận = doanh thu - chi
-		            LocalDate date = ngayBatDau.plusYears(i);
-		            int year = date.getYear();
-		            lineChart.addData(new gui_Panel.lineChart.ModelChart(year+"", new double[]{a, b, c}));
-		        }
-		        lineChart.start();
-		        return lineChart;
-		    }
-		}
+			if (loaiThoiGian.equals("By month") || loaiThoiGian.equals("Theo tháng")) {
+				if (monthcount <= maxcount) {
+					for (int i = 0; i < monthcount; i++) {
+						LocalDate date = ngayBatDau.plusMonths(i);
+						int monthOfYear = date.getMonthValue();
+						int year = date.getYear();
+						barChart.addData(new ModelChart("Tháng " + monthOfYear + "/" + year,
+								new double[] { i + 200, i + 200, 20 * (i + 1) }));
+					}
+					barChart.start();
+					return barChart;
+				} else {
+					for (int i = 0; i < monthcount; i++) {
+						int a = rand.nextInt(1001);
+						int b = rand.nextInt(1001);
+						int c = a - b; // lợi nhuận = doanh thu - chi
+						LocalDate date = ngayBatDau.plusMonths(i);
+						int monthOfYear = date.getMonthValue();
+						int year = date.getYear();
+						lineChart.addData(
+								new gui_Panel.lineChart.ModelChart(monthOfYear + "/" + year, new double[] { a, b, c }));
+					}
+					lineChart.start();
+					return lineChart;
+				}
+			}
+			// Khỏi
+			if (loaiThoiGian.equals("By quarter") || loaiThoiGian.equals("Theo quý")) {
+				if (quartercount <= maxcount) {
+					for (int i = 0; i < quartercount; i++) {
+						LocalDate date = ngayBatDau.plusMonths(i * 3);
+						int quarterOfYear = (date.getMonthValue() - 1) / 3 + 1;
+						int year = date.getYear();
+						barChart.addData(new ModelChart("Quý " + quarterOfYear + "/" + year,
+								new double[] { i + 200, i + 200, 20 * (i + 1) }));
+					}
+					barChart.start();
+					return barChart;
+				} else {
+					for (int i = 0; i < quartercount; i++) {
+						int a = rand.nextInt(1001);
+						int b = rand.nextInt(1001);
+						int c = a - b; // lợi nhuận = doanh thu - chi
+						LocalDate date = ngayBatDau.plusMonths(i * 3);
+						int quarterOfYear = (date.getMonthValue() - 1) / 3 + 1;
+						int year = date.getYear();
+						lineChart.addData(new gui_Panel.lineChart.ModelChart(quarterOfYear + "/" + year,
+								new double[] { a, b, c }));
+					}
+					lineChart.start();
+					return lineChart;
+				}
+			} else if (loaiThoiGian.equals("By year") || loaiThoiGian.equals("Theo năm")) {
+				if (yearcount <= maxcount) {
+					for (int i = 0; i < yearcount; i++) {
+						LocalDate date = ngayBatDau.plusYears(i);
+						int year = date.getYear();
+						barChart.addData(
+								new ModelChart("Năm " + year, new double[] { i + 200, i + 200, 20 * (i + 1) }));
+					}
+					barChart.start();
+					return barChart;
+				} else {
+					for (int i = 0; i < yearcount; i++) {
+						int a = rand.nextInt(1001);
+						int b = rand.nextInt(1001);
+						int c = a - b; // lợi nhuận = doanh thu - chi
+						LocalDate date = ngayBatDau.plusYears(i);
+						int year = date.getYear();
+						lineChart.addData(new gui_Panel.lineChart.ModelChart(year + "", new double[] { a, b, c }));
+					}
+					lineChart.start();
+					return lineChart;
+				}
+			}
 		}
 
 		return null;
 	}
+
 	private void hienBieuDo() {
-        
-        // Xóa component cũ khỏi container
-        this.remove(pn_Show);
 
-        // Cập nhật tham chiếu và thêm component mới vào container
-        pn_Show = tinhBieuDo();
-        this.add(pn_Show, BorderLayout.CENTER);
+		// Xóa component cũ khỏi container
+		this.remove(pn_Show);
 
-        // Yêu cầu Swing cập nhật giao diện người dùng
-        this.revalidate();
-        this.repaint();
+		// Cập nhật tham chiếu và thêm component mới vào container
+		pn_Show = tinhBieuDo();
+		this.add(pn_Show, BorderLayout.CENTER);
+
+		// Yêu cầu Swing cập nhật giao diện người dùng
+		this.revalidate();
+		this.repaint();
 	}
+
 	private void setDefaultValue() {
-	    Calendar cal = Calendar.getInstance();
-	    settingModel = new SettingModel();
+		Calendar cal = Calendar.getInstance();
+		settingModel = new SettingModel();
 		try {
 			settingModel.readFrom();
 		} catch (IOException e) {
@@ -1308,108 +1483,110 @@ public class Panel_ThongKeDoanhThuTheoNhanVien extends JPanel implements ActionL
 			e.printStackTrace();
 		}
 		String ngonNgu = settingModel.getNgonNgu();
-		if(cbo_Loc.getSelectedItem() == null) {
+		if (cbo_Loc.getSelectedItem() == null) {
 			System.out.println("ngôn ngữ đọc đc " + ngonNgu);
-			if(ngonNgu.equals("Vietnamese"))
-	    		cbo_Loc.setSelectedItem("Tất cả nhân viên");
-	    	if(ngonNgu.equals("English"))
-	    		cbo_Loc.setSelectedItem("All employees");   	
+			if (ngonNgu.equals("Vietnamese"))
+				cbo_Loc.setSelectedItem("Tất cả nhân viên");
+			if (ngonNgu.equals("English"))
+				cbo_Loc.setSelectedItem("All employees");
 		}
-	    if(cbo_LoaiThoiGian.getSelectedItem() == null) {
-	    	if(ngonNgu.equals("Vietnamese"))
-	    		cbo_LoaiThoiGian.setSelectedItem("Theo ngày");
-	    	if(ngonNgu.equals("English"))
-	    		cbo_LoaiThoiGian.setSelectedItem("By day");
-	    }
-	    String loaiThoiGian = (String) cbo_LoaiThoiGian.getSelectedItem();
-	    switch (loaiThoiGian) {
-	    	case "By day":
-	    		loaiThoiGian = "Theo ngày";
-	    		break;
-	    	case "By week":
-	    		loaiThoiGian = "Theo tuần";
-	    		break;
-	    	case "By month":
-	    		loaiThoiGian = "Theo tháng";
-	    		break;
-	    	case "By quarter":
-	    		loaiThoiGian = "Theo quý";
-	    		break;
-	    	case "By year":
-	    		loaiThoiGian = "Theo năm";
-	    		break;
-	    }
-	    if (dcr_NgayKetThuc.getDate() == null) dcr_NgayKetThuc.setDate(cal.getTime());
-	    if (dcr_NgayBatDau.getDate() == null) {
-	        switch (loaiThoiGian) {
-	            case "Theo ngày":
-	                // Ngày hôm nay
-	                dcr_NgayBatDau.setDate(cal.getTime());
-	                break;
-	            case "Theo tuần":
-	                // Đầu tuần (Thứ Hai)
-	                cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-	                dcr_NgayBatDau.setDate(cal.getTime());
-	                break;
-	            case "Theo tháng":
-	                // Đầu tháng
-	                cal.set(Calendar.DAY_OF_MONTH, 1);
-	                dcr_NgayBatDau.setDate(cal.getTime());
-	                break;
-	            case "Theo quý":
-	                // Đầu quý
-	                int month = cal.get(Calendar.MONTH);
-	                int quarter = month / 3;
-	                cal.set(Calendar.MONTH, quarter * 3);
-	                cal.set(Calendar.DAY_OF_MONTH, 1);
-	                dcr_NgayBatDau.setDate(cal.getTime());
-	                break;
-	            case "Theo năm":
-	                // Đầu năm
-	                cal.set(Calendar.DAY_OF_YEAR, 1);
-	                dcr_NgayBatDau.setDate(cal.getTime());
-	                break;
-	        }
-	    }
+		if (cbo_LoaiThoiGian.getSelectedItem() == null) {
+			if (ngonNgu.equals("Vietnamese"))
+				cbo_LoaiThoiGian.setSelectedItem("Theo ngày");
+			if (ngonNgu.equals("English"))
+				cbo_LoaiThoiGian.setSelectedItem("By day");
+		}
+		String loaiThoiGian = (String) cbo_LoaiThoiGian.getSelectedItem();
+		switch (loaiThoiGian) {
+		case "By day":
+			loaiThoiGian = "Theo ngày";
+			break;
+		case "By week":
+			loaiThoiGian = "Theo tuần";
+			break;
+		case "By month":
+			loaiThoiGian = "Theo tháng";
+			break;
+		case "By quarter":
+			loaiThoiGian = "Theo quý";
+			break;
+		case "By year":
+			loaiThoiGian = "Theo năm";
+			break;
+		}
+		if (dcr_NgayKetThuc.getDate() == null)
+			dcr_NgayKetThuc.setDate(cal.getTime());
+		if (dcr_NgayBatDau.getDate() == null) {
+			switch (loaiThoiGian) {
+			case "Theo ngày":
+				// Ngày hôm nay
+				dcr_NgayBatDau.setDate(cal.getTime());
+				break;
+			case "Theo tuần":
+				// Đầu tuần (Thứ Hai)
+				cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+				dcr_NgayBatDau.setDate(cal.getTime());
+				break;
+			case "Theo tháng":
+				// Đầu tháng
+				cal.set(Calendar.DAY_OF_MONTH, 1);
+				dcr_NgayBatDau.setDate(cal.getTime());
+				break;
+			case "Theo quý":
+				// Đầu quý
+				int month = cal.get(Calendar.MONTH);
+				int quarter = month / 3;
+				cal.set(Calendar.MONTH, quarter * 3);
+				cal.set(Calendar.DAY_OF_MONTH, 1);
+				dcr_NgayBatDau.setDate(cal.getTime());
+				break;
+			case "Theo năm":
+				// Đầu năm
+				cal.set(Calendar.DAY_OF_YEAR, 1);
+				dcr_NgayBatDau.setDate(cal.getTime());
+				break;
+			}
+		}
 	}
 
 	private boolean kiemTraHopLe() {
 		setDefaultValue();
 		Date ngayHienTai = new Date();
-        UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
-        UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
-        String canhBao = null, loaiCanhBao = null, ngonNgu = settingModel.getNgonNgu();
-        if (dcr_NgayBatDau.getDate() == null || dcr_NgayKetThuc.getDate() == null) {
-            if (ngonNgu.equals("Vietnamese")) {
-                canhBao = "Ngày bắt đầu hoặc ngày kết thúc không được để trống.";
-                loaiCanhBao = "Lỗi";
-            } else if (ngonNgu.equals("English")) {
-                canhBao = "Start date or end date should not be empty.";
-                loaiCanhBao = "Error";
-            }
-        } else if (dcr_NgayBatDau.getDate().after(dcr_NgayKetThuc.getDate())) {
-            if (ngonNgu.equals("Vietnamese")) {
-                canhBao = "Ngày bắt đầu không thể sau ngày kết thúc.";
-                loaiCanhBao = "Lỗi";
-            } else if (ngonNgu.equals("English")) {
-                canhBao = "Start date cannot be after end date.";
-                loaiCanhBao = "Error";
-            }
-        } else if (dcr_NgayBatDau.getDate().after(ngayHienTai)) {
-            if (ngonNgu.equals("Vietnamese")) {
-                canhBao = "Ngày bắt đầu không thể sau ngày hiện tại.";
-                loaiCanhBao = "Lỗi";
-            } else if (ngonNgu.equals("English")) {
-                canhBao = "Start date cannot be after current date.";
-                loaiCanhBao = "Error";
-            }
-        } 
-        if(loaiCanhBao == null) {
-        	return true;
-        }
-        JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
-        return false;
-    }
+		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+		UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+		String canhBao = null, loaiCanhBao = null, ngonNgu = settingModel.getNgonNgu();
+		if (dcr_NgayBatDau.getDate() == null || dcr_NgayKetThuc.getDate() == null) {
+			if (ngonNgu.equals("Vietnamese")) {
+				canhBao = "Ngày bắt đầu hoặc ngày kết thúc không được để trống.";
+				loaiCanhBao = "Lỗi";
+			} else if (ngonNgu.equals("English")) {
+				canhBao = "Start date or end date should not be empty.";
+				loaiCanhBao = "Error";
+			}
+		} else if (dcr_NgayBatDau.getDate().after(dcr_NgayKetThuc.getDate())) {
+			if (ngonNgu.equals("Vietnamese")) {
+				canhBao = "Ngày bắt đầu không thể sau ngày kết thúc.";
+				loaiCanhBao = "Lỗi";
+			} else if (ngonNgu.equals("English")) {
+				canhBao = "Start date cannot be after end date.";
+				loaiCanhBao = "Error";
+			}
+		} else if (dcr_NgayBatDau.getDate().after(ngayHienTai)) {
+			if (ngonNgu.equals("Vietnamese")) {
+				canhBao = "Ngày bắt đầu không thể sau ngày hiện tại.";
+				loaiCanhBao = "Lỗi";
+			} else if (ngonNgu.equals("English")) {
+				canhBao = "Start date cannot be after current date.";
+				loaiCanhBao = "Error";
+			}
+		}
+		if (loaiCanhBao == null) {
+			return true;
+		}
+		JOptionPane.showMessageDialog(null, canhBao, loaiCanhBao, JOptionPane.ERROR_MESSAGE);
+		return false;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -1427,15 +1604,14 @@ public class Panel_ThongKeDoanhThuTheoNhanVien extends JPanel implements ActionL
 			loadInfoText();
 		}
 		if (o.equals(btn_XuatExcel)) {
-			XuatFile.saveToExcel(dtm_ChiTiet,"Thống kê hóa đơn");
+			XuatFile.saveToExcel(dtm_ChiTiet, "Thống kê hóa đơn");
 		}
-		if (o.equals(btn_XuatPDF)&&kiemTraHopLe()) {
+		if (o.equals(btn_XuatPDF) && kiemTraHopLe()) {
 			Frame_ThongKeDoanhThuTheoNhanVien frameXuatPDF = new Frame_ThongKeDoanhThuTheoNhanVien(this);
 			frameXuatPDF.setVisible(true);
 		}
 	}
-	
-	
+
 	private void setting() {
 		settingModel = new SettingModel();
 		try {
@@ -1448,113 +1624,180 @@ public class Panel_ThongKeDoanhThuTheoNhanVien extends JPanel implements ActionL
 		settingButton();
 		settingCombobox();
 	}
+
 	private void settingLanguage() {
-	    if(settingModel.getNgonNgu().equals("Vietnamese")) {
-	    	lbl_Title_BaoCaoDoanhThu.setText("Thống kê doanh thu theo nhân viên");
-	        lbl_LoaiThoiGian.setText("Loại thời gian");
-	        lbl_Loc.setText("Lọc theo");
-	        lbl_ThoiGianBatDau.setText("Thời gian bắt đầu");
-	        lbl_ThoiGianKetThuc.setText("Thời gian kết thúc");
-	        btn_TimKiem.setText("Tìm kiếm");
-	        btn_XuatExcel.setText("Xuất Excel");
-	        btn_XuatPDF.setText("Xuất PDF");
-	        btn_BieuDo.setText("Biểu đồ");
-	        btn_HienThi.setText("Hiển thị chi tiết");
-	        lbl_Read_Loc.setText("Lọc theo");
-	        lbl_Read_NVLoc.setText("Lượng nhân viên theo thời gian");
-	        lbl_Read_NVTong.setText("Lượng nhân viên tổng");
-	        lbl_DoanhThu.setText("Doanh thu");
-	        lbl_Chi.setText("Chi");
-	        lbl_LoiNhuan.setText("Lợi nhuận");
-	        lbl_SLHoaDon.setText("Lượng hóa đơn");
-	        lbl_SLKhach.setText("Lượng khách");
-	        lbl_SLSPB.setText("Lượng sản phẩm bán được");
-	        lbl_Control_Main.setText("Thao tác: ");
-	        lbl_Control_Show.setText("Nội dung: ");
-	        dtm_ChiTiet =  new DefaultTableModel(new String[]{"Mã nhân viên","Tên nhân viên","Lượng hóa đơn","Lượng khách","Lượng sản phẩm bán được","Thu","Chi","Lợi nhuận"},0);
-	        cbo_LoaiThoiGian.addItem("Theo ngày");
-	        cbo_LoaiThoiGian.addItem("Theo tuần");
-	        cbo_LoaiThoiGian.addItem("Theo tháng");
-	        cbo_LoaiThoiGian.addItem("Theo quý");
-	        cbo_LoaiThoiGian.addItem("Theo năm");
-	        cbo_Loc.addItem("Tất cả nhân viên");
-	        lbl_ShowName.setText("Chọn nội dung hiển thị");
-	    }
-	    if(settingModel.getNgonNgu().equals("English")) {
-	    	lbl_Title_BaoCaoDoanhThu.setText("Revenue statistics by employee");
-	    	lbl_LoaiThoiGian.setText("Type of time");
-	    	lbl_Loc.setText("Filter by");
-	    	lbl_ThoiGianBatDau.setText("Start time");
-	    	lbl_ThoiGianKetThuc.setText("End time");
-	    	btn_TimKiem.setText("Search");
-	    	btn_XuatExcel.setText("Export Excel");
-	    	btn_XuatPDF.setText("Export PDF");
-	    	btn_BieuDo.setText("Chart");
-	    	btn_HienThi.setText("Show details");
-	    	lbl_Read_Loc.setText("Filter by");
-	    	lbl_Read_NVLoc.setText("Number of employees over time");
-	    	lbl_Read_NVTong.setText("Total number of employees");
-	    	lbl_DoanhThu.setText("Revenue");
-	    	lbl_Chi.setText("Expenditure");
-	    	lbl_LoiNhuan.setText("Profit");
-	    	lbl_SLHoaDon.setText("Number of invoices");
-	    	lbl_SLKhach.setText("Number of customers");
-	    	lbl_SLSPB.setText("Number of products sold");
-	    	lbl_Control_Main.setText("Operation: ");
-	    	lbl_Control_Show.setText("Content: ");
-	        dtm_ChiTiet =  new DefaultTableModel(new String[]{"Employee Number","Employee Name","Number of Invoices","Number of Customers","Number of Products Sold","Revenue","Expenditure","Profit"},0);
-	        cbo_LoaiThoiGian.addItem("By day");
-	        cbo_LoaiThoiGian.addItem("By week");
-	        cbo_LoaiThoiGian.addItem("By month");
-	        cbo_LoaiThoiGian.addItem("By quarter");
-	        cbo_LoaiThoiGian.addItem("By year");
-	        cbo_Loc.addItem("All employees");
-	        lbl_ShowName.setText("Select content to show");
-	    }
-	    
-	    //Nhật xóa các dòng dưới này
-	    cbo_Loc.addItem("NV1");
-	    cbo_Loc.addItem("NV2");
-	    cbo_Loc.addItem("NV3");
+		if (settingModel.getNgonNgu().equals("Vietnamese")) {
+			lbl_Title_BaoCaoDoanhThu.setText("Thống kê doanh thu theo nhân viên");
+			lbl_LoaiThoiGian.setText("Loại thời gian");
+			lbl_Loc.setText("Lọc theo");
+			lbl_ThoiGianBatDau.setText("Thời gian bắt đầu");
+			lbl_ThoiGianKetThuc.setText("Thời gian kết thúc");
+			btn_TimKiem.setText("Tìm kiếm");
+			btn_XuatExcel.setText("Xuất Excel");
+			btn_XuatPDF.setText("Xuất PDF");
+			btn_BieuDo.setText("Biểu đồ");
+			btn_HienThi.setText("Hiển thị chi tiết");
+			lbl_Read_Loc.setText("Lọc theo");
+			lbl_Read_NVLoc.setText("Lượng nhân viên theo thời gian");
+			lbl_Read_NVTong.setText("Lượng nhân viên tổng");
+			lbl_DoanhThu.setText("Doanh thu");
+			lbl_Chi.setText("Chi");
+			lbl_LoiNhuan.setText("Lợi nhuận");
+			lbl_SLHoaDon.setText("Lượng hóa đơn");
+			lbl_SLKhach.setText("Lượng khách");
+			lbl_SLSPB.setText("Lượng sản phẩm bán được");
+			lbl_Control_Main.setText("Thao tác: ");
+			lbl_Control_Show.setText("Nội dung: ");
+			dtm_ChiTiet = new DefaultTableModel(new String[] { "Mã nhân viên", "Tên nhân viên", "Lượng hóa đơn",
+					"Lượng khách", "Lượng sản phẩm bán được", "Thu", "Chi", "Lợi nhuận" }, 0);
+			cbo_LoaiThoiGian.addItem("Theo ngày");
+			cbo_LoaiThoiGian.addItem("Theo tuần");
+			cbo_LoaiThoiGian.addItem("Theo tháng");
+			cbo_LoaiThoiGian.addItem("Theo quý");
+			cbo_LoaiThoiGian.addItem("Theo năm");
+			cbo_Loc.addItem("Tất cả nhân viên");
+			lbl_ShowName.setText("Chọn nội dung hiển thị");
+		}
+		if (settingModel.getNgonNgu().equals("English")) {
+			lbl_Title_BaoCaoDoanhThu.setText("Revenue statistics by employee");
+			lbl_LoaiThoiGian.setText("Type of time");
+			lbl_Loc.setText("Filter by");
+			lbl_ThoiGianBatDau.setText("Start time");
+			lbl_ThoiGianKetThuc.setText("End time");
+			btn_TimKiem.setText("Search");
+			btn_XuatExcel.setText("Export Excel");
+			btn_XuatPDF.setText("Export PDF");
+			btn_BieuDo.setText("Chart");
+			btn_HienThi.setText("Show details");
+			lbl_Read_Loc.setText("Filter by");
+			lbl_Read_NVLoc.setText("Number of employees over time");
+			lbl_Read_NVTong.setText("Total number of employees");
+			lbl_DoanhThu.setText("Revenue");
+			lbl_Chi.setText("Expenditure");
+			lbl_LoiNhuan.setText("Profit");
+			lbl_SLHoaDon.setText("Number of invoices");
+			lbl_SLKhach.setText("Number of customers");
+			lbl_SLSPB.setText("Number of products sold");
+			lbl_Control_Main.setText("Operation: ");
+			lbl_Control_Show.setText("Content: ");
+			dtm_ChiTiet = new DefaultTableModel(new String[] { "Employee Number", "Employee Name", "Number of Invoices",
+					"Number of Customers", "Number of Products Sold", "Revenue", "Expenditure", "Profit" }, 0);
+			cbo_LoaiThoiGian.addItem("By day");
+			cbo_LoaiThoiGian.addItem("By week");
+			cbo_LoaiThoiGian.addItem("By month");
+			cbo_LoaiThoiGian.addItem("By quarter");
+			cbo_LoaiThoiGian.addItem("By year");
+			cbo_Loc.addItem("All employees");
+			lbl_ShowName.setText("Select content to show");
+		}
+
+		// Nhật xóa các dòng dưới này
+		sqlNhanVien_BUS.dayComboBoxMaNV(cbo_Loc);
 	}
+
 	private void settingButton() {
 		// TODO Auto-generated method stub
+		String phongCach = settingModel.getPhongCach();
 		for (Component component : pn_Control_Show.getComponents()) {
-		    if (component instanceof Custom_Button) {
-		        Custom_Button button = (Custom_Button) component;
+			if (component instanceof Custom_Button) {
+				Custom_Button button = (Custom_Button) component;
+				if (phongCach.equals("Whitebright")) {
+					button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+					button.setColor_Foreground(new Custom_ColorPicker("31004a").toColor());
+					button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+					button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+					button.setColor_Over(new Custom_ColorPicker("e5c3c6").toColor());
+					button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+					button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+					button.setColor_Clicked_Background(Color.WHITE);
+				}
+				if (phongCach.equals("Darkmode")) {
+					button.setColor_Foreground(Color.WHITE);
+					button.setColor_Background(new Custom_ColorPicker("526D82").toColor());
+					button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+					button.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+					button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+					button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+					button.setColor_Clicked_Background(Color.WHITE);
+				}
 
-		        FontMetrics fm = button.getFontMetrics(button.getFont());
-		        int textWidth = fm.stringWidth(button.getText());
-		        int textHeight = fm.getHeight();
-		        int paddingWidth = (int)(textWidth * 0.3); // 30% of text width
-		        int paddingHeight = (int)(textHeight * 0.3); // 30% of text height
-		        Dimension currentPreferredSize = button.getPreferredSize();
-		        Dimension newPreferredSize = new Dimension(
-		            currentPreferredSize.width + 2 * paddingWidth,
-		            currentPreferredSize.height + 2 * paddingHeight
-		        );
-		        button.setPreferredSize(newPreferredSize);
-		    }
+				FontMetrics fm = button.getFontMetrics(button.getFont());
+				int textWidth = fm.stringWidth(button.getText());
+				int textHeight = fm.getHeight();
+				int paddingWidth = (int) (textWidth * 0.3); // 30% of text width
+				int paddingHeight = (int) (textHeight * 0.3); // 30% of text height
+				Dimension currentPreferredSize = button.getPreferredSize();
+				Dimension newPreferredSize = new Dimension(currentPreferredSize.width + 2 * paddingWidth,
+						currentPreferredSize.height + 2 * paddingHeight);
+				button.setPreferredSize(newPreferredSize);
+			}
 		}
 		for (Component component : pn_Control_Main.getComponents()) {
-		    if (component instanceof Custom_Button) {
-		        Custom_Button button = (Custom_Button) component;
-
-		        FontMetrics fm = button.getFontMetrics(button.getFont());
-		        int textWidth = fm.stringWidth(button.getText());
-		        int textHeight = fm.getHeight();
-		        int paddingWidth = (int)(textWidth * 0.3); // 30% of text width
-		        int paddingHeight = (int)(textHeight * 0.3); // 30% of text height
-		        Dimension currentPreferredSize = button.getPreferredSize();
-		        Dimension newPreferredSize = new Dimension(
-		            currentPreferredSize.width + 2 * paddingWidth,
-		            currentPreferredSize.height + 2 * paddingHeight
-		        );
-		        button.setPreferredSize(newPreferredSize);
-		    }
+			if (component instanceof Custom_Button) {
+				Custom_Button button = (Custom_Button) component;
+				if (phongCach.equals("Whitebright")) {
+					button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+					button.setColor_Foreground(new Custom_ColorPicker("31004a").toColor());
+					button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+					button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+					button.setColor_Over(new Custom_ColorPicker("e5c3c6").toColor());
+					button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+					button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+					button.setColor_Clicked_Background(Color.WHITE);
+				}
+				if (phongCach.equals("Darkmode")) {
+					button.setColor_Foreground(Color.WHITE);
+					button.setColor_Background(new Custom_ColorPicker("526D82").toColor());
+					button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+					button.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+					button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+					button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+					button.setColor_Clicked_Background(Color.WHITE);
+				}
+				FontMetrics fm = button.getFontMetrics(button.getFont());
+				int textWidth = fm.stringWidth(button.getText());
+				int textHeight = fm.getHeight();
+				int paddingWidth = (int) (textWidth * 0.3); // 30% of text width
+				int paddingHeight = (int) (textHeight * 0.3); // 30% of text height
+				Dimension currentPreferredSize = button.getPreferredSize();
+				Dimension newPreferredSize = new Dimension(currentPreferredSize.width + 2 * paddingWidth,
+						currentPreferredSize.height + 2 * paddingHeight);
+				button.setPreferredSize(newPreferredSize);
+			}
 		}
 	}
+
 	private void settingCombobox() {
 		// TODO Auto-generated method stub
+		String phongCach = settingModel.getPhongCach();
+		for (Component component : pn_Control.getComponents()) {
+			if (component instanceof Custom_ComboBox) {
+				Custom_ComboBox custom_ComboBox = (Custom_ComboBox) component;
+				if (phongCach.equals("Whitebright")) {
+					custom_ComboBox.setColor_Foreground(new Custom_ColorPicker("31004a").toColor());
+					custom_ComboBox.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+					custom_ComboBox.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+					custom_ComboBox.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+					custom_ComboBox.setColor_Border(new Custom_ColorPicker("000000").toColor());
+					custom_ComboBox.redraw_Custom_Combobox();
+				}
+				if (phongCach.equals("Darkmode")) {
+					custom_ComboBox.setColor_Foreground(Color.WHITE);
+					custom_ComboBox.setColor_Background(new Custom_ColorPicker("323232").toColor());
+					custom_ComboBox.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+					custom_ComboBox.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+					custom_ComboBox.setColor_Border(new Custom_ColorPicker("000000").toColor());
+					custom_ComboBox.redraw_Custom_Combobox();
+				}
+			}
+		}
+	}
+
+	public ArrayList<NhanVien> getListNV() {
+		return listNV;
+	}
+
+	public void setListNV(ArrayList<NhanVien> listNV) {
+		this.listNV = listNV;
 	}
 }

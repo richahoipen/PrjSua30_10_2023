@@ -20,7 +20,7 @@ import javax.swing.JComboBox;
 
 import customEntities.CustomIcon;
 import customEntities.Custom_Button;
-import dataBase_BUS.NhanVien_BUS;
+
 import dataBase_BUS.TaiKhoan_BUS;
 import entities.TaiKhoan;
 import gui_Frame_Running.Frame_Chinh;
@@ -181,9 +181,9 @@ public class Frame_DangNhap extends JFrame implements ActionListener
 		}
 		return false;
 	}
-	public void load_Frame_Chinh(String maNV)
+	public void load_Frame_Chinh(String maNV, String chucVu)
 	{
-		Frame_Chinh frame = new Frame_Chinh(maNV);
+		Frame_Chinh frame = new Frame_Chinh(maNV,chucVu);
 		frame.setTitle("Rising Star: Quản lý mua bán sách tại hiệu sách tư nhân. ");
         frame.setIconImage(new CustomIcon("src/main/images/view_image/Logo.png").getImage());
 		frame.setVisible(true);
@@ -197,7 +197,7 @@ public class Frame_DangNhap extends JFrame implements ActionListener
 		{
 			if(xuLy_DangNhap())
 			{
-				load_Frame_Chinh(txt_MaNV.getText());
+				load_Frame_Chinh(txt_MaNV.getText(),cbo_ChucVu.getSelectedItem().toString());
 			}else
 			{
 				UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 30));

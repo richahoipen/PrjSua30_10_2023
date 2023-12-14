@@ -442,18 +442,18 @@ public class DonDatHang_DAO implements DonDatHang_Method, ICombobox_TimKiem_DonD
 		try {
 			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);
 	        //preparedStatement.setNString(1, maNV);
-	        
+	        //dtm_DD = new DefaultTableModel(new String[] {"Mã đơn đặt","Họ tên nhân viên","Họ tên khách hàng","SĐT khách","Ngày lập","Tổng tiền"},0);
 			ResultSet rs = preparedStatement.executeQuery();
 			while(rs.next())
 			{
 				String maDDH=rs.getString("maDDH");
+				String tenNV=rs.getNString("tenNV");
 				String tenKH=rs.getNString("tenKH");
 				String sdt=rs.getNString("sdt");
-				Date ngayDat=rs.getDate("ngayDat");
-				String tenNV=rs.getNString("tenNV");
+				Date ngayDat=rs.getDate("ngayDat");			
 				DonDatHang d=new DonDatHang();
 				d.setNgayDat(ngayDat);
-				String[] row= {maDDH,tenKH,sdt,d.getNgayDatToString(),tenNV,Double.toString(getTongTien_DonDatHang(maDDH))};
+				String[] row= {maDDH,tenNV,tenKH,sdt,d.getNgayDatToString(),Double.toString(getTongTien_DonDatHang(maDDH))};
 				dtm_DD.addRow(row);
 			}	
 			con.con().close();
@@ -506,10 +506,64 @@ public class DonDatHang_DAO implements DonDatHang_Method, ICombobox_TimKiem_DonD
 		}
 	}
 	@Override
-	public boolean tim_DonDatHang(DonDatHang d, String tenNV, KhachHang k, int ngay, int thang, int nam,
+	public boolean tim_DonDatHang(DonDatHang d_canTim, String tenNV_CanTim, KhachHang k, int ngay, int thang, int nam,
 			DefaultTableModel dtm_DD) {
-		// TODO Auto-generated method stub
-		return false;
+		String sqlSelect = "SELECT\r\n"
+				+ "    DDH.maDDH,\r\n"
+				+ "    KH.tenKH,\r\n"
+				+ "    KH.sdt,\r\n"
+				+ "    DDH.ngayDat,\r\n"
+				+ "    NV.tenNV\r\n"
+				+ "FROM\r\n"
+				+ "    DonDatHang DDH\r\n"
+				+ "JOIN\r\n"
+				+ "    KhachHang KH ON DDH.maKH = KH.maKH\r\n"
+				+ "JOIN\r\n"
+				+ "    NhanVien NV ON DDH.maNV = NV.maNV\r\n"
+				+ "WHERE\r\n"
+				+ "    DDH.maDDH=? or\r\n"
+				+ "	NV.tenNV=? or\r\n"
+				+ "	KH.tenKH=? or\r\n"
+				+ "	KH.sdt=? or\r\n"
+				+ "	DAY(DDH.ngayDat)=? or\r\n"
+				+ "	MONTH(DDH.ngayDat)=? or\r\n"
+				+ "	YEAR(DDH.ngayDat)=? \r\n"
+				+ "ORDER BY\r\n"
+				+ "    CAST(SUBSTRING(maDDH, 4, LEN(maDDH)) AS INT) ASC;";
+		try {
+			PreparedStatement preparedStatement = con.con().prepareStatement(sqlSelect);
+	        preparedStatement.setString(1, d_canTim.getMaDDH());
+	        preparedStatement.setNString(2, tenNV_CanTim);
+	        preparedStatement.setNString(3, k.getTenKH());
+	        preparedStatement.setNString(4, k.getSdt());
+	        preparedStatement.setInt(5, ngay);
+	        preparedStatement.setInt(6, thang);
+	        preparedStatement.setInt(7, nam);
+	        
+			ResultSet rs = preparedStatement.executeQuery();
+			while(rs.next())
+			{
+				String maDDH=rs.getString("maDDH");
+				String tenKH=rs.getNString("tenKH");
+				String sdt=rs.getNString("sdt");
+				Date ngayDat=rs.getDate("ngayDat");
+				String tenNV=rs.getNString("tenNV");
+				DonDatHang d=new DonDatHang();
+				d.setNgayDat(ngayDat);
+				String[] row= {maDDH,tenKH,sdt,d.getNgayDatToString(),tenNV,Double.toString(getTongTien_DonDatHang(maDDH))};
+				dtm_DD.addRow(row);
+			}	
+			con.con().close();
+			con.stmt().close();
+			rs.close();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			UIManager.put("OptionPane.messageFont", new Font("Arial", Font.BOLD, 25));
+			UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.PLAIN, 25));
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
 	}
 	@Override
 	public String get_MaDDH_MoiNhat() {

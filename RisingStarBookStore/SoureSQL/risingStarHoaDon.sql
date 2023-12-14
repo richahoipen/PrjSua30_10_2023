@@ -122,3 +122,87 @@ JOIN NhanVien ON HoaDon.maNV = NhanVien.maNV
 JOIN KhachHang ON HoaDon.maKH = KhachHang.maKH
 where maHD=N'HD1';
 SELECT * FROM [dbo].[TaiKhoan]
+
+--Tìm hóa đơn
+SELECT
+    HD.maHD,
+	NV.tenNV,
+    KH.tenKH,
+    KH.sdt,
+    HD.ngayLap,  
+	HD.tongTien
+FROM
+    HoaDon HD
+JOIN
+    KhachHang KH ON HD.maKH = KH.maKH
+JOIN
+    NhanVien NV ON HD.maNV = NV.maNV
+WHERE
+    HD.maHD=N'HD2' or
+	NV.tenNV=N'Nguyễn Năm' or
+	KH.tenKH=N'Dương Nhi Minh' or
+	KH.sdt=N'0123477896' or
+	DAY(HD.ngayLap)=3 or
+	MONTH(HD.ngayLap)=12 or
+	YEAR(HD.ngayLap)=2023 or
+	HD.tongTien=16412
+ORDER BY
+    CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) ASC;
+--
+SELECT
+    HD.maHD,
+	NV.tenNV,
+    KH.tenKH,
+    KH.sdt,
+    HD.ngayLap,  
+	HD.tongTien
+FROM
+    HoaDon HD
+JOIN
+    KhachHang KH ON HD.maKH = KH.maKH
+JOIN
+    NhanVien NV ON HD.maNV = NV.maNV
+ORDER BY
+    CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) ASC;
+--nkniki
+SELECT HoaDon.maHD, HoaDon.ngayLap, HoaDon.tongTien,
+       KhachHang.tenKH, KhachHang.sdt,
+       NhanVien.tenNV
+FROM HoaDon
+JOIN NhanVien ON HoaDon.maNV = NhanVien.maNV
+JOIN KhachHang ON HoaDon.maKH = KhachHang.maKH
+WHERE
+    HoaDon.maHD=? or
+	NhanVien.tenNV=? or
+	KhachHang.tenKH=? or
+	KhachHang.sdt=? or
+	DAY(HoaDon.ngayLap)=? or
+	MONTH(HoaDon.ngayLap)=? or
+	YEAR(HoaDon.ngayLap)=? or
+	HoaDon.tongTien=?
+ORDER BY CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) ASC;
+
+SELECT
+    HD.maHD,
+	NV.tenNV,
+    KH.tenKH,
+    KH.sdt,
+    HD.ngayLap,  
+	HD.tongTien
+FROM
+    HoaDon HD
+JOIN
+    KhachHang KH ON HD.maKH = KH.maKH
+JOIN
+    NhanVien NV ON HD.maNV = NV.maNV
+WHERE
+    HD.maHD=N'HD2' or (
+	NV.tenNV=N'Nguyễn Năm' or
+	KH.tenKH=N'Dương Nhi Minh' or
+	KH.sdt=N'0123477896' or
+	DAY(HD.ngayLap)=3 or
+	MONTH(HD.ngayLap)=12 or
+	YEAR(HD.ngayLap)=2023 or
+	HD.tongTien=16412)
+ORDER BY
+    CAST(SUBSTRING(maHD, 3, LEN(maHD)) AS INT) ASC;

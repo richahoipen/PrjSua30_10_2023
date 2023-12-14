@@ -37,9 +37,33 @@ public class MainForm extends javax.swing.JPanel {
 		{
         	for (Component component : form.getComponents()) {
         		if (component instanceof JPanel) {
-                    ((JPanel) component).setBackground(Color.WHITE);
-                    ((JPanel) component).setBorder(BorderFactory.createLineBorder(new Custom_ColorPicker("5A8FEB").toColor(), 2));
+        			JPanel panel = (JPanel) component;
+        			panel.setBackground(Color.WHITE);
+        			panel.setBorder(BorderFactory.createLineBorder(new Custom_ColorPicker("5A8FEB").toColor(), 2));
+                    for (Component componentS : panel.getComponents()) {
+            			if (componentS instanceof Custom_Button) {
+                		Custom_Button custom_Button = (Custom_Button) componentS;
+                		custom_Button.setColor_Foreground(new Custom_ColorPicker("31004a").toColor());
+                		custom_Button.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+                		custom_Button.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+                		custom_Button.setColor_Over(new Custom_ColorPicker("e5c3c6").toColor());
+                		custom_Button.setColor_Border(new Custom_ColorPicker("FFFFFF").toColor());
+                		custom_Button.setColor_Click(new Custom_ColorPicker("000000").toColor());
+                		custom_Button.setColor_Clicked_Background(Color.WHITE);
+            			}
+            			if (componentS instanceof Custom_ComboBox) {
+                    		Custom_ComboBox custom_ComboBox = (Custom_ComboBox) componentS;
+                    		custom_ComboBox.setColor_Foreground(new Custom_ColorPicker("31004a").toColor());
+                    		custom_ComboBox.setColor_Background(new Custom_ColorPicker("fff8dc").toColor());
+                    		custom_ComboBox.setColor_Hightlight(new Custom_ColorPicker("778899").toColor());
+                    		custom_ComboBox.setColor_Over(new Custom_ColorPicker("DCDCDC").toColor());
+                    		custom_ComboBox.setColor_Border(new Custom_ColorPicker("000000").toColor());
+                    		custom_ComboBox.redraw_Custom_Combobox();
+                    	}
+            		}
                 }
+        		
+        		
                 component.setForeground(new Custom_ColorPicker("5A8FEB").toColor());
             }
         	setBackground(new Custom_ColorPicker("FFFFFF").toColor());
@@ -80,8 +104,6 @@ public class MainForm extends javax.swing.JPanel {
                     		custom_Button.setColor_Clicked_Background(Color.WHITE);
                     	}
                     }
-                    
-                    
         		}
         		if (component instanceof Custom_Button) {
             		Custom_Button custom_Button = (Custom_Button) component;
